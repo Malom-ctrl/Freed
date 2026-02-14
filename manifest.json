@@ -1,19 +1,19 @@
 {
   "name": "Freed",
   "short_name": "Freed",
-  "start_url": ".",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#4f46e5",
   "description": "Control what you feed your brain.",
   "icons": [
     {
-      "src": "https://via.placeholder.com/192.png?text=RSS",
-      "sizes": "192x192",
+      "src": "images/128.png",
+      "sizes": "128x128",
       "type": "image/png"
     },
     {
-      "src": "https://via.placeholder.com/512.png?text=RSS",
+      "src": "images/512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
