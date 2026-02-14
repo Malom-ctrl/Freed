@@ -352,6 +352,9 @@
       ?.addEventListener("click", () =>
         Reader.toggleCurrentFavorite(() => refreshUI()),
       );
+    document
+      .getElementById("btn-share-article")
+      ?.addEventListener("click", () => Reader.shareCurrentArticle());
 
     document.getElementById("btn-settings")?.addEventListener("click", () => {
       document.getElementById("settings-modal")?.classList.add("open");
