@@ -1,23 +1,56 @@
 window.Freed = window.Freed || {};
 
 window.Freed.Utils = {
-    divToText: function(html) {
-        const tmp = document.createElement('DIV');
-        tmp.innerHTML = html;
-        return tmp.textContent || tmp.innerText || '';
-    },
+  divToText: function (html) {
+    const tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  },
 
-    showToast: function(msg) {
-        const toast = document.getElementById('toast');
-        if (!toast) return;
-        toast.textContent = msg;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-    },
+  toastTimeout: null,
 
-    getRandomFromPalette: function() {
-        if (!window.Freed.Config || !window.Freed.Config.COLOR_PALETTE) return '#64748b';
-        const palette = window.Freed.Config.COLOR_PALETTE;
-        return palette[Math.floor(Math.random() * palette.length)];
+  showToast: function (msg, action) {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+
+    // Clear existing timeout to prevent closing a new toast prematurely
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+      this.toastTimeout = null;
     }
+
+    // Reset content
+    toast.innerHTML = "";
+    const msgSpan = document.createElement("span");
+    msgSpan.textContent = msg;
+    toast.appendChild(msgSpan);
+
+    // Add Action Button if provided
+    if (action && action.label && action.callback) {
+      const btn = document.createElement("button");
+      btn.className = "toast-action";
+      btn.textContent = action.label;
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        action.callback();
+        toast.classList.remove("show");
+      };
+      toast.appendChild(btn);
+    }
+
+    toast.classList.add("show");
+
+    // Auto-hide after 3.5 seconds
+    this.toastTimeout = setTimeout(() => {
+      toast.classList.remove("show");
+      this.toastTimeout = null;
+    }, 3500);
+  },
+
+  getRandomFromPalette: function () {
+    if (!window.Freed.Config || !window.Freed.Config.COLOR_PALETTE)
+      return "#64748b";
+    const palette = window.Freed.Config.COLOR_PALETTE;
+    return palette[Math.floor(Math.random() * palette.length)];
+  },
 };

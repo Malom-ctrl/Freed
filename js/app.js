@@ -124,8 +124,23 @@
       enrichedArticles,
       (article) => Reader.openArticle(article, refreshUI),
       State.showArticleImages,
+      (article) => handleDiscard(article),
     );
     updateFilterUI();
+  }
+
+  function handleDiscard(article) {
+    DB.setArticleDiscarded(article.guid, true).then(() => {
+      refreshUI();
+      Utils.showToast("Article discarded", {
+        label: "Undo",
+        callback: () => {
+          DB.setArticleDiscarded(article.guid, false).then(() => {
+            refreshUI();
+          });
+        },
+      });
+    });
   }
 
   function applyFilters(articles) {
@@ -135,6 +150,9 @@
     const filters = State.filters;
 
     return articles.filter((a) => {
+      // Exclude discarded items by default
+      if (a.discarded) return false;
+
       if (filters.status === "unread" && a.read) return false;
       if (filters.status === "read" && !a.read) return false;
       if (filters.status === "favorites" && !a.favorite) return false;
