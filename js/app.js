@@ -180,6 +180,11 @@
         if (filters.status === "unread" && a.read) return false;
         if (filters.status === "read" && !a.read) return false;
         if (filters.status === "favorites" && !a.favorite) return false;
+        if (
+          filters.status === "unfinished" &&
+          (a.read || !a.readingProgress || a.readingProgress === 0)
+        )
+          return false;
       }
 
       const articleTime = new Date(a.pubDate).getTime();
@@ -367,6 +372,7 @@
         modal.classList.remove("open");
         document.body.classList.remove("modal-open");
         State.currentArticleGuid = null;
+        refreshUI(); // Ensure UI is updated on back navigation
       }
     });
 

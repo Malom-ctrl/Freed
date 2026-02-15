@@ -1,6 +1,76 @@
 window.Freed = window.Freed || {};
 
 window.Freed.Reader = {
+  _scrollHandler: null,
+  _lastScrollContainer: null,
+  _resizeObserver: null,
+  _currentMaxProgress: 0,
+  _isLoadingContent: false,
+  _contentFetchFailed: false,
+  _restoreProgress: 0,
+
+  _checkProgress: function (scrollContainer) {
+    if (!window.Freed.State.currentArticleGuid || !scrollContainer) return;
+
+    // Prevent premature read status if waiting for content or if content fetch failed
+    if (this._isLoadingContent || this._contentFetchFailed) return;
+
+    const { DB } = window.Freed;
+
+    const scrollTop = scrollContainer.scrollTop;
+    const scrollHeight = scrollContainer.scrollHeight;
+    const clientHeight = scrollContainer.clientHeight;
+
+    if (scrollHeight <= clientHeight) {
+      // Only mark as read if content exists and is not loading
+      if (scrollHeight > 0 && this._currentMaxProgress < 1) {
+        this._currentMaxProgress = 1;
+        DB.updateReadingProgress(
+          window.Freed.State.currentArticleGuid,
+          1,
+          true,
+        );
+      }
+      return;
+    }
+
+    let progress = scrollTop / (scrollHeight - clientHeight);
+
+    // End detection: allow 20px buffer for bottom reached
+    if (scrollTop + clientHeight >= scrollHeight - 20) {
+      progress = 1;
+    }
+
+    progress = Math.min(1, Math.max(0, progress));
+
+    // Monotonic check: only update if progress increased
+    if (progress > this._currentMaxProgress) {
+      this._currentMaxProgress = progress;
+      const isRead = progress > 0.95;
+      DB.updateReadingProgress(
+        window.Freed.State.currentArticleGuid,
+        progress,
+        isRead ? true : undefined,
+      );
+    }
+  },
+
+  _applyRestoreScroll: function () {
+    if (this._restoreProgress > 0 && this._lastScrollContainer) {
+      const el = this._lastScrollContainer;
+      // Only restore if we have scrollable content
+      if (el.scrollHeight > el.clientHeight) {
+        const target =
+          this._restoreProgress * (el.scrollHeight - el.clientHeight);
+        // If the target is significant, scroll to it
+        if (target > 10) {
+          el.scrollTop = target;
+        }
+        this._restoreProgress = 0; // Clear flag so we don't jump again
+      }
+    }
+  },
+
   openArticle: async function (articleInput, onRefreshNeeded) {
     const { DB, Service, Tools, Utils, State } = window.Freed;
     State.currentArticleGuid = articleInput.guid;
@@ -18,22 +88,51 @@ window.Freed.Reader = {
       console.warn("Failed to fetch fresh article data", e);
     }
 
+    // Initialize state
+    this._currentMaxProgress = article.readingProgress || 0;
+    this._isLoadingContent = false;
+    this._contentFetchFailed = !!article.contentFetchFailed;
+
+    // Determine if we should restore position later
+    // Don't restore for read or favorited articles (start from top)
+    this._restoreProgress = 0;
+    if (article.readingProgress > 0 && !article.read && !article.favorite) {
+      this._restoreProgress = article.readingProgress;
+    }
+
     history.pushState(
       { readingView: true, articleGuid: article.guid },
       "",
       "#article",
     );
 
-    if (!article.read) {
-      await DB.markArticleRead(article.guid);
-      article.read = true;
-      // Trigger refresh to update list visual state
-      if (onRefreshNeeded) setTimeout(() => onRefreshNeeded(), 500);
-    }
-
     this.updateFavoriteButtonState(article.favorite);
     const scrollContainer = modal.querySelector(".reader-scroll-container");
     if (scrollContainer) scrollContainer.scrollTop = 0;
+
+    // --- Scroll Tracking Logic ---
+    if (this._scrollHandler && this._lastScrollContainer) {
+      this._lastScrollContainer.removeEventListener(
+        "scroll",
+        this._scrollHandler,
+      );
+    }
+
+    this._lastScrollContainer = scrollContainer;
+
+    // Debounce update to DB
+    this._scrollHandler = Utils.throttle(() => {
+      this._checkProgress(scrollContainer);
+    }, 300);
+
+    scrollContainer.addEventListener("scroll", this._scrollHandler);
+
+    // Resize Observer for dynamic content (images loading, full content injection)
+    if (this._resizeObserver) this._resizeObserver.disconnect();
+    this._resizeObserver = new ResizeObserver(() => {
+      this._applyRestoreScroll(); // Try restoring if pending
+      this._checkProgress(scrollContainer);
+    });
 
     const heroEl = document.getElementById("reader-hero");
     const titleEl = document.getElementById("reader-title");
@@ -56,9 +155,7 @@ window.Freed.Reader = {
 
     if (dateEl) {
       try {
-        // Use relative time by default
         dateEl.textContent = Utils.formatRelativeTime(article.pubDate);
-        // Add full date tooltip
         const fullDate = new Date(article.pubDate).toLocaleDateString(
           undefined,
           {
@@ -79,10 +176,18 @@ window.Freed.Reader = {
 
     if (contentEl) {
       contentEl.setAttribute("data-guid", article.guid);
+      // Observe content element for size changes
+      this._resizeObserver.observe(contentEl);
 
       if (article.fullContent) {
         contentEl.innerHTML = article.fullContent;
+        // Schedule restore after layout
+        setTimeout(() => {
+          this._applyRestoreScroll();
+          this._checkProgress(scrollContainer);
+        }, 100);
       } else {
+        this._isLoadingContent = true; // Block progress updates
         const baseContent =
           article.content || article.description || `<p>${article.snippet}</p>`;
         const loadingHtml = `<div class="full-content-loader">Fetching full article content...</div>`;
@@ -92,17 +197,18 @@ window.Freed.Reader = {
           const currentGuid = contentEl.getAttribute("data-guid");
           if (currentGuid !== article.guid) return;
 
+          this._isLoadingContent = false; // Unblock progress updates
+
           if (fullHtml) {
-            // Calculate word count diff
             const oldText = article.content || article.snippet || "";
             const oldWc = Utils.countWords(oldText);
-
             const newWc = Utils.countWords(Utils.divToText(fullHtml));
             const diff = newWc - oldWc;
 
             article.fullContent = fullHtml;
+            article.contentFetchFailed = false; // Reset failure flag in object
+            this._contentFetchFailed = false; // Reset local flag
 
-            // Ensure DB updates happen before refresh
             DB.saveArticles([article])
               .then(() => {
                 if (diff !== 0 && article.feedId) {
@@ -110,7 +216,6 @@ window.Freed.Reader = {
                 }
               })
               .then(() => {
-                // Update list UI to show offline indicator and refresh stats
                 if (onRefreshNeeded) onRefreshNeeded();
               });
 
@@ -124,7 +229,20 @@ window.Freed.Reader = {
               loader.style.color = "var(--text-muted)";
             }
             Utils.showToast("Could not retrieve full content");
+
+            // Mark as failed in DB
+            article.contentFetchFailed = true;
+            this._contentFetchFailed = true; // Set local flag
+
+            DB.saveArticles([article]).then(() => {
+              if (onRefreshNeeded) onRefreshNeeded();
+            });
           }
+          // Trigger restoration and check now that content is loaded
+          setTimeout(() => {
+            this._applyRestoreScroll();
+            this._checkProgress(scrollContainer);
+          }, 100);
         });
       }
     }
@@ -132,6 +250,11 @@ window.Freed.Reader = {
     if (linkEl) linkEl.href = article.link;
     modal.classList.add("open");
     document.body.classList.add("modal-open");
+
+    // Initial check if content is already there and not loading
+    if (!this._isLoadingContent) {
+      setTimeout(() => this._checkProgress(scrollContainer), 100);
+    }
   },
 
   updateFavoriteButtonState: function (isFavorite) {
@@ -176,7 +299,6 @@ window.Freed.Reader = {
         console.log("Share canceled or failed", err);
       }
     } else {
-      // Fallback to clipboard
       try {
         await navigator.clipboard.writeText(article.link);
         Utils.showToast("Link copied to clipboard");
@@ -187,11 +309,36 @@ window.Freed.Reader = {
   },
 
   closeModal: function () {
+    if (this._resizeObserver) {
+      this._resizeObserver.disconnect();
+      this._resizeObserver = null;
+    }
+
+    // Force final check before closing to capture end of read
+    if (this._lastScrollContainer) {
+      this._checkProgress(this._lastScrollContainer);
+    }
+
+    if (this._scrollHandler && this._lastScrollContainer) {
+      this._lastScrollContainer.removeEventListener(
+        "scroll",
+        this._scrollHandler,
+      );
+      this._scrollHandler = null;
+    }
+    this._lastScrollContainer = null;
+    this._isLoadingContent = false;
+    this._contentFetchFailed = false;
+    this._restoreProgress = 0;
+
     if (history.state && history.state.readingView) history.back();
     else {
       document.getElementById("read-modal")?.classList.remove("open");
       document.body.classList.remove("modal-open");
       window.Freed.State.currentArticleGuid = null;
+      if (window.Freed.App && window.Freed.App.refreshUI) {
+        window.Freed.App.refreshUI();
+      }
     }
   },
 };

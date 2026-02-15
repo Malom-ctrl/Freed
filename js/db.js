@@ -237,6 +237,11 @@ window.Freed = window.Freed || {};
               article.discarded === undefined
             )
               finalArticle.discarded = existing.discarded;
+            if (
+              existing.readingProgress !== undefined &&
+              article.readingProgress === undefined
+            )
+              finalArticle.readingProgress = existing.readingProgress;
           }
           delete finalArticle.isDateFromFeed;
           articleStore.put(finalArticle);
@@ -282,18 +287,37 @@ window.Freed = window.Freed || {};
   }
 
   async function markArticleRead(guid) {
+    // Legacy support, directs to updateReadingProgress
+    return updateReadingProgress(guid, undefined, true);
+  }
+
+  async function updateReadingProgress(guid, progress, isRead) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
       const tx = db.transaction(["articles", "feeds"], "readwrite");
       const articleStore = tx.objectStore("articles");
       const feedStore = tx.objectStore("feeds");
-      const request = articleStore.get(guid);
 
-      request.onsuccess = () => {
-        const article = request.result;
-        if (article && !article.read) {
-          article.read = true;
-          articleStore.put(article);
+      const req = articleStore.get(guid);
+      req.onsuccess = () => {
+        const article = req.result;
+        if (!article) {
+          resolve();
+          return;
+        }
+
+        let changed = false;
+
+        // Update Progress if provided
+        if (progress !== undefined && article.readingProgress !== progress) {
+          article.readingProgress = progress;
+          changed = true;
+        }
+
+        // Update Read Status if provided
+        if (isRead !== undefined && article.read !== isRead) {
+          article.read = isRead;
+          changed = true;
 
           // Update Feed Stats
           if (article.feedId) {
@@ -302,21 +326,26 @@ window.Freed = window.Freed || {};
               const feed = freq.result;
               if (feed) {
                 initStats(feed);
-                feed.stats.read++;
-                // Calculate word count
-                const text = article.fullContent
-                  ? divToText(article.fullContent)
-                  : article.content || article.snippet || "";
-                const wc = countWords(text);
-                feed.stats.wordCountRead += wc;
+                if (isRead) {
+                  feed.stats.read++;
+                  const text = article.fullContent
+                    ? divToText(article.fullContent)
+                    : article.content || article.snippet || "";
+                  feed.stats.wordCountRead += countWords(text);
+                } else {
+                  feed.stats.read = Math.max(0, feed.stats.read - 1);
+                  // Optional: subtract word count? keeping simple for now
+                }
                 feedStore.put(feed);
               }
             };
           }
         }
+
+        if (changed) articleStore.put(article);
+        resolve();
       };
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error);
+      req.onerror = () => reject(req.error);
     });
   }
 
@@ -560,6 +589,7 @@ window.Freed = window.Freed || {};
     getArticlesByFeed,
     getArticle,
     markArticleRead,
+    updateReadingProgress,
     setFavorite,
     setArticleDiscarded,
     toggleFavorite,

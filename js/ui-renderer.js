@@ -165,7 +165,8 @@ window.Freed.UI = {
       const hasFilters =
         document.getElementById("filter-status")?.value !== "all" ||
         document.getElementById("filter-date")?.value !== "all" ||
-        document.getElementById("filter-tag")?.value !== "all";
+        document.getElementById("filter-tag-input")?.value ||
+        false;
 
       let message = "Syncing or add a new feed.";
       let title = "No articles found";
@@ -221,17 +222,49 @@ window.Freed.UI = {
         tagsHtml += `</div>`;
       }
 
-      // Offline Indicator
-      let offlineIconHtml = "";
-      if (article.fullContent) {
-        offlineIconHtml = `<svg class="offline-icon" data-tooltip="Offline Available" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px; color: var(--text-muted); opacity: 0.7;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line></svg>`;
+      // --- Dynamic Status Icon Logic ---
+      let statusIconContent = "";
+      let statusTitle = "";
+
+      if (article.favorite) {
+        // 1. Favorite - Star
+        statusIconContent = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="color:#f59e0b;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+        statusTitle = "Favorited";
+      } else if (article.contentFetchFailed && !article.fullContent) {
+        // 2. Fetch Failed - Alert Triangle
+        statusIconContent = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#f59e0b;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+        statusTitle = "Content Unavailable";
+      } else if (article.read) {
+        // 3. Read - Checkmark in Circle
+        statusIconContent = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+        statusTitle = "Read";
+      } else if (article.readingProgress > 0) {
+        // 4. In Progress - Ring
+        // SVG Dasharray circumference approx 56.5 (r=9)
+        const r = 9;
+        const c = 2 * Math.PI * r;
+        const pct = article.readingProgress;
+        const offset = c * (1 - pct);
+
+        statusIconContent = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="color:var(--primary); transform:rotate(-90deg);">
+                   <circle cx="12" cy="12" r="${r}" stroke-opacity="0.2"></circle>
+                   <circle cx="12" cy="12" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${offset}"></circle>
+                </svg>`;
+        statusTitle = "In Progress";
+      } else if (article.fullContent) {
+        // 5. Fetched/Offline - Download Icon
+        statusIconContent = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px; color: var(--text-muted); opacity: 0.7;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line></svg>`;
+        statusTitle = "Offline Available";
+      } else {
+        // 6. Unread & Unfetched - No Icon
+        statusIconContent = "";
       }
 
-      // Favorite Icon (Inline)
-      let favIconHtml = "";
-      if (article.favorite) {
-        favIconHtml = `<div class="inline-fav-icon" title="Remove from favorites" style="margin-left: 8px; color: #f59e0b; display: flex; align-items: center; cursor: pointer; z-index: 5;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>`;
-      }
+      const statusHtml = statusIconContent
+        ? `<div class="dynamic-status-icon" style="margin-left:8px; display:flex; align-items:center; cursor:pointer;" data-tooltip="${statusTitle}">${statusIconContent}</div>`
+        : "";
+      // ---------------------------------
 
       // Discard structures
       const isDiscarded = !!article.discarded;
@@ -255,8 +288,7 @@ window.Freed.UI = {
                     <span ${feedTitleStyle}>${article.feedTitle}</span>
                     <div style="display:flex; align-items:center;">
                         <span data-tooltip="${fullDateStr}" style="cursor:help;">${dateStr}</span>
-                        ${offlineIconHtml}
-                        ${favIconHtml}
+                        ${statusHtml}
                     </div>
                 </div>
                 <h3 class="card-title">${article.title}</h3>
@@ -266,19 +298,21 @@ window.Freed.UI = {
 
       // Click Handler (Main)
       card.onclick = (e) => {
-        // Ignore clicks on the discard zone/overlay (though propagation should stop)
+        // Ignore clicks on the discard zone/overlay
         if (
           e.target.closest(".discard-zone") ||
           e.target.closest(".discard-overlay")
         )
           return;
+        // Ignore click on status icon if we want it to be a dedicated toggle
+        if (e.target.closest(".dynamic-status-icon")) return;
         onOpen(article);
       };
 
-      // Fav Icon Handler
-      const favBtn = card.querySelector(".inline-fav-icon");
-      if (favBtn) {
-        favBtn.onclick = (e) => {
+      // Status Icon Click Handler (Toggle Favorite)
+      const statusBtn = card.querySelector(".dynamic-status-icon");
+      if (statusBtn) {
+        statusBtn.onclick = (e) => {
           e.stopPropagation();
           if (onToggleFavorite) onToggleFavorite(article);
         };
