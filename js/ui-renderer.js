@@ -1,7 +1,7 @@
 window.Freed = window.Freed || {};
 
 window.Freed.UI = {
-  renderFeedList: function (feeds, currentFeedId, onSwitch, onEdit) {
+  renderFeedList: function (feeds, currentFeedId, onSwitch, onEdit, onStats) {
     const container = document.getElementById("feed-list-container");
     if (!container) return;
     container.innerHTML = "";
@@ -25,8 +25,6 @@ window.Freed.UI = {
         }
       }
 
-      // Fallback to currentColor allows CSS color (text color) to take over,
-      // useful for "no accent" state.
       const strokeColor = feed.color ? feed.color : "currentColor";
 
       // Choose icon based on feed type
@@ -39,20 +37,32 @@ window.Freed.UI = {
         iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="${strokeColor}" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>`;
       }
 
+      // Stats Icon (Bar Chart)
+      const statsIcon = `<div class="feed-btn-icon feed-stats-btn" title="Stats"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>`;
+
       // Gear icon for settings
-      const settingsIcon = `<div class="feed-settings-btn" title="Edit Feed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></div>`;
+      const settingsIcon = `<div class="feed-btn-icon feed-settings-btn" title="Edit Feed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></div>`;
 
       div.innerHTML = `
                 <div class="nav-item-content" style="display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden;">
                     ${iconSvg}
                     <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${feed.title}</span>
                 </div>
-                ${settingsIcon}
+                <div style="display: flex; gap: 2px;">
+                    ${statsIcon}
+                    ${settingsIcon}
+                </div>
             `;
 
       // Handle main click on the entire row
       div.onclick = (e) => {
         onSwitch(feed.id);
+      };
+
+      // Handle stats click
+      div.querySelector(".feed-stats-btn").onclick = (e) => {
+        e.stopPropagation();
+        onStats(feed);
       };
 
       // Handle edit click
@@ -69,6 +79,74 @@ window.Freed.UI = {
       if (currentFeedId === "all") allBtn.classList.add("active");
       else allBtn.classList.remove("active");
     }
+  },
+
+  renderStatsModal: function (feed) {
+    const modal = document.getElementById("stats-modal");
+    const content = document.getElementById("stats-modal-content");
+    if (!modal || !content) return;
+
+    const stats = feed.stats || {
+      totalFetched: 0,
+      read: 0,
+      discarded: 0,
+      favorited: 0,
+      wordCountRead: 0,
+      wordCountTranslated: 0,
+    };
+
+    const total = Math.max(stats.totalFetched, 1); // Avoid division by zero
+    const readPct = Math.round((stats.read / total) * 100);
+    const discardPct = Math.round((stats.discarded / total) * 100);
+    const favPct = Math.round((stats.favorited / total) * 100);
+
+    let transPct = 0;
+    if (stats.wordCountRead > 0) {
+      transPct = (
+        (stats.wordCountTranslated / stats.wordCountRead) *
+        100
+      ).toFixed(1);
+    }
+
+    const makeBar = (label, value, totalVal, color) => {
+      const pct = Math.min(100, Math.round((value / totalVal) * 100)) || 0;
+      return `
+            <div style="margin-bottom: 16px;">
+                <div style="display:flex; justify-content:space-between; font-size: 0.9rem; margin-bottom: 6px;">
+                    <span>${label}</span>
+                    <span style="font-weight:600;">${value} <span style="font-weight:400;color:var(--text-muted);font-size:0.8em">(${pct}%)</span></span>
+                </div>
+                <div style="width:100%; height:8px; background:var(--border); border-radius:4px; overflow:hidden;">
+                    <div style="width:${pct}%; height:100%; background:${color};"></div>
+                </div>
+            </div>`;
+    };
+
+    content.innerHTML = `
+            <div style="text-align:center; padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:20px;">
+                <div style="font-size:3rem; font-weight:700; color:var(--text-main);">${stats.totalFetched}</div>
+                <div style="color:var(--text-muted); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em;">Total Articles Fetched</div>
+            </div>
+
+            ${makeBar("Read", stats.read, total, "#10b981")}
+            ${makeBar("Discarded", stats.discarded, total, "#ef4444")}
+            ${makeBar("Favorited", stats.favorited, total, "#f59e0b")}
+
+            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
+                <div style="font-size: 0.9rem; margin-bottom: 6px; font-weight: 600;">Translation Density</div>
+                <div style="display: flex; align-items: baseline; gap: 8px;">
+                    <span style="font-size: 2rem; color: var(--primary);">${transPct}%</span>
+                    <span style="color: var(--text-muted); font-size: 0.85rem;">of read words translated</span>
+                </div>
+                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">
+                   ${stats.wordCountTranslated.toLocaleString()} words translated / ${stats.wordCountRead.toLocaleString()} read
+                </div>
+            </div>
+        `;
+
+    document.getElementById("stats-modal-title").textContent =
+      `${feed.title} Stats`;
+    modal.classList.add("open");
   },
 
   renderArticles: function (

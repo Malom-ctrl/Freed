@@ -108,6 +108,7 @@
       State.currentFeedId,
       switchFeed,
       Feeds.openEditFeedModal.bind(Feeds),
+      (feed) => UI.renderStatsModal(feed), // Stats callback
     );
 
     // Update header title
@@ -381,6 +382,8 @@
 
     window.closeSettingsModal = () =>
       document.getElementById("settings-modal")?.classList.remove("open");
+    window.closeStatsModal = () =>
+      document.getElementById("stats-modal")?.classList.remove("open");
 
     document.getElementById("read-modal")?.addEventListener("click", (e) => {
       if (e.target === document.getElementById("read-modal"))
@@ -396,6 +399,10 @@
         if (e.target === document.getElementById("settings-modal"))
           window.closeSettingsModal();
       });
+    document.getElementById("stats-modal")?.addEventListener("click", (e) => {
+      if (e.target === document.getElementById("stats-modal"))
+        window.closeStatsModal();
+    });
 
     document
       .getElementById("btn-new-feed")

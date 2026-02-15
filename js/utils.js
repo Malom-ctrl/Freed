@@ -7,6 +7,17 @@ window.Freed.Utils = {
     return tmp.textContent || tmp.innerText || "";
   },
 
+  countWords: function (text) {
+    if (!text) return 0;
+    // Strip HTML tags if any (though usually passed text is clean or we want divToText first)
+    const clean = text.replace(/<[^>]*>/g, " ");
+    // Split by whitespace and filter empty strings
+    return clean
+      .trim()
+      .split(/\s+/)
+      .filter((w) => w.length > 0).length;
+  },
+
   toastTimeout: null,
 
   showToast: function (msg, action) {

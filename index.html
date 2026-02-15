@@ -597,6 +597,42 @@
             </div>
         </div>
 
+        <!-- Stats Modal -->
+        <div class="modal-backdrop" id="stats-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 style="margin: 0" id="stats-modal-title">Feed Stats</h3>
+                    <button
+                        class="close-btn"
+                        onclick="window.closeStatsModal()"
+                    >
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-content" id="stats-modal-content">
+                    <!-- Injected via JS -->
+                </div>
+                <div class="modal-actions" style="justify-content: flex-end">
+                    <button
+                        class="btn btn-primary"
+                        onclick="window.closeStatsModal()"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Settings Modal -->
         <div class="modal-backdrop" id="settings-modal">
             <div class="modal">

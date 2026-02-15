@@ -2,6 +2,7 @@ window.Freed = window.Freed || {};
 
 (function () {
   const { DB_NAME, DB_VERSION, DEFAULT_FEEDS } = window.Freed.Config;
+  const { countWords, divToText } = window.Freed.Utils;
   let dbPromise = null;
 
   function openDB() {
@@ -63,6 +64,21 @@ window.Freed = window.Freed || {};
       request.onerror = (e) => reject(e);
     });
     return dbPromise;
+  }
+
+  // Helper to init stats object if missing
+  function initStats(feed) {
+    if (!feed.stats) {
+      feed.stats = {
+        totalFetched: 0,
+        read: 0,
+        discarded: 0,
+        favorited: 0,
+        wordCountRead: 0,
+        wordCountTranslated: 0,
+      };
+    }
+    return feed.stats;
   }
 
   async function getAllFeeds() {
@@ -174,14 +190,34 @@ window.Freed = window.Freed || {};
   async function saveArticles(articles) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
-      const tx = db.transaction("articles", "readwrite");
-      const store = tx.objectStore("articles");
+      const tx = db.transaction(["articles", "feeds"], "readwrite");
+      const articleStore = tx.objectStore("articles");
+      const feedStore = tx.objectStore("feeds");
+
+      // Track new articles per feed to update stats
+      const newCounts = {}; // feedId -> count
+
+      let processed = 0;
+
+      // If no articles, resolve immediately
+      if (articles.length === 0) {
+        resolve();
+        return;
+      }
 
       articles.forEach((article) => {
-        const getReq = store.get(article.guid);
+        const getReq = articleStore.get(article.guid);
 
         getReq.onsuccess = () => {
           const existing = getReq.result;
+
+          if (!existing) {
+            // Count as new
+            if (article.feedId) {
+              newCounts[article.feedId] = (newCounts[article.feedId] || 0) + 1;
+            }
+          }
+
           // Merge existing data
           const finalArticle = existing
             ? { ...existing, ...article }
@@ -203,11 +239,44 @@ window.Freed = window.Freed || {};
               finalArticle.discarded = existing.discarded;
           }
           delete finalArticle.isDateFromFeed;
-          store.put(finalArticle);
+          articleStore.put(finalArticle);
+
+          processed++;
+          checkComplete();
         };
       });
 
-      tx.oncomplete = () => resolve();
+      function checkComplete() {
+        if (processed === articles.length) {
+          // Update stats for feeds
+          const feedIds = Object.keys(newCounts);
+          if (feedIds.length === 0) {
+            resolve();
+            return;
+          }
+
+          let feedsUpdated = 0;
+          feedIds.forEach((fid) => {
+            const freq = feedStore.get(fid);
+            freq.onsuccess = () => {
+              const feed = freq.result;
+              if (feed) {
+                initStats(feed);
+                feed.stats.totalFetched += newCounts[fid];
+                feedStore.put(feed);
+              }
+              feedsUpdated++;
+              if (feedsUpdated === feedIds.length) resolve();
+            };
+            freq.onerror = () => {
+              // ignore missing feed error, just continue
+              feedsUpdated++;
+              if (feedsUpdated === feedIds.length) resolve();
+            };
+          });
+        }
+      }
+
       tx.onerror = () => reject(tx.error);
     });
   }
@@ -215,15 +284,35 @@ window.Freed = window.Freed || {};
   async function markArticleRead(guid) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
-      const tx = db.transaction("articles", "readwrite");
-      const store = tx.objectStore("articles");
-      const request = store.get(guid);
+      const tx = db.transaction(["articles", "feeds"], "readwrite");
+      const articleStore = tx.objectStore("articles");
+      const feedStore = tx.objectStore("feeds");
+      const request = articleStore.get(guid);
 
       request.onsuccess = () => {
         const article = request.result;
-        if (article) {
+        if (article && !article.read) {
           article.read = true;
-          store.put(article);
+          articleStore.put(article);
+
+          // Update Feed Stats
+          if (article.feedId) {
+            const freq = feedStore.get(article.feedId);
+            freq.onsuccess = () => {
+              const feed = freq.result;
+              if (feed) {
+                initStats(feed);
+                feed.stats.read++;
+                // Calculate word count
+                const text = article.fullContent
+                  ? divToText(article.fullContent)
+                  : article.content || article.snippet || "";
+                const wc = countWords(text);
+                feed.stats.wordCountRead += wc;
+                feedStore.put(feed);
+              }
+            };
+          }
         }
       };
       tx.oncomplete = () => resolve();
@@ -234,15 +323,31 @@ window.Freed = window.Freed || {};
   async function setFavorite(guid, isFavorite) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
-      const tx = db.transaction("articles", "readwrite");
-      const store = tx.objectStore("articles");
-      const request = store.get(guid);
+      const tx = db.transaction(["articles", "feeds"], "readwrite");
+      const articleStore = tx.objectStore("articles");
+      const feedStore = tx.objectStore("feeds");
+      const request = articleStore.get(guid);
 
       request.onsuccess = () => {
         const article = request.result;
-        if (article) {
+        if (article && article.favorite !== isFavorite) {
           article.favorite = isFavorite;
-          store.put(article);
+          articleStore.put(article);
+
+          // Update Feed Stats
+          if (article.feedId) {
+            const freq = feedStore.get(article.feedId);
+            freq.onsuccess = () => {
+              const feed = freq.result;
+              if (feed) {
+                initStats(feed);
+                if (isFavorite) feed.stats.favorited++;
+                else
+                  feed.stats.favorited = Math.max(0, feed.stats.favorited - 1);
+                feedStore.put(feed);
+              }
+            };
+          }
         }
       };
       tx.oncomplete = () => resolve();
@@ -253,15 +358,33 @@ window.Freed = window.Freed || {};
   async function setArticleDiscarded(guid, isDiscarded) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
-      const tx = db.transaction("articles", "readwrite");
-      const store = tx.objectStore("articles");
-      const request = store.get(guid);
+      const tx = db.transaction(["articles", "feeds"], "readwrite");
+      const articleStore = tx.objectStore("articles");
+      const feedStore = tx.objectStore("feeds");
+      const request = articleStore.get(guid);
 
       request.onsuccess = () => {
         const article = request.result;
-        if (article) {
+        // Only update if value actually changes
+        const currentVal = !!article.discarded;
+        if (article && currentVal !== isDiscarded) {
           article.discarded = isDiscarded;
-          store.put(article);
+          articleStore.put(article);
+
+          // Update Feed Stats
+          if (article.feedId) {
+            const freq = feedStore.get(article.feedId);
+            freq.onsuccess = () => {
+              const feed = freq.result;
+              if (feed) {
+                initStats(feed);
+                if (isDiscarded) feed.stats.discarded++;
+                else
+                  feed.stats.discarded = Math.max(0, feed.stats.discarded - 1);
+                feedStore.put(feed);
+              }
+            };
+          }
         }
       };
       tx.oncomplete = () => resolve();
@@ -272,21 +395,79 @@ window.Freed = window.Freed || {};
   async function toggleFavorite(guid) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
-      const tx = db.transaction("articles", "readwrite");
-      const store = tx.objectStore("articles");
-      const request = store.get(guid);
+      const tx = db.transaction(["articles", "feeds"], "readwrite");
+      const articleStore = tx.objectStore("articles");
+      const feedStore = tx.objectStore("feeds");
+      const request = articleStore.get(guid);
 
       request.onsuccess = () => {
         const article = request.result;
         if (article) {
-          article.favorite = !article.favorite;
-          store.put(article);
-          resolve(article.favorite);
+          const newState = !article.favorite;
+          article.favorite = newState;
+          articleStore.put(article);
+
+          if (article.feedId) {
+            const freq = feedStore.get(article.feedId);
+            freq.onsuccess = () => {
+              const feed = freq.result;
+              if (feed) {
+                initStats(feed);
+                if (newState) feed.stats.favorited++;
+                else
+                  feed.stats.favorited = Math.max(0, feed.stats.favorited - 1);
+                feedStore.put(feed);
+              }
+            };
+          }
+          resolve(newState);
         } else {
           resolve(false);
         }
       };
       request.onerror = () => reject(request.error);
+    });
+  }
+
+  async function updateTranslationStats(feedId, wordCount) {
+    if (!feedId || !wordCount) return;
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("feeds", "readwrite");
+      const store = tx.objectStore("feeds");
+      const request = store.get(feedId);
+
+      request.onsuccess = () => {
+        const feed = request.result;
+        if (feed) {
+          initStats(feed);
+          feed.stats.wordCountTranslated += wordCount;
+          store.put(feed);
+        }
+      };
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async function updateFeedReadStats(feedId, wordCountDelta) {
+    if (!feedId || !wordCountDelta) return;
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("feeds", "readwrite");
+      const store = tx.objectStore("feeds");
+      const request = store.get(feedId);
+
+      request.onsuccess = () => {
+        const feed = request.result;
+        if (feed) {
+          initStats(feed);
+          feed.stats.wordCountRead += wordCountDelta;
+          store.put(feed);
+        }
+      };
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
     });
   }
 
@@ -382,6 +563,8 @@ window.Freed = window.Freed || {};
     setFavorite,
     setArticleDiscarded,
     toggleFavorite,
+    updateTranslationStats,
+    updateFeedReadStats,
     performCleanup,
   };
 })();

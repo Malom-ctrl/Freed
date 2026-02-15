@@ -93,12 +93,29 @@ window.Freed.Reader = {
           if (currentGuid !== article.guid) return;
 
           if (fullHtml) {
+            // Calculate word count diff
+            const oldText = article.content || article.snippet || "";
+            const oldWc = Utils.countWords(oldText);
+
+            const newWc = Utils.countWords(Utils.divToText(fullHtml));
+            const diff = newWc - oldWc;
+
             article.fullContent = fullHtml;
-            DB.saveArticles([article]);
+
+            // Ensure DB updates happen before refresh
+            DB.saveArticles([article])
+              .then(() => {
+                if (diff !== 0 && article.feedId) {
+                  return DB.updateFeedReadStats(article.feedId, diff);
+                }
+              })
+              .then(() => {
+                // Update list UI to show offline indicator and refresh stats
+                if (onRefreshNeeded) onRefreshNeeded();
+              });
+
             contentEl.innerHTML = fullHtml;
             Utils.showToast("Article optimized");
-            // Update list UI to show offline indicator
-            if (onRefreshNeeded) onRefreshNeeded();
           } else {
             const loader = contentEl.querySelector(".full-content-loader");
             if (loader) {

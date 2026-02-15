@@ -302,8 +302,8 @@ body.modal-open {
     stroke: currentColor;
 }
 
-.feed-settings-btn {
-    margin-left: auto;
+.feed-btn-icon {
+    margin-left: 2px;
     padding: 4px;
     border-radius: 4px;
     color: var(--text-muted);
@@ -312,15 +312,15 @@ body.modal-open {
         opacity 0.2s,
         background 0.2s;
 }
-.nav-item:hover .feed-settings-btn,
-.feed-settings-btn:focus {
+.nav-item:hover .feed-btn-icon,
+.feed-btn-icon:focus {
     opacity: 1;
 }
-.feed-settings-btn:hover {
+.feed-btn-icon:hover {
     background: rgba(0, 0, 0, 0.1);
     color: var(--text-main);
 }
-.feed-settings-btn svg {
+.feed-btn-icon svg {
     width: 16px;
     height: 16px;
 }
@@ -1460,7 +1460,7 @@ input:focus + .slider {
         font-size: 1.05rem;
     }
 
-    .feed-settings-btn {
+    .feed-btn-icon {
         opacity: 1;
     } /* Always show settings on mobile */
 }

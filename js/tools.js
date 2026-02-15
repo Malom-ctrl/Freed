@@ -169,6 +169,24 @@ window.Freed.Tools = {
         }
 
         this.saveCurrentArticleContent();
+
+        // Update Stats
+        const guid = window.Freed.State.currentArticleGuid;
+        if (guid) {
+          const article = await window.Freed.DB.getArticle(guid);
+          if (article && article.feedId) {
+            const wordCount = window.Freed.Utils.countWords(text);
+            await window.Freed.DB.updateTranslationStats(
+              article.feedId,
+              wordCount,
+            );
+
+            // Force refresh UI to update stats in background so that when stats modal opens it is fresh
+            if (window.Freed.App && window.Freed.App.refreshUI) {
+              window.Freed.App.refreshUI();
+            }
+          }
+        }
       } else {
         throw new Error("Empty");
       }
