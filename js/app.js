@@ -411,6 +411,11 @@
       const themeInput = document.getElementById("settings-theme");
       if (themeInput)
         themeInput.value = localStorage.getItem("freed_theme") || "system";
+
+      const fontInput = document.getElementById("settings-font");
+      if (fontInput)
+        fontInput.value = localStorage.getItem("freed_font") || "system";
+
       const imagesInput = document.getElementById("settings-show-images");
       if (imagesInput) imagesInput.checked = State.showArticleImages;
 
@@ -440,6 +445,10 @@
         const theme = document.getElementById("settings-theme").value;
         localStorage.setItem("freed_theme", theme);
         Theme.apply(theme);
+
+        const font = document.getElementById("settings-font").value;
+        localStorage.setItem("freed_font", font);
+        Theme.applyFont(font);
 
         const showImages = document.getElementById(
           "settings-show-images",
