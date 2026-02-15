@@ -101,7 +101,12 @@ window.Freed.Reader = {
             if (onRefreshNeeded) onRefreshNeeded();
           } else {
             const loader = contentEl.querySelector(".full-content-loader");
-            if (loader) loader.remove();
+            if (loader) {
+              loader.innerHTML =
+                "Unable to fetch full content.<br>Showing summary only.";
+              loader.style.color = "var(--text-muted)";
+            }
+            Utils.showToast("Could not retrieve full content");
           }
         });
       }

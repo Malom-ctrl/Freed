@@ -282,9 +282,19 @@
         Config.DEFAULTS.CLEANUP_CONTENT_DAYS,
     );
 
+    let successCount = 0;
+    let failCount = 0;
+
     // Process sequentially to manage network load
     for (const feed of feeds) {
       const result = await Service.fetchAndParseFeed(feed);
+      if (result.error) {
+        failCount++;
+        console.warn(`Sync failed for ${feed.title}:`, result.error);
+        continue;
+      }
+
+      successCount++;
       if (result.articles && result.articles.length > 0) {
         if (result.parsingRule) {
           feed.parsingRule = result.parsingRule;
@@ -294,8 +304,6 @@
         await DB.saveArticles(result.articles);
 
         // Trigger Autofetch if enabled for this feed
-        // We pass the fresh list of articles we just fetched/parsed
-        // We also pass a callback to refresh UI on individual article fetch for reactivity
         Service.processAutofetch(
           feed,
           result.articles,
@@ -313,7 +321,14 @@
       }
     }
     await refreshUI();
-    Utils.showToast("Feeds updated");
+
+    if (failCount > 0) {
+      if (successCount === 0)
+        Utils.showToast("Feed sync failed. Check connection.");
+      else Utils.showToast(`Feeds updated. ${failCount} failed.`);
+    } else {
+      Utils.showToast("Feeds updated");
+    }
   }
 
   function setupEventListeners() {
