@@ -242,8 +242,6 @@ window.Freed = window.Freed || {};
         const article = request.result;
         if (article) {
           article.discarded = isDiscarded;
-          // If discarding, also mark as read to keep stats clean, optional but recommended logic
-          if (isDiscarded) article.read = true;
           store.put(article);
         }
       };

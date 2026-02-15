@@ -130,16 +130,25 @@
   }
 
   function handleDiscard(article) {
-    DB.setArticleDiscarded(article.guid, true).then(() => {
+    const newState = !article.discarded;
+    DB.setArticleDiscarded(article.guid, newState).then(() => {
       refreshUI();
-      Utils.showToast("Article discarded", {
-        label: "Undo",
-        callback: () => {
-          DB.setArticleDiscarded(article.guid, false).then(() => {
-            refreshUI();
-          });
-        },
-      });
+
+      let msg, label, callback;
+
+      if (newState) {
+        // Was not discarded, now is Discarded
+        msg = "Article discarded";
+        label = "Undo";
+        callback = () => {
+          DB.setArticleDiscarded(article.guid, false).then(() => refreshUI());
+        };
+      } else {
+        // Was discarded, now Restored
+        msg = "Article restored";
+      }
+
+      if (msg) Utils.showToast(msg, label ? { label, callback } : null);
     });
   }
 
@@ -150,12 +159,17 @@
     const filters = State.filters;
 
     return articles.filter((a) => {
-      // Exclude discarded items by default
-      if (a.discarded) return false;
+      // Status Logic
+      if (filters.status === "discarded") {
+        if (!a.discarded) return false;
+      } else {
+        // Default: Hide discarded
+        if (a.discarded) return false;
 
-      if (filters.status === "unread" && a.read) return false;
-      if (filters.status === "read" && !a.read) return false;
-      if (filters.status === "favorites" && !a.favorite) return false;
+        if (filters.status === "unread" && a.read) return false;
+        if (filters.status === "read" && !a.read) return false;
+        if (filters.status === "favorites" && !a.favorite) return false;
+      }
 
       const articleTime = new Date(a.pubDate).getTime();
       if (filters.date === "24h" && now - articleTime > oneDay) return false;

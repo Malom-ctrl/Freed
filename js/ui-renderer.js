@@ -141,8 +141,18 @@ window.Freed.UI = {
       }
 
       // Discard structures
-      const discardZone = `<div class="discard-zone" title="Discard"></div>`;
-      const discardOverlay = `<div class="discard-overlay">Discard</div>`;
+      const isDiscarded = !!article.discarded;
+      const actionLabel = isDiscarded ? "Restore" : "Discard";
+      const iconSvg = isDiscarded
+        ? `<svg class="discard-icon-cross" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>`
+        : `<svg class="discard-icon-cross" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+      const discardZone = `<div class="discard-zone" title="${actionLabel}"></div>`;
+      const discardOverlay = `
+            <div class="discard-overlay">
+                ${iconSvg}
+                ${actionLabel}
+            </div>`;
 
       card.innerHTML = `
             ${discardZone}
@@ -165,19 +175,27 @@ window.Freed.UI = {
 
       // Click Handler (Main)
       card.onclick = (e) => {
-        // Ignore clicks on the discard zone
-        if (e.target.classList.contains("discard-zone")) return;
+        // Ignore clicks on the discard zone/overlay (though propagation should stop)
+        if (
+          e.target.closest(".discard-zone") ||
+          e.target.closest(".discard-overlay")
+        )
+          return;
         onOpen(article);
       };
 
       // Desktop Discard Handler
       const zone = card.querySelector(".discard-zone");
-      if (zone) {
-        zone.onclick = (e) => {
-          e.stopPropagation();
-          onDiscard(article);
-        };
-      }
+      const overlay = card.querySelector(".discard-overlay");
+
+      const discardHandler = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        onDiscard(article);
+      };
+
+      if (zone) zone.onclick = discardHandler;
+      if (overlay) overlay.onclick = discardHandler;
 
       // Mobile Swipe Logic
       this.attachSwipeHandlers(card, () => onDiscard(article));
