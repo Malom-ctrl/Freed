@@ -133,7 +133,7 @@ window.Freed.UI = {
             ${makeBar("Favorited", stats.favorited, total, "#f59e0b")}
 
             <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
-                <div style="font-size: 0.9rem; margin-bottom: 6px; font-weight: 600;">Translation Density</div>
+                <div style="font-size: 0.9rem; margin-bottom: 6px; font-weight: 600;">Translation</div>
                 <div style="display: flex; align-items: baseline; gap: 8px;">
                     <span style="font-size: 2rem; color: var(--primary);">${transPct}%</span>
                     <span style="color: var(--text-muted); font-size: 0.85rem;">of read words translated</span>
