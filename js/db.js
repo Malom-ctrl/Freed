@@ -286,11 +286,6 @@ window.Freed = window.Freed || {};
     });
   }
 
-  async function markArticleRead(guid) {
-    // Legacy support, directs to updateReadingProgress
-    return updateReadingProgress(guid, undefined, true);
-  }
-
   async function updateReadingProgress(guid, progress, isRead) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
@@ -306,6 +301,9 @@ window.Freed = window.Freed || {};
           return;
         }
 
+        const previousRead = !!article.read;
+        const previousProgress = article.readingProgress || 0;
+
         let changed = false;
 
         // Update Progress if provided
@@ -314,36 +312,70 @@ window.Freed = window.Freed || {};
           changed = true;
         }
 
+        // If marking as read without progress, assume 100% completion
+        if (
+          isRead === true &&
+          progress === undefined &&
+          article.readingProgress < 1
+        ) {
+          article.readingProgress = 1;
+          changed = true;
+        }
+
         // Update Read Status if provided
         if (isRead !== undefined && article.read !== isRead) {
           article.read = isRead;
           changed = true;
-
-          // Update Feed Stats
-          if (article.feedId) {
-            const freq = feedStore.get(article.feedId);
-            freq.onsuccess = () => {
-              const feed = freq.result;
-              if (feed) {
-                initStats(feed);
-                if (isRead) {
-                  feed.stats.read++;
-                  const text = article.fullContent
-                    ? divToText(article.fullContent)
-                    : article.content || article.snippet || "";
-                  feed.stats.wordCountRead += countWords(text);
-                } else {
-                  feed.stats.read = Math.max(0, feed.stats.read - 1);
-                  // Optional: subtract word count? keeping simple for now
-                }
-                feedStore.put(feed);
-              }
-            };
-          }
         }
 
-        if (changed) articleStore.put(article);
-        resolve();
+        if (!changed) {
+          resolve();
+          return;
+        }
+
+        // Update Feed Stats
+        if (article.feedId) {
+          const freq = feedStore.get(article.feedId);
+          freq.onsuccess = () => {
+            const feed = freq.result;
+            if (feed) {
+              initStats(feed);
+
+              // 1. Update Word Count based on progress delta
+              const currentProgress = article.readingProgress || 0;
+              const delta = currentProgress - previousProgress;
+
+              // Only add if positive progress is made
+              if (delta > 0.001) {
+                const text = article.fullContent
+                  ? divToText(article.fullContent)
+                  : article.content || article.snippet || "";
+                const totalWords = countWords(text);
+                const wordsToAdd = Math.round(totalWords * delta);
+                feed.stats.wordCountRead =
+                  (feed.stats.wordCountRead || 0) + wordsToAdd;
+              }
+
+              // 2. Update Read Count
+              if (article.read !== previousRead) {
+                if (article.read) feed.stats.read++;
+                else feed.stats.read = Math.max(0, feed.stats.read - 1);
+              }
+
+              feedStore.put(feed);
+            }
+            articleStore.put(article);
+            resolve();
+          };
+          freq.onerror = () => {
+            // Fallback save article if feed fetch fails
+            articleStore.put(article);
+            resolve();
+          };
+        } else {
+          articleStore.put(article);
+          resolve();
+        }
       };
       req.onerror = () => reject(req.error);
     });
@@ -588,7 +620,6 @@ window.Freed = window.Freed || {};
     saveArticles,
     getArticlesByFeed,
     getArticle,
-    markArticleRead,
     updateReadingProgress,
     setFavorite,
     setArticleDiscarded,
