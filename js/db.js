@@ -231,6 +231,25 @@ window.Freed = window.Freed || {};
     });
   }
 
+  async function setFavorite(guid, isFavorite) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("articles", "readwrite");
+      const store = tx.objectStore("articles");
+      const request = store.get(guid);
+
+      request.onsuccess = () => {
+        const article = request.result;
+        if (article) {
+          article.favorite = isFavorite;
+          store.put(article);
+        }
+      };
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
   async function setArticleDiscarded(guid, isDiscarded) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
@@ -360,6 +379,7 @@ window.Freed = window.Freed || {};
     getArticlesByFeed,
     getArticle,
     markArticleRead,
+    setFavorite,
     setArticleDiscarded,
     toggleFavorite,
     performCleanup,
