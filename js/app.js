@@ -228,8 +228,13 @@
         State.filters.search
       ) {
         clearBtn.style.display = "block";
+        // Also highlight toggle button if on mobile
+        const toggle = document.getElementById("btn-toggle-filters");
+        if (toggle) toggle.classList.add("active");
       } else {
         clearBtn.style.display = "none";
+        const toggle = document.getElementById("btn-toggle-filters");
+        if (toggle) toggle.classList.remove("active");
       }
     }
   }
@@ -326,6 +331,13 @@
     document
       .querySelector('[data-id="all"]')
       ?.addEventListener("click", () => switchFeed("all"));
+
+    // Filter Toggle (Mobile)
+    document
+      .getElementById("btn-toggle-filters")
+      ?.addEventListener("click", () => {
+        document.getElementById("filter-bar")?.classList.toggle("open");
+      });
 
     window.closeModal = () => Reader.closeModal();
 

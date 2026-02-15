@@ -391,6 +391,20 @@ header {
     color: var(--text-main);
 }
 
+/* Mobile Filter Button */
+.mobile-filter-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-main);
+    padding: 4px;
+}
+.mobile-filter-btn.active {
+    color: var(--primary);
+    fill: rgba(79, 70, 229, 0.1);
+}
+
 /* Filter Bar */
 .filter-bar {
     padding: 0 24px 16px;
@@ -1375,7 +1389,7 @@ input:focus + .slider {
     }
 }
 
-/* Mobile */
+/* Mobile Layout Overrides */
 @media (max-width: 768px) {
     #sidebar {
         position: fixed;
@@ -1391,15 +1405,51 @@ input:focus + .slider {
     .mobile-menu-btn {
         display: block;
     }
+
+    .mobile-filter-btn {
+        display: block;
+    }
+
     #article-list {
-        padding: 0 16px 16px;
+        padding: 4px 16px 16px;
         grid-template-columns: 1fr;
     }
     header {
         padding: 16px;
     }
+
+    /* Mobile Filter Logic */
     .filter-bar {
-        padding: 0 16px 16px;
+        display: none;
+        padding: 16px;
+        background: var(--bg-body);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-bar.open {
+        display: flex;
+        animation: slideDown 0.2s ease-out;
+    }
+
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .search-wrapper,
+    #filter-search,
+    .filter-select,
+    .filter-tag-wrapper {
+        width: 100%;
+    }
+
+    #btn-clear-filters {
+        align-self: flex-end;
+        padding-right: 0;
     }
 
     .reader-title {
@@ -1413,11 +1463,15 @@ input:focus + .slider {
     .feed-settings-btn {
         opacity: 1;
     } /* Always show settings on mobile */
+}
 
-    #filter-search {
-        width: 120px;
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
     }
-    #filter-search:focus {
-        width: 160px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
