@@ -105,7 +105,10 @@ window.Freed.UI = {
     }
 
     articles.forEach((article) => {
-      const dateStr = new Date(article.pubDate).toLocaleDateString();
+      const dateStr = window.Freed.Utils.formatRelativeTime(article.pubDate);
+      const dateObj = new Date(article.pubDate);
+      const fullDateStr = dateObj.toLocaleString();
+
       const card = document.createElement("article");
       card.className = `card ${article.read ? "read" : ""} ${article.favorite ? "favorite" : ""}`;
 
@@ -173,7 +176,7 @@ window.Freed.UI = {
                 <div class="card-meta">
                     <span ${feedTitleStyle}>${article.feedTitle}</span>
                     <div style="display:flex; align-items:center;">
-                        <span>${dateStr}</span>
+                        <span data-tooltip="${fullDateStr}" style="cursor:help;">${dateStr}</span>
                         ${offlineIconHtml}
                         ${favIconHtml}
                     </div>

@@ -56,9 +56,13 @@ window.Freed.Reader = {
 
     if (dateEl) {
       try {
-        dateEl.textContent = new Date(article.pubDate).toLocaleDateString(
+        // Use relative time by default
+        dateEl.textContent = Utils.formatRelativeTime(article.pubDate);
+        // Add full date tooltip
+        const fullDate = new Date(article.pubDate).toLocaleDateString(
           undefined,
           {
+            weekday: "long",
             year: "numeric",
             month: "long",
             day: "numeric",
@@ -66,6 +70,8 @@ window.Freed.Reader = {
             minute: "2-digit",
           },
         );
+        dateEl.setAttribute("data-tooltip", fullDate);
+        dateEl.style.cursor = "help";
       } catch (e) {
         dateEl.textContent = article.pubDate;
       }
