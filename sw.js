@@ -1,4 +1,4 @@
-const CACHE_NAME = "freed-v34";
+const CACHE_NAME = "freed-v35";
 const ASSETS = [
   "./",
   "./index.html",
