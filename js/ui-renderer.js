@@ -71,7 +71,13 @@ window.Freed.UI = {
     }
   },
 
-  renderArticles: function (articles, onOpen, showImages = true, onDiscard) {
+  renderArticles: function (
+    articles,
+    onOpen,
+    showImages = true,
+    onDiscard,
+    onToggleFavorite,
+  ) {
     const list = document.getElementById("article-list");
     if (!list) return;
     list.innerHTML = "";
@@ -140,6 +146,12 @@ window.Freed.UI = {
         offlineIconHtml = `<svg class="offline-icon" data-tooltip="Offline Available" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px; color: var(--text-muted); opacity: 0.7;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line></svg>`;
       }
 
+      // Favorite Icon (Inline)
+      let favIconHtml = "";
+      if (article.favorite) {
+        favIconHtml = `<div class="inline-fav-icon" title="Remove from favorites" style="margin-left: 8px; color: #f59e0b; display: flex; align-items: center; cursor: pointer; z-index: 5;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>`;
+      }
+
       // Discard structures
       const isDiscarded = !!article.discarded;
       const actionLabel = isDiscarded ? "Restore" : "Discard";
@@ -157,15 +169,13 @@ window.Freed.UI = {
       card.innerHTML = `
             ${discardZone}
             ${discardOverlay}
-            <div class="card-fav-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-            </div>
             <div class="card-body">
                 <div class="card-meta">
                     <span ${feedTitleStyle}>${article.feedTitle}</span>
                     <div style="display:flex; align-items:center;">
                         <span>${dateStr}</span>
                         ${offlineIconHtml}
+                        ${favIconHtml}
                     </div>
                 </div>
                 <h3 class="card-title">${article.title}</h3>
@@ -183,6 +193,15 @@ window.Freed.UI = {
           return;
         onOpen(article);
       };
+
+      // Fav Icon Handler
+      const favBtn = card.querySelector(".inline-fav-icon");
+      if (favBtn) {
+        favBtn.onclick = (e) => {
+          e.stopPropagation();
+          if (onToggleFavorite) onToggleFavorite(article);
+        };
+      }
 
       // Desktop Discard Handler
       const zone = card.querySelector(".discard-zone");

@@ -125,6 +125,7 @@
       (article) => Reader.openArticle(article, refreshUI),
       State.showArticleImages,
       (article) => handleDiscard(article),
+      (article) => handleToggleFavorite(article),
     );
     updateFilterUI();
   }
@@ -149,6 +150,15 @@
       }
 
       if (msg) Utils.showToast(msg, label ? { label, callback } : null);
+    });
+  }
+
+  function handleToggleFavorite(article) {
+    DB.toggleFavorite(article.guid).then((newState) => {
+      refreshUI();
+      Utils.showToast(
+        newState ? "Added to Favorites" : "Removed from Favorites",
+      );
     });
   }
 
