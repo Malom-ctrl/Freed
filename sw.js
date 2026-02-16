@@ -1,4 +1,4 @@
-const CACHE_NAME = "freed-v35";
+const CACHE_NAME = "freed-v37";
 const ASSETS = [
   "./",
   "./index.html",
@@ -10,6 +10,7 @@ const ASSETS = [
   "./js/theme.js",
   "./js/ai-service.js",
   "./js/rss-service.js",
+  "./js/data-service.js",
   "./js/ui-renderer.js",
   "./js/tools.js",
   "./js/tags.js",

@@ -764,6 +764,182 @@
                         <option value="sv">🇸🇪 Swedish</option>
                     </select>
 
+                    <div
+                        style="
+                            height: 1px;
+                            background: var(--border);
+                            margin: 24px 0;
+                        "
+                    ></div>
+
+                    <h4 style="margin-top: 0; margin-bottom: 10px">
+                        Import / Export (OPML)
+                    </h4>
+
+                    <div
+                        style="
+                            background: var(--bg-body);
+                            padding: 12px;
+                            border-radius: 8px;
+                            border: 1px solid var(--border);
+                        "
+                    >
+                        <div
+                            style="
+                                margin-bottom: 12px;
+                                font-weight: 600;
+                                font-size: 0.85rem;
+                                color: var(--text-muted);
+                            "
+                        >
+                            Export Options
+                        </div>
+                        <label
+                            style="
+                                display: flex;
+                                gap: 8px;
+                                margin-bottom: 8px;
+                                font-size: 0.9rem;
+                            "
+                        >
+                            <input type="checkbox" id="export-feeds" checked />
+                            Feeds & Parsing Rules
+                        </label>
+                        <label
+                            style="
+                                display: flex;
+                                gap: 8px;
+                                margin-bottom: 8px;
+                                font-size: 0.9rem;
+                            "
+                        >
+                            <input
+                                type="checkbox"
+                                id="export-settings"
+                                checked
+                            />
+                            App Settings
+                        </label>
+                        <label
+                            style="
+                                display: flex;
+                                gap: 8px;
+                                margin-bottom: 12px;
+                                font-size: 0.9rem;
+                            "
+                        >
+                            <input
+                                type="checkbox"
+                                id="export-favorites"
+                                checked
+                            />
+                            Favorites & Saved Content
+                        </label>
+                        <button
+                            id="btn-export-opml"
+                            class="btn btn-primary"
+                            style="width: 100%; justify-content: center"
+                        >
+                            Download Backup (OPML)
+                        </button>
+
+                        <div
+                            style="
+                                height: 1px;
+                                background: var(--border);
+                                margin: 16px 0;
+                            "
+                        ></div>
+
+                        <div
+                            style="
+                                margin-bottom: 12px;
+                                font-weight: 600;
+                                font-size: 0.85rem;
+                                color: var(--text-muted);
+                            "
+                        >
+                            Import Options
+                        </div>
+                        <label
+                            style="
+                                display: flex;
+                                gap: 8px;
+                                margin-bottom: 8px;
+                                font-size: 0.9rem;
+                            "
+                        >
+                            <input type="checkbox" id="import-feeds" checked />
+                            Feeds & Parsing Rules
+                        </label>
+                        <label
+                            style="
+                                display: flex;
+                                gap: 8px;
+                                margin-bottom: 8px;
+                                font-size: 0.9rem;
+                            "
+                        >
+                            <input
+                                type="checkbox"
+                                id="import-settings"
+                                checked
+                            />
+                            App Settings
+                        </label>
+                        <label
+                            style="
+                                display: flex;
+                                gap: 8px;
+                                margin-bottom: 8px;
+                                font-size: 0.9rem;
+                            "
+                        >
+                            <input
+                                type="checkbox"
+                                id="import-favorites"
+                                checked
+                            />
+                            Favorites & Saved Content
+                        </label>
+                        <label
+                            style="
+                                display: flex;
+                                gap: 8px;
+                                margin-bottom: 12px;
+                                font-size: 0.9rem;
+                            "
+                        >
+                            <input type="checkbox" id="import-overwrite" />
+                            Overwrite existing items
+                        </label>
+                        <input
+                            type="file"
+                            id="file-input-import"
+                            style="display: none"
+                            accept=".opml,.xml"
+                        />
+                        <button
+                            id="btn-import-opml"
+                            class="btn btn-outline"
+                            style="
+                                width: 100%;
+                                justify-content: center;
+                                background: var(--bg-card);
+                            "
+                        >
+                            Import Backup (OPML)
+                        </button>
+                    </div>
+
+                    <div
+                        style="
+                            height: 1px;
+                            background: var(--border);
+                            margin: 24px 0;
+                        "
+                    ></div>
+
                     <h4 style="margin-bottom: 10px">Gemini API Key</h4>
                     <p
                         style="
@@ -789,9 +965,7 @@
                         >
                     </p>
 
-                    <h4 style="margin-bottom: 10px">
-                        Storage & Data Retention
-                    </h4>
+                    <h4 style="margin-bottom: 10px">Data Retention</h4>
                     <p
                         style="
                             margin-top: 0;
@@ -872,6 +1046,7 @@
         <script src="./js/theme.js"></script>
         <script src="./js/ai-service.js"></script>
         <script src="./js/rss-service.js"></script>
+        <script src="./js/data-service.js"></script>
         <script src="./js/ui-renderer.js"></script>
         <script src="./js/tools.js"></script>
         <script src="./js/tags.js"></script>

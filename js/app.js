@@ -12,6 +12,7 @@
     Tags,
     Reader,
     Feeds,
+    Data,
   } = window.Freed;
 
   // --- Initialization ---
@@ -513,6 +514,73 @@
         window.closeSettingsModal();
         refreshUI();
       });
+
+    // --- Export / Import Listeners ---
+    document
+      .getElementById("btn-export-opml")
+      ?.addEventListener("click", async () => {
+        const options = {
+          includeFeeds: document.getElementById("export-feeds").checked,
+          includeSettings: document.getElementById("export-settings").checked,
+          includeFavorites: document.getElementById("export-favorites").checked,
+        };
+
+        const xml = await Data.generateOPML(options);
+        const blob = new Blob([xml], { type: "text/xml" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `freed_export_${new Date().toISOString().slice(0, 10)}.opml`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        Utils.showToast("Export generated");
+      });
+
+    document
+      .getElementById("btn-import-opml")
+      ?.addEventListener("click", () => {
+        document.getElementById("file-input-import").click();
+      });
+
+    document
+      .getElementById("file-input-import")
+      ?.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const options = {
+          includeFeeds: document.getElementById("import-feeds").checked,
+          includeSettings: document.getElementById("import-settings").checked,
+          includeFavorites: document.getElementById("import-favorites").checked,
+          overwrite: document.getElementById("import-overwrite").checked,
+        };
+
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          const xml = e.target.result;
+          try {
+            const stats = await Data.processImport(xml, options);
+            let msg = `Imported: ${stats.feeds} feeds`;
+            if (stats.favorites > 0) msg += `, ${stats.favorites} items`;
+            if (stats.settings) msg += `, settings`;
+            Utils.showToast(msg);
+
+            // Reset input
+            document.getElementById("file-input-import").value = "";
+
+            // Reload App
+            setTimeout(() => window.location.reload(), 1500);
+          } catch (err) {
+            console.error(err);
+            Utils.showToast("Import failed: " + err.message);
+          }
+        };
+        reader.readAsText(file);
+      });
+
+    // --------------------------------
 
     document.getElementById("filter-search")?.addEventListener("input", (e) => {
       State.filters.search = e.target.value;

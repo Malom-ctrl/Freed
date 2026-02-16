@@ -559,6 +559,30 @@ window.Freed = window.Freed || {};
     });
   }
 
+  async function getExportableArticles() {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("articles", "readonly");
+      const store = tx.objectStore("articles");
+      const request = store.openCursor();
+      const results = [];
+
+      request.onsuccess = (e) => {
+        const cursor = e.target.result;
+        if (cursor) {
+          const article = cursor.value;
+          if (article.favorite) {
+            results.push(article);
+          }
+          cursor.continue();
+        } else {
+          resolve(results);
+        }
+      };
+      request.onerror = () => reject(request.error);
+    });
+  }
+
   async function getArticle(guid) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
@@ -619,6 +643,7 @@ window.Freed = window.Freed || {};
     cleanupOrphanedTags,
     saveArticles,
     getArticlesByFeed,
+    getExportableArticles,
     getArticle,
     updateReadingProgress,
     setFavorite,
