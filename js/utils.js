@@ -154,4 +154,81 @@ window.Freed.Utils = {
       }
     };
   },
+
+  getFaviconUrl: function (domain) {
+    return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+  },
+
+  fetchImageAsBase64: async function (url) {
+    const proxy = this.proxifyUrl(url);
+    try {
+      const res = await fetch(proxy);
+      if (!res.ok) throw new Error("Fetch failed");
+      const blob = await res.blob();
+      // Check if valid image content type if possible, or just try to read
+      if (blob.size === 0) throw new Error("Empty image");
+
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (reader.result === "data:")
+            resolve(null); // Failed read
+          else resolve(reader.result);
+        };
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      return null;
+    }
+  },
+
+  getDominantColor: function (base64) {
+    return new Promise((resolve) => {
+      if (!base64) return resolve(null);
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        try {
+          const canvas = document.createElement("canvas");
+          // Downscale to 1x1 to get average color roughly
+          canvas.width = 1;
+          canvas.height = 1;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, 1, 1);
+          const p = ctx.getImageData(0, 0, 1, 1).data;
+
+          // Simple RGB to Hex
+          const hex =
+            "#" +
+            ((1 << 24) + (p[0] << 16) + (p[1] << 8) + p[2])
+              .toString(16)
+              .slice(1);
+          resolve(hex);
+        } catch (e) {
+          console.warn("Color extraction failed", e);
+          resolve(null);
+        }
+      };
+      img.onerror = () => resolve(null);
+      img.src = base64;
+    });
+  },
+
+  fetchFaviconAndColor: async function (url) {
+    try {
+      const domain = new URL(url).hostname;
+      const iconUrl = this.getFaviconUrl(domain);
+      const base64 = await this.fetchImageAsBase64(iconUrl);
+
+      if (!base64) return null;
+
+      // Attempt to check if it's a valid image by loading it
+      const color = await this.getDominantColor(base64);
+      // If color extraction works, the image is likely valid
+      return { iconData: base64, color: color };
+    } catch (e) {
+      return null;
+    }
+  },
 };

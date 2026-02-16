@@ -2,6 +2,9 @@ window.Freed = window.Freed || {};
 
 window.Freed.Feeds = {
   isEditing: false,
+  tempIconData: null,
+  tempIconColor: null,
+  _inputDebounce: null,
 
   // Factory method for creating a consistent Feed object
   createFeedObject: function (data) {
@@ -16,6 +19,7 @@ window.Freed.Feeds = {
       parsingRule: data.parsingRule || null,
       tags: Array.isArray(data.tags) ? data.tags : [],
       autofetch: !!data.autofetch,
+      iconData: data.iconData || null, // Base64 icon string
       // Default stats initialization
       stats: data.stats || {
         totalFetched: 0,
@@ -31,15 +35,24 @@ window.Freed.Feeds = {
   openAddFeedModal: function () {
     const { Tags } = window.Freed;
     this.isEditing = false;
+    this._resetTempIconState();
+
     const modal = document.getElementById("feed-modal");
     document.getElementById("feed-modal-title").textContent = "Add New Feed";
 
     document.getElementById("feed-id-input").value = "";
-    document.getElementById("feed-url-input").value = "";
-    document.getElementById("feed-url-input").disabled = false;
+    const urlInput = document.getElementById("feed-url-input");
+    urlInput.value = "";
+    urlInput.disabled = false;
+
     document.getElementById("feed-name-input").value = "";
-    document.getElementById("feed-autofetch-input").checked = false; // Default false
+    document.getElementById("feed-autofetch-input").checked = false;
     document.getElementById("btn-delete-feed").style.display = "none";
+
+    const iconToggle = document.getElementById("feed-use-icon-input");
+    iconToggle.checked = false;
+    iconToggle.disabled = true; // Disabled until URL processed
+    this._updateIconPreview(false);
 
     const actionBtns = document.getElementById("feed-modal-action-buttons");
     if (actionBtns) actionBtns.style.display = "flex";
@@ -47,12 +60,17 @@ window.Freed.Feeds = {
     Tags.currentTags = [];
     Tags.renderTagEditor();
     Tags.renderColorPicker("color-picker-container", null);
+
+    this._setupUrlListener();
     window.Freed.UI.toggleModal("feed-modal", true);
   },
 
   openEditFeedModal: async function (feed) {
     const { Tags, DB, Utils } = window.Freed;
     this.isEditing = true;
+    this._resetTempIconState();
+    this.tempIconData = feed.iconData || null;
+
     const modal = document.getElementById("feed-modal");
     document.getElementById("feed-modal-title").textContent = "Edit Feed";
 
@@ -61,6 +79,20 @@ window.Freed.Feeds = {
     document.getElementById("feed-url-input").disabled = true;
     document.getElementById("feed-name-input").value = feed.title;
     document.getElementById("feed-autofetch-input").checked = !!feed.autofetch;
+
+    const iconToggle = document.getElementById("feed-use-icon-input");
+    iconToggle.checked = !!feed.iconData;
+    iconToggle.disabled = false; // Enabled for editing if data exists or we fetch it
+
+    if (feed.iconData) {
+      const preview = document.getElementById("feed-icon-preview");
+      preview.src = feed.iconData;
+      preview.style.display = "block";
+      // We assume if iconData is present, color logic is already handled or handled on save
+    } else {
+      // If editing and no icon stored, try to init preview based on URL
+      this._processUrlForIcon(feed.url);
+    }
 
     const deleteBtn = document.getElementById("btn-delete-feed");
     deleteBtn.style.display = "block";
@@ -83,13 +115,91 @@ window.Freed.Feeds = {
 
     Tags.renderTagEditor();
     Tags.renderColorPicker("color-picker-container", feed.color);
+
+    this._setupUrlListener();
     window.Freed.UI.toggleModal("feed-modal", true);
+  },
+
+  _resetTempIconState: function () {
+    this.tempIconData = null;
+    this.tempIconColor = null;
+    const preview = document.getElementById("feed-icon-preview");
+    const checkbox = document.getElementById("feed-use-icon-input");
+    if (preview) {
+      preview.src = "";
+      preview.style.display = "none";
+    }
+    if (checkbox) {
+      checkbox.disabled = true;
+    }
+  },
+
+  _setupUrlListener: function () {
+    const urlInput = document.getElementById("feed-url-input");
+    const iconToggle = document.getElementById("feed-use-icon-input");
+    const { Tags } = window.Freed;
+
+    // Debounce URL input
+    urlInput.oninput = (e) => {
+      if (this._inputDebounce) clearTimeout(this._inputDebounce);
+      this._inputDebounce = setTimeout(() => {
+        this._processUrlForIcon(e.target.value);
+      }, 500);
+    };
+
+    // Handle Toggle Change
+    iconToggle.onchange = (e) => {
+      this._updateIconPreview(true); // Ensure visibility state is correct
+
+      // Logic: If disabling icon, and current color IS the icon color, reset to null
+      if (
+        !e.target.checked &&
+        this.tempIconColor &&
+        Tags.selectedColor === this.tempIconColor // TODO: doesn't work
+      ) {
+        Tags.selectedColor = null;
+        Tags.renderColorPicker("color-picker-container", null);
+      }
+    };
+  },
+
+  _updateIconPreview: function (forceShow) {
+    const preview = document.getElementById("feed-icon-preview");
+    // We show the preview if we have data, regardless of toggle, unless data is missing
+    if (this.tempIconData) {
+      preview.src = this.tempIconData;
+      preview.style.display = "block";
+    } else {
+      preview.style.display = "none";
+    }
+  },
+
+  _processUrlForIcon: async function (url) {
+    if (!url) return;
+    const checkbox = document.getElementById("feed-use-icon-input");
+
+    const result = await window.Freed.Utils.fetchFaviconAndColor(url);
+
+    if (result) {
+      this.tempIconData = result.iconData;
+      this.tempIconColor = result.color;
+      checkbox.disabled = false;
+      this._updateIconPreview(true);
+    } else {
+      this.tempIconData = null;
+      this.tempIconColor = null;
+      checkbox.disabled = true;
+      checkbox.checked = false;
+      this._updateIconPreview(false);
+    }
   },
 
   // --- Helpers ---
 
   _getModalValues: function () {
     const { Tags } = window.Freed;
+    const useIcon = document.getElementById("feed-use-icon-input").checked;
+
     return {
       id: document.getElementById("feed-id-input").value,
       url: document.getElementById("feed-url-input").value.trim(),
@@ -97,6 +207,7 @@ window.Freed.Feeds = {
       autofetch: document.getElementById("feed-autofetch-input").checked,
       color: Tags.selectedColor,
       tags: Tags.currentTags,
+      useIcon: useIcon,
     };
   },
 
@@ -126,8 +237,8 @@ window.Freed.Feeds = {
   },
 
   // Core Logic extracted for re-use
-  _createFeed: async function (url, title, color, tags, autofetch) {
-    const { DB, Service } = window.Freed;
+  _createFeed: async function (url, title, color, tags, autofetch, iconData) {
+    const { DB, Service, Utils } = window.Freed;
 
     // Ensure tags exist in DB
     await this._saveTags(tags);
@@ -145,16 +256,18 @@ window.Freed.Feeds = {
       throw new Error("No articles found");
 
     const finalTitle = title || result.articles[0].feedTitle || "New Feed";
+    const finalColor = color || Utils.getRandomFromPalette();
 
     // Use the shared factory method
     const newFeed = this.createFeedObject({
       url: url,
       title: finalTitle,
-      color: color,
+      color: finalColor,
       tags: tagNames,
       autofetch: autofetch,
       type: result.type,
       parsingRule: result.parsingRule,
+      iconData: iconData,
     });
 
     await DB.saveFeed(newFeed);
@@ -174,6 +287,15 @@ window.Freed.Feeds = {
   addFeedDirectly: async function (feedData, onSuccess) {
     const { Utils, DB } = window.Freed;
     try {
+      // Fetch Icon Data for Discover feed (Default enabled)
+      let iconData = null;
+      let iconColor = null;
+      const iconResult = await Utils.fetchFaviconAndColor(feedData.url);
+      if (iconResult) {
+        iconData = iconResult.iconData;
+        iconColor = iconResult.color;
+      }
+
       // Check if tags have colors, if not assign random from palette
       const tagsWithColors = feedData.tags.map((tName) => ({
         name: tName,
@@ -188,12 +310,17 @@ window.Freed.Feeds = {
         if (tagMap.has(t.name)) t.color = tagMap.get(t.name);
       });
 
+      // Use accent color from discover data, fallback to icon color, then random
+      const finalColor =
+        feedData.accentColor || iconColor || Utils.getRandomFromPalette();
+
       const newFeed = await this._createFeed(
         feedData.url,
         feedData.title,
-        feedData.accentColor,
+        finalColor,
         tagsWithColors,
-        false, // Default autofetch to false for discover items for now
+        false, // Default autofetch to false for discover items
+        iconData, // Pass icon data
       );
 
       Utils.showToast(`Added ${newFeed.title}`);
@@ -271,10 +398,19 @@ window.Freed.Feeds = {
           feed.title = values.name;
           feedChanged = true;
         }
-        if (feed.color !== values.color) {
-          feed.color = values.color;
+
+        // Color Logic: Use picker, else auto-detect if icon used, else keep existing
+        let finalColor = values.color;
+        if (values.useIcon && !finalColor && this.tempIconColor) {
+          finalColor = this.tempIconColor;
+        }
+
+        // Update if color changed (including setting to null/unsetting)
+        if (feed.color !== finalColor) {
+          feed.color = finalColor;
           feedChanged = true;
         }
+
         if (JSON.stringify(feed.tags) !== JSON.stringify(tagNames)) {
           feed.tags = tagNames;
           feedChanged = true;
@@ -284,6 +420,15 @@ window.Freed.Feeds = {
           feed.autofetch = values.autofetch;
           feedChanged = true;
           if (values.autofetch) autofetchTriggered = true;
+        }
+
+        // Icon logic
+        const newIconData = values.useIcon
+          ? this.tempIconData || feed.iconData
+          : null;
+        if (feed.iconData !== newIconData) {
+          feed.iconData = newIconData;
+          feedChanged = true;
         }
 
         if (feedChanged || tagsColorChanged) {
@@ -319,12 +464,23 @@ window.Freed.Feeds = {
     btn.textContent = "Saving...";
 
     try {
+      // Determine Color
+      let finalColor = values.color;
+      if (values.useIcon && !finalColor && this.tempIconColor) {
+        finalColor = this.tempIconColor;
+      }
+
+      // Determine Icon Data
+      // If toggle is ON, use the cached tempIconData.
+      const finalIconData = values.useIcon ? this.tempIconData : null;
+
       const newFeed = await this._createFeed(
         values.url,
         values.name,
-        values.color,
+        finalColor,
         values.tags,
         values.autofetch,
+        finalIconData,
       );
 
       Utils.showToast(`Added ${newFeed.title}`);

@@ -29,6 +29,9 @@ window.Freed.Data = {
         // Custom Attributes for Freed Re-import
         if (feed.color) line += ` data-freed-color="${esc(feed.color)}"`;
         if (feed.autofetch) line += ` data-freed-autofetch="true"`;
+        // If feed has icon data, we mark it to try fetching again on import
+        if (feed.iconData) line += ` data-freed-use-icon="true"`;
+
         if (feed.tags && feed.tags.length)
           line += ` category="${esc(feed.tags.join(","))}"`;
 
@@ -181,9 +184,10 @@ window.Freed.Data = {
           node.getAttribute("text") ||
           node.getAttribute("title") ||
           "Imported Feed";
-        const color =
+        let color =
           node.getAttribute("data-freed-color") || Utils.getRandomFromPalette();
         const autofetch = node.getAttribute("data-freed-autofetch") === "true";
+        const useIcon = node.getAttribute("data-freed-use-icon") === "true";
         const category = node.getAttribute("category");
         const ruleAttr = node.getAttribute("data-freed-rule");
 
@@ -212,6 +216,18 @@ window.Freed.Data = {
           }
         }
 
+        // Handle Icon Fetching
+        let iconData = null;
+        if (useIcon) {
+          const res = await Utils.fetchFaviconAndColor(url);
+          if (res) {
+            iconData = res.iconData;
+            if (!node.getAttribute("data-freed-color")) {
+              color = res.color;
+            }
+          }
+        }
+
         const existing = existingMap.get(url);
 
         // If it exists and we aren't overwriting, skip.
@@ -227,6 +243,7 @@ window.Freed.Data = {
           tags,
           type,
           parsingRule,
+          iconData,
         });
 
         await DB.saveFeed(feedObj);

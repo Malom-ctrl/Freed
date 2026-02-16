@@ -107,9 +107,12 @@ window.Freed.UI = {
 
       const strokeColor = feed.color ? feed.color : "currentColor";
 
-      // Choose icon based on feed type
+      // Choose icon based on feed type or use cached iconData
       let iconSvg;
-      if (feed.type === "web") {
+
+      if (feed.iconData) {
+        iconSvg = `<img src="${feed.iconData}" style="width:20px; height:20px; border-radius:2px; object-fit:contain;">`;
+      } else if (feed.type === "web") {
         // Globe icon
         iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="${strokeColor}" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
       } else {
