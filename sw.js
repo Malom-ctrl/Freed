@@ -1,4 +1,4 @@
-const CACHE_NAME = "freed-v37";
+const CACHE_NAME = "freed-v38";
 const ASSETS = [
   "./",
   "./index.html",
@@ -17,6 +17,7 @@ const ASSETS = [
   "./js/reader.js",
   "./js/feeds.js",
   "./js/app.js",
+  "./js/discover-data.js",
   "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
 ];
 

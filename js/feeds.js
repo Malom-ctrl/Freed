@@ -100,7 +100,121 @@ window.Freed.Feeds = {
     }
   },
 
+  // Core Logic extracted for re-use
+  _createFeed: async function (url, title, color, tags, autofetch) {
+    const { DB, Service, Utils } = window.Freed;
+
+    // Ensure tags exist in DB
+    await this._saveTags(tags);
+    const tagNames = tags.map((t) => t.name);
+
+    const tempId = "temp-" + Date.now();
+    const result = await Service.fetchAndParseFeed({
+      id: tempId,
+      url: url,
+      title: "Temp",
+    });
+
+    if (result.error) throw new Error(result.error);
+    if (!result.articles || result.articles.length === 0)
+      throw new Error("No articles found");
+
+    const finalTitle = title || result.articles[0].feedTitle || "New Feed";
+
+    const newFeed = {
+      id: Date.now().toString() + Math.floor(Math.random() * 1000),
+      url: url,
+      title: finalTitle,
+      color: color || null,
+      type: result.type || "rss",
+      parsingRule: result.parsingRule,
+      tags: tagNames,
+      autofetch: !!autofetch,
+    };
+
+    await DB.saveFeed(newFeed);
+    await DB.saveArticles(
+      result.articles.map((a) => ({
+        ...a,
+        feedId: newFeed.id,
+        feedTitle: finalTitle,
+      })),
+    );
+
+    return newFeed;
+  },
+
   // --- Actions ---
+
+  addFeedDirectly: async function (feedData, onSuccess) {
+    const { Utils, DB } = window.Freed;
+    try {
+      // Check if tags have colors, if not assign random from palette
+      const tagsWithColors = feedData.tags.map((tName) => ({
+        name: tName,
+        color: Utils.getRandomFromPalette(),
+      }));
+
+      // For existing tags in DB, we prefer their existing color
+      const existingTags = await DB.getAllTags();
+      const tagMap = new Map(existingTags.map((t) => [t.name, t.color]));
+
+      tagsWithColors.forEach((t) => {
+        if (tagMap.has(t.name)) t.color = tagMap.get(t.name);
+      });
+
+      const newFeed = await this._createFeed(
+        feedData.url,
+        feedData.title,
+        feedData.accentColor,
+        tagsWithColors,
+        false, // Default autofetch to false for discover items for now
+      );
+
+      Utils.showToast(`Added ${newFeed.title}`);
+      if (onSuccess) onSuccess(newFeed);
+
+      // Cleanup & Trigger
+      await DB.cleanupOrphanedTags();
+      if (newFeed.autofetch) this._triggerAutofetch(newFeed);
+      return true;
+    } catch (e) {
+      console.error(e);
+      Utils.showToast(`Error adding ${feedData.title}: ${e.message}`);
+      return false;
+    }
+  },
+
+  addDiscoverPack: async function (pack, allDiscoverFeeds, onComplete) {
+    const { Utils, DB } = window.Freed;
+    const feedsToAdd = pack.feeds
+      .map((fid) => allDiscoverFeeds.find((f) => f.id === fid))
+      .filter(Boolean);
+
+    if (feedsToAdd.length === 0) return;
+
+    Utils.showToast(`Adding ${feedsToAdd.length} feeds...`);
+
+    // Get existing to avoid duplicates
+    const existingFeeds = await DB.getAllFeeds();
+    const existingUrls = new Set(existingFeeds.map((f) => f.url));
+
+    let addedCount = 0;
+    for (const feedData of feedsToAdd) {
+      if (existingUrls.has(feedData.url)) continue;
+
+      await this.addFeedDirectly(feedData);
+      addedCount++;
+    }
+
+    if (addedCount > 0) {
+      Utils.showToast(`Pack added (${addedCount} new feeds)`);
+    } else {
+      Utils.showToast(`All feeds in pack already exist`);
+    }
+
+    if (onComplete) onComplete();
+  },
 
   saveCurrentEdit: async function () {
     const { DB, Utils } = window.Freed;
@@ -180,46 +294,15 @@ window.Freed.Feeds = {
     btn.textContent = "Saving...";
 
     try {
-      await this._saveTags(values.tags);
-      const tagNames = values.tags.map((t) => t.name);
-
-      // Create New Feed
-      const tempId = "temp-" + Date.now();
-      const result = await Service.fetchAndParseFeed({
-        id: tempId,
-        url: values.url,
-        title: "Temp",
-      });
-
-      if (result.error) throw new Error(result.error);
-
-      if (!result.articles || result.articles.length === 0)
-        throw new Error("No articles found");
-
-      const finalTitle =
-        values.name || result.articles[0].feedTitle || "New Feed";
-
-      const newFeed = {
-        id: Date.now().toString(),
-        url: values.url,
-        title: finalTitle,
-        color: values.color,
-        type: result.type || "rss",
-        parsingRule: result.parsingRule,
-        tags: tagNames,
-        autofetch: values.autofetch,
-      };
-
-      await DB.saveFeed(newFeed);
-      await DB.saveArticles(
-        result.articles.map((a) => ({
-          ...a,
-          feedId: newFeed.id,
-          feedTitle: finalTitle,
-        })),
+      const newFeed = await this._createFeed(
+        values.url,
+        values.name,
+        values.color,
+        values.tags,
+        values.autofetch,
       );
 
-      Utils.showToast(`Added ${finalTitle}`);
+      Utils.showToast(`Added ${newFeed.title}`);
 
       if (onSuccessCallback) onSuccessCallback(newFeed.id, true);
 

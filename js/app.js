@@ -13,6 +13,7 @@
     Reader,
     Feeds,
     Data,
+    DiscoverData,
   } = window.Freed;
 
   // --- Initialization ---
@@ -53,11 +54,20 @@
       console.error("Cleanup failed", e),
     );
 
+    // Initial Routing Logic
+    const allFeeds = await DB.getAllFeeds();
+    if (allFeeds.length === 0) {
+      // New user experience
+      State.currentFeedId = "discover";
+    }
+
     // Initial Render
     await refreshUI();
 
     // Background Network Sync
-    syncFeeds();
+    if (allFeeds.length > 0) {
+      syncFeeds();
+    }
   }
 
   function registerSW() {
@@ -91,19 +101,7 @@
       feedMap[f.id] = { ...f, tags: resolvedTags };
     });
 
-    let articles = await DB.getArticlesByFeed(State.currentFeedId);
-
-    // Enrich articles
-    let enrichedArticles = articles.map((a) => ({
-      ...a,
-      feedColor: feedMap[a.feedId]?.color,
-      feedTitle: feedMap[a.feedId]?.title || a.feedTitle,
-      feedTags: feedMap[a.feedId]?.tags || [],
-    }));
-
-    // Apply Filters
-    enrichedArticles = applyFilters(enrichedArticles);
-
+    // 1. Render Feed Sidebar
     UI.renderFeedList(
       feeds,
       State.currentFeedId,
@@ -112,24 +110,70 @@
       (feed) => UI.renderStatsModal(feed), // Stats callback
     );
 
-    // Update header title
-    const titleEl = document.getElementById("page-title");
-    if (titleEl) {
-      if (State.currentFeedId === "all") titleEl.textContent = "All Articles";
-      else {
-        const f = feeds.find((x) => x.id === State.currentFeedId);
-        if (f) titleEl.textContent = f.title;
-      }
-    }
+    // 2. Render Main Content (Discover vs Articles)
+    const mainTitleEl = document.getElementById("page-title");
+    const filterBar = document.getElementById("filter-bar");
+    const filterToggleBtn = document.getElementById("btn-toggle-filters");
 
-    UI.renderArticles(
-      enrichedArticles,
-      (article) => Reader.openArticle(article, refreshUI),
-      State.showArticleImages,
-      (article) => handleDiscard(article),
-      (article) => handleToggleFavorite(article),
-    );
-    updateFilterUI();
+    if (State.currentFeedId === "discover") {
+      // Discover View
+      if (mainTitleEl) mainTitleEl.textContent = "Discover";
+
+      // Hide Standard Filter UI
+      if (filterBar) filterBar.style.display = "none";
+      if (filterToggleBtn) filterToggleBtn.style.display = "none";
+
+      UI.renderDiscoverView(
+        DiscoverData,
+        feeds,
+        (feed) => Feeds.addFeedDirectly(feed, () => refreshUI()),
+        (pack) =>
+          Feeds.addDiscoverPack(pack, DiscoverData.feeds, () => refreshUI()),
+      );
+    } else {
+      // Standard View
+      if (filterBar) {
+        // Restore filter bar style (flex/none handled by class/inline override)
+        // We reset explicit display but keep mobile logic intact
+        // Actually mobile logic toggles class 'open' on filter bar.
+        // We just need to make sure we don't force it hidden.
+        filterBar.style.display = "";
+      }
+      if (filterToggleBtn) filterToggleBtn.style.display = "";
+
+      let articles = await DB.getArticlesByFeed(State.currentFeedId);
+
+      // Enrich articles
+      let enrichedArticles = articles.map((a) => ({
+        ...a,
+        feedColor: feedMap[a.feedId]?.color,
+        feedTitle: feedMap[a.feedId]?.title || a.feedTitle,
+        feedTags: feedMap[a.feedId]?.tags || [],
+      }));
+
+      // Apply Filters
+      enrichedArticles = applyFilters(enrichedArticles);
+
+      // Update header title
+      if (mainTitleEl) {
+        if (State.currentFeedId === "all")
+          mainTitleEl.textContent = "All Articles";
+        else {
+          const f = feeds.find((x) => x.id === State.currentFeedId);
+          if (f) mainTitleEl.textContent = f.title;
+        }
+      }
+
+      UI.renderArticles(
+        enrichedArticles,
+        (article) => Reader.openArticle(article, refreshUI),
+        State.showArticleImages,
+        (article) => handleDiscard(article),
+        (article) => handleToggleFavorite(article),
+      );
+
+      updateFilterUI();
+    }
   }
 
   function handleDiscard(article) {
@@ -248,6 +292,7 @@
 
   async function renderFilterTags() {
     const container = document.getElementById("filter-active-tags");
+    if (!container) return;
     container.innerHTML = "";
 
     const allTags = await DB.getAllTags();
@@ -353,6 +398,9 @@
     document
       .querySelector('[data-id="all"]')
       ?.addEventListener("click", () => switchFeed("all"));
+    document
+      .querySelector('[data-id="discover"]')
+      ?.addEventListener("click", () => switchFeed("discover"));
 
     // Filter Toggle (Mobile)
     document

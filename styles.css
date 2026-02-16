@@ -548,6 +548,23 @@ header {
     overflow-x: hidden; /* Prevent horizontal scroll from swipes */
 }
 
+/* Discover View override for #article-list */
+#article-list.discover-view {
+    display: block; /* Override grid */
+    padding: 0;
+}
+
+/* Fix filter bar in discover view */
+.discover-filter-bar {
+    padding: 24px 24px 0;
+    margin: 0;
+    border: none;
+    position: sticky;
+    top: 0;
+    background: var(--bg-body);
+    z-index: 10;
+}
+
 /* Article Card */
 .card {
     background: var(--bg-card);
@@ -1389,6 +1406,229 @@ input:focus + .slider {
     }
 }
 
+/* --- DISCOVER VIEW STYLES --- */
+.discover-container {
+    padding: 24px;
+    max-width: 100%;
+}
+
+.discover-section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 24px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Packs Grid */
+.pack-grid {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 16px;
+    padding: 12px 4px 16px 4px;
+    scroll-snap-type: x mandatory;
+    margin-bottom: 24px;
+    align-items: stretch;
+}
+
+.pack-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.pack-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+    min-width: 280px;
+    width: 280px;
+    scroll-snap-align: start;
+}
+
+.pack-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
+}
+
+.pack-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    color: var(--text-main);
+}
+
+.pack-description {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+/* Pack Feed Compact List */
+.pack-feed-preview-text {
+    font-size: 0.8rem;
+    color: var(--text-main);
+    margin-bottom: 16px;
+    margin-top: auto;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.pack-card .btn.added {
+    background-color: var(--bg-body);
+    color: var(--text-muted);
+    border-color: var(--border);
+    opacity: 0.6;
+}
+.pack-card .btn.added:hover {
+    background-color: var(--bg-body);
+    color: var(--text-muted);
+    border-color: var(--border);
+    box-shadow: none;
+    transform: none;
+}
+
+/* Discover Tags/Categories (New Expandable) */
+.discover-tags-wrapper {
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.discover-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    justify-content: center;
+}
+
+.discover-tags-container.collapsed {
+    max-height: 84px; /* Roughly 2 rows including gaps and padding */
+}
+
+.discover-tag-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+
+.discover-tag-pill:hover,
+.discover-tag-pill.active {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: rgba(79, 70, 229, 0.05);
+}
+
+/* Directory List */
+.feed-directory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.feed-directory-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s;
+}
+
+.feed-directory-card:hover {
+    box-shadow: var(--shadow-sm);
+    border-color: var(--border);
+}
+
+.feed-icon-large {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    background: #f3f4f6;
+    object-fit: contain;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+}
+
+.feed-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.feed-title {
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.feed-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+.feed-add-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--primary);
+    background: transparent;
+    color: var(--primary);
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.feed-add-btn:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.feed-add-btn.added {
+    border-color: var(--border);
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.05);
+    cursor: default;
+}
+.feed-add-btn.added:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-muted);
+}
+
 /* Mobile Layout Overrides */
 @media (max-width: 768px) {
     #sidebar {
@@ -1415,7 +1655,27 @@ input:focus + .slider {
         grid-template-columns: 1fr;
     }
     header {
+        display: grid;
+        grid-template-columns: 48px 1fr 48px;
         padding: 16px;
+        align-items: center;
+        justify-content: stretch;
+    }
+    .mobile-menu-btn {
+        grid-column: 1;
+    }
+    .header-title {
+        grid-column: 2;
+        text-align: center;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 1.2rem;
+    }
+    .mobile-filter-btn {
+        grid-column: 3;
+        justify-self: end;
     }
 
     /* Mobile Filter Logic */
@@ -1431,6 +1691,17 @@ input:focus + .slider {
     .filter-bar.open {
         display: flex;
         animation: slideDown 0.2s ease-out;
+    }
+
+    /* Discover view filter bar specific override for mobile */
+    .discover-filter-bar {
+        display: flex !important; /* Force flex in discover view */
+        padding: 16px !important;
+        background: var(--bg-body);
+        border: none;
+        position: sticky;
+        top: 0;
+        z-index: 10;
     }
 
     .filter-group {
@@ -1463,6 +1734,23 @@ input:focus + .slider {
     .feed-btn-icon {
         opacity: 1;
     } /* Always show settings on mobile */
+
+    /* Discover Mobile */
+    .feed-directory-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feed-directory-card {
+        padding: 12px;
+    }
+    .feed-icon-large {
+        width: 40px;
+        height: 40px;
+    }
+
+    .discover-tags-wrapper {
+        padding-bottom: 12px;
+    }
 }
 
 @keyframes slideDown {
