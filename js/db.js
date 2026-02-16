@@ -81,6 +81,32 @@ window.Freed = window.Freed || {};
     return feed.stats;
   }
 
+  // Apply a delta object to feed stats
+  // delta: { favorited: 1, read: -1, wordCountRead: 500, ... }
+  function _applyFeedStatsDelta(feedStore, feedId, delta) {
+    if (!feedId) return;
+    const req = feedStore.get(feedId);
+    req.onsuccess = () => {
+      const feed = req.result;
+      if (feed) {
+        initStats(feed);
+        let changed = false;
+        for (const key in delta) {
+          if (Object.prototype.hasOwnProperty.call(delta, key)) {
+            const val = delta[key];
+            if (typeof val === "number" && val !== 0) {
+              feed.stats[key] = (feed.stats[key] || 0) + val;
+              // Sanity check to prevent negative stats
+              if (feed.stats[key] < 0) feed.stats[key] = 0;
+              changed = true;
+            }
+          }
+        }
+        if (changed) feedStore.put(feed);
+      }
+    };
+  }
+
   async function getAllFeeds() {
     const db = await openDB();
     return new Promise((resolve, reject) => {
@@ -255,30 +281,14 @@ window.Freed = window.Freed || {};
         if (processed === articles.length) {
           // Update stats for feeds
           const feedIds = Object.keys(newCounts);
-          if (feedIds.length === 0) {
-            resolve();
-            return;
+          if (feedIds.length > 0) {
+            feedIds.forEach((fid) => {
+              _applyFeedStatsDelta(feedStore, fid, {
+                totalFetched: newCounts[fid],
+              });
+            });
           }
-
-          let feedsUpdated = 0;
-          feedIds.forEach((fid) => {
-            const freq = feedStore.get(fid);
-            freq.onsuccess = () => {
-              const feed = freq.result;
-              if (feed) {
-                initStats(feed);
-                feed.stats.totalFetched += newCounts[fid];
-                feedStore.put(feed);
-              }
-              feedsUpdated++;
-              if (feedsUpdated === feedIds.length) resolve();
-            };
-            freq.onerror = () => {
-              // ignore missing feed error, just continue
-              feedsUpdated++;
-              if (feedsUpdated === feedIds.length) resolve();
-            };
-          });
+          resolve();
         }
       }
 
@@ -333,49 +343,36 @@ window.Freed = window.Freed || {};
           return;
         }
 
+        articleStore.put(article);
+
         // Update Feed Stats
         if (article.feedId) {
-          const freq = feedStore.get(article.feedId);
-          freq.onsuccess = () => {
-            const feed = freq.result;
-            if (feed) {
-              initStats(feed);
+          const delta = {};
 
-              // 1. Update Word Count based on progress delta
-              const currentProgress = article.readingProgress || 0;
-              const delta = currentProgress - previousProgress;
+          // 1. Update Word Count based on progress delta
+          const currentProgress = article.readingProgress || 0;
+          const progressDelta = currentProgress - previousProgress;
 
-              // Only add if positive progress is made
-              if (delta > 0.001) {
-                const text = article.fullContent
-                  ? divToText(article.fullContent)
-                  : article.content || article.snippet || "";
-                const totalWords = countWords(text);
-                const wordsToAdd = Math.round(totalWords * delta);
-                feed.stats.wordCountRead =
-                  (feed.stats.wordCountRead || 0) + wordsToAdd;
-              }
+          // Only add if positive progress is made
+          if (progressDelta > 0.001) {
+            const text = article.fullContent
+              ? divToText(article.fullContent)
+              : article.content || article.snippet || "";
+            const totalWords = countWords(text);
+            const wordsToAdd = Math.round(totalWords * progressDelta);
+            delta.wordCountRead = wordsToAdd;
+          }
 
-              // 2. Update Read Count
-              if (article.read !== previousRead) {
-                if (article.read) feed.stats.read++;
-                else feed.stats.read = Math.max(0, feed.stats.read - 1);
-              }
+          // 2. Update Read Count
+          if (article.read !== previousRead) {
+            delta.read = article.read ? 1 : -1;
+          }
 
-              feedStore.put(feed);
-            }
-            articleStore.put(article);
-            resolve();
-          };
-          freq.onerror = () => {
-            // Fallback save article if feed fetch fails
-            articleStore.put(article);
-            resolve();
-          };
-        } else {
-          articleStore.put(article);
-          resolve();
+          if (Object.keys(delta).length > 0) {
+            _applyFeedStatsDelta(feedStore, article.feedId, delta);
+          }
         }
+        resolve();
       };
       req.onerror = () => reject(req.error);
     });
@@ -397,17 +394,9 @@ window.Freed = window.Freed || {};
 
           // Update Feed Stats
           if (article.feedId) {
-            const freq = feedStore.get(article.feedId);
-            freq.onsuccess = () => {
-              const feed = freq.result;
-              if (feed) {
-                initStats(feed);
-                if (isFavorite) feed.stats.favorited++;
-                else
-                  feed.stats.favorited = Math.max(0, feed.stats.favorited - 1);
-                feedStore.put(feed);
-              }
-            };
+            _applyFeedStatsDelta(feedStore, article.feedId, {
+              favorited: isFavorite ? 1 : -1,
+            });
           }
         }
       };
@@ -434,17 +423,9 @@ window.Freed = window.Freed || {};
 
           // Update Feed Stats
           if (article.feedId) {
-            const freq = feedStore.get(article.feedId);
-            freq.onsuccess = () => {
-              const feed = freq.result;
-              if (feed) {
-                initStats(feed);
-                if (isDiscarded) feed.stats.discarded++;
-                else
-                  feed.stats.discarded = Math.max(0, feed.stats.discarded - 1);
-                feedStore.put(feed);
-              }
-            };
+            _applyFeedStatsDelta(feedStore, article.feedId, {
+              discarded: isDiscarded ? 1 : -1,
+            });
           }
         }
       };
@@ -469,17 +450,9 @@ window.Freed = window.Freed || {};
           articleStore.put(article);
 
           if (article.feedId) {
-            const freq = feedStore.get(article.feedId);
-            freq.onsuccess = () => {
-              const feed = freq.result;
-              if (feed) {
-                initStats(feed);
-                if (newState) feed.stats.favorited++;
-                else
-                  feed.stats.favorited = Math.max(0, feed.stats.favorited - 1);
-                feedStore.put(feed);
-              }
-            };
+            _applyFeedStatsDelta(feedStore, article.feedId, {
+              favorited: newState ? 1 : -1,
+            });
           }
           resolve(newState);
         } else {
@@ -496,16 +469,8 @@ window.Freed = window.Freed || {};
     return new Promise((resolve, reject) => {
       const tx = db.transaction("feeds", "readwrite");
       const store = tx.objectStore("feeds");
-      const request = store.get(feedId);
+      _applyFeedStatsDelta(store, feedId, { wordCountTranslated: wordCount });
 
-      request.onsuccess = () => {
-        const feed = request.result;
-        if (feed) {
-          initStats(feed);
-          feed.stats.wordCountTranslated += wordCount;
-          store.put(feed);
-        }
-      };
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
     });
@@ -517,16 +482,8 @@ window.Freed = window.Freed || {};
     return new Promise((resolve, reject) => {
       const tx = db.transaction("feeds", "readwrite");
       const store = tx.objectStore("feeds");
-      const request = store.get(feedId);
+      _applyFeedStatsDelta(store, feedId, { wordCountRead: wordCountDelta });
 
-      request.onsuccess = () => {
-        const feed = request.result;
-        if (feed) {
-          initStats(feed);
-          feed.stats.wordCountRead += wordCountDelta;
-          store.put(feed);
-        }
-      };
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
     });

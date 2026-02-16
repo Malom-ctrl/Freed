@@ -437,6 +437,20 @@ window.Freed.UI = {
     renderContent();
   },
 
+  _createStatBar: function (label, value, total, color) {
+    const pct = Math.min(100, Math.round((value / total) * 100)) || 0;
+    return `
+            <div style="margin-bottom: 16px;">
+                <div style="display:flex; justify-content:space-between; font-size: 0.9rem; margin-bottom: 6px;">
+                    <span>${label}</span>
+                    <span style="font-weight:600;">${value} <span style="font-weight:400;color:var(--text-muted);font-size:0.8em">(${pct}%)</span></span>
+                </div>
+                <div style="width:100%; height:8px; background:var(--border); border-radius:4px; overflow:hidden;">
+                    <div style="width:${pct}%; height:100%; background:${color};"></div>
+                </div>
+            </div>`;
+  },
+
   renderStatsModal: function (feed) {
     const modal = document.getElementById("stats-modal");
     const content = document.getElementById("stats-modal-content");
@@ -452,9 +466,6 @@ window.Freed.UI = {
     };
 
     const total = Math.max(stats.totalFetched, 1);
-    const readPct = Math.round((stats.read / total) * 100);
-    const discardPct = Math.round((stats.discarded / total) * 100);
-    const favPct = Math.round((stats.favorited / total) * 100);
 
     let transPct = 0;
     if (stats.wordCountRead > 0) {
@@ -464,29 +475,15 @@ window.Freed.UI = {
       ).toFixed(1);
     }
 
-    const makeBar = (label, value, totalVal, color) => {
-      const pct = Math.min(100, Math.round((value / totalVal) * 100)) || 0;
-      return `
-            <div style="margin-bottom: 16px;">
-                <div style="display:flex; justify-content:space-between; font-size: 0.9rem; margin-bottom: 6px;">
-                    <span>${label}</span>
-                    <span style="font-weight:600;">${value} <span style="font-weight:400;color:var(--text-muted);font-size:0.8em">(${pct}%)</span></span>
-                </div>
-                <div style="width:100%; height:8px; background:var(--border); border-radius:4px; overflow:hidden;">
-                    <div style="width:${pct}%; height:100%; background:${color};"></div>
-                </div>
-            </div>`;
-    };
-
     content.innerHTML = `
             <div style="text-align:center; padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:20px;">
                 <div style="font-size:3rem; font-weight:700; color:var(--text-main);">${stats.totalFetched}</div>
                 <div style="color:var(--text-muted); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em;">Total Articles Fetched</div>
             </div>
 
-            ${makeBar("Read", stats.read, total, "#10b981")}
-            ${makeBar("Discarded", stats.discarded, total, "#ef4444")}
-            ${makeBar("Favorited", stats.favorited, total, "#f59e0b")}
+            ${this._createStatBar("Read", stats.read, total, "#10b981")}
+            ${this._createStatBar("Discarded", stats.discarded, total, "#ef4444")}
+            ${this._createStatBar("Favorited", stats.favorited, total, "#f59e0b")}
 
             <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
                 <div style="font-size: 0.9rem; margin-bottom: 6px; font-weight: 600;">Translation</div>
