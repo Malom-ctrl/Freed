@@ -519,6 +519,22 @@
         Config.DEFAULTS.CLEANUP_READ_DAYS;
     });
 
+    // Settings Tabs Switcher
+    const tabButtons = document.querySelectorAll(".settings-tab-btn");
+    const tabPanes = document.querySelectorAll(".settings-tab-pane");
+
+    tabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-target");
+
+        tabButtons.forEach((b) => b.classList.remove("active"));
+        tabPanes.forEach((p) => p.classList.remove("active"));
+
+        btn.classList.add("active");
+        document.getElementById(target).classList.add("active");
+      });
+    });
+
     document
       .getElementById("btn-save-settings")
       ?.addEventListener("click", () => {
