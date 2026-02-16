@@ -245,11 +245,25 @@ window.Freed.UI = {
         if (!lowerFilter) {
           visiblePacks = data.packs;
         } else {
-          visiblePacks = data.packs.filter(
-            (p) =>
+          // Expanded Pack Search: Check Pack Title/Desc OR Contained Feeds Title/Tags
+          visiblePacks = data.packs.filter((p) => {
+            // 1. Match Pack Metadata
+            if (
               p.title.toLowerCase().includes(lowerFilter) ||
-              p.description.toLowerCase().includes(lowerFilter),
-          );
+              p.description.toLowerCase().includes(lowerFilter)
+            ) {
+              return true;
+            }
+            // 2. Match Contained Feeds
+            const feedsInPack = p.feeds
+              .map((fid) => data.feeds.find((f) => f.id === fid))
+              .filter(Boolean);
+            return feedsInPack.some(
+              (f) =>
+                f.title.toLowerCase().includes(lowerFilter) ||
+                f.tags.some((t) => t.toLowerCase().includes(lowerFilter)),
+            );
+          });
         }
       }
 
@@ -317,12 +331,18 @@ window.Freed.UI = {
       renderedCount = 0;
       currentFilteredFeeds = data.feeds.filter((feed) => {
         if (filterTag !== "all" && !feed.tags.includes(filterTag)) return false;
-        if (
-          lowerFilter &&
-          !feed.title.toLowerCase().includes(lowerFilter) &&
-          !feed.description.toLowerCase().includes(lowerFilter)
-        )
-          return false;
+
+        if (lowerFilter) {
+          const matchesTitle = feed.title.toLowerCase().includes(lowerFilter);
+          const matchesDesc = feed.description
+            .toLowerCase()
+            .includes(lowerFilter);
+          const matchesTags = feed.tags.some((t) =>
+            t.toLowerCase().includes(lowerFilter),
+          );
+
+          if (!matchesTitle && !matchesDesc && !matchesTags) return false;
+        }
         return true;
       });
 
