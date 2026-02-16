@@ -1,11 +1,48 @@
 window.Freed = window.Freed || {};
 
 (function () {
-  const { divToText } = window.Freed.Utils;
-  // AI Service might be loaded later or asynchronously, so we access it via window.Freed.AI in runtime
+  const { divToText, proxifyUrl } = window.Freed.Utils;
+
+  // Internal helper to normalize article object and handle date parsing/defaults
+  function _normalizeArticle(data) {
+    let pubDate = new Date().toISOString();
+    let isDateFromFeed = false;
+
+    // Validating date string if present
+    if (data.dateStr) {
+      const parsed = new Date(data.dateStr);
+      if (!isNaN(parsed.getTime())) {
+        pubDate = parsed.toISOString();
+        isDateFromFeed = true;
+      }
+    }
+
+    const link = data.link || "";
+    // If guid is missing, fallback to link or composite key
+    let guid = data.guid;
+    if (!guid) guid = link || data.title + pubDate;
+
+    return {
+      guid,
+      feedId: data.feedId,
+      feedTitle: data.feedTitle,
+      title: data.title || "No Title",
+      link,
+      pubDate,
+      content: data.content || "",
+      snippet: data.snippet || "",
+      image: data.image || "",
+      isDateFromFeed,
+      // Allow override if provided (e.g. from existing DB merge outside this scope) but usually undefined here
+      fullContent: data.fullContent,
+      read: false,
+      favorite: false,
+      discarded: false,
+    };
+  }
 
   async function fetchAndParseFeed(feed) {
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(feed.url)}`;
+    const proxyUrl = proxifyUrl(feed.url);
     let rawText = "";
 
     try {
@@ -65,22 +102,12 @@ window.Freed = window.Freed || {};
   function parseRSS(xml, feed) {
     const items = Array.from(xml.querySelectorAll("item, entry"));
     return items.map((item) => {
-      const title = item.querySelector("title")?.textContent || "No Title";
+      const title = item.querySelector("title")?.textContent;
       let link = item.querySelector("link")?.textContent || "";
       if (!link) link = item.querySelector("link")?.getAttribute("href") || "";
 
-      // Date Parsing with source tracking
       const dateNode = item.querySelector("pubDate, published, updated");
-      let pubDate = new Date().toISOString();
-      let isDateFromFeed = false;
-
-      if (dateNode && dateNode.textContent) {
-        const parsed = new Date(dateNode.textContent);
-        if (!isNaN(parsed.getTime())) {
-          pubDate = parsed.toISOString();
-          isDateFromFeed = true;
-        }
-      }
+      const dateStr = dateNode ? dateNode.textContent : null;
 
       const contentEncoded = item.getElementsByTagNameNS("*", "encoded")[0]
         ?.textContent;
@@ -103,25 +130,24 @@ window.Freed = window.Freed || {};
         if (img) image = img.src;
       }
 
-      // User requested URL as unique ID
-      let guid = link;
-      if (!guid)
-        guid = item.querySelector("guid, id")?.textContent || title + pubDate;
+      const guidNode = item.querySelector("guid, id");
+      const guidRaw = guidNode ? guidNode.textContent : null;
+      // Prefer link as guid if available to avoid duplicates if ID changes but link is same
+      const guid = link || guidRaw;
 
       const snippet = divToText(description).substring(0, 150) + "...";
 
-      return {
-        guid,
+      return _normalizeArticle({
         feedId: feed.id,
         feedTitle: feed.title,
         title,
         link,
-        pubDate,
+        dateStr,
+        guid,
         content,
         snippet,
         image,
-        isDateFromFeed,
-      };
+      });
     });
   }
 
@@ -147,23 +173,14 @@ window.Freed = window.Freed || {};
             : null;
           const imgEl = rule.image ? item.querySelector(rule.image) : null;
 
-          const title = titleEl ? titleEl.textContent.trim() : "No Title";
+          const title = titleEl ? titleEl.textContent.trim() : null;
           const link = linkEl
             ? linkEl.href || linkEl.getAttribute("href")
             : baseUrl;
 
-          // Date logic with source tracking
-          let pubDate = new Date().toISOString();
-          let isDateFromFeed = false;
-
+          let dateStr = null;
           if (dateEl) {
-            const dateAttr =
-              dateEl.getAttribute("datetime") || dateEl.textContent;
-            const d = new Date(dateAttr);
-            if (!isNaN(d.getTime())) {
-              pubDate = d.toISOString();
-              isDateFromFeed = true;
-            }
+            dateStr = dateEl.getAttribute("datetime") || dateEl.textContent;
           }
 
           const snippet = snippetEl
@@ -173,20 +190,18 @@ window.Freed = window.Freed || {};
 
           if (!title || !link) return null;
 
-          const guid = link; // Use link as GUID for web feeds
-
-          return {
-            guid,
+          // For web parsing, link is usually the best GUID
+          return _normalizeArticle({
             feedId: feed.id,
             feedTitle: feed.title,
             title,
             link,
-            pubDate,
+            dateStr,
+            guid: link,
             content: "", // Web feeds usually don't have full content in list
             snippet,
             image,
-            isDateFromFeed,
-          };
+          });
         } catch (e) {
           return null;
         }
@@ -200,7 +215,7 @@ window.Freed = window.Freed || {};
       return null;
     }
 
-    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+    const proxyUrl = proxifyUrl(url);
 
     try {
       const response = await fetch(proxyUrl);

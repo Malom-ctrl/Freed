@@ -3,8 +3,33 @@ window.Freed = window.Freed || {};
 window.Freed.Feeds = {
   isEditing: false,
 
+  // Factory method for creating a consistent Feed object
+  createFeedObject: function (data) {
+    const { Utils } = window.Freed;
+    return {
+      id: data.id || Date.now().toString() + Math.floor(Math.random() * 1000),
+      url: data.url,
+      title: data.title || "New Feed",
+      description: data.description || "",
+      color: data.color || Utils.getRandomFromPalette(),
+      type: data.type || "rss",
+      parsingRule: data.parsingRule || null,
+      tags: Array.isArray(data.tags) ? data.tags : [],
+      autofetch: !!data.autofetch,
+      // Default stats initialization
+      stats: data.stats || {
+        totalFetched: 0,
+        read: 0,
+        discarded: 0,
+        favorited: 0,
+        wordCountRead: 0,
+        wordCountTranslated: 0,
+      },
+    };
+  },
+
   openAddFeedModal: function () {
-    const { Tags, Utils } = window.Freed;
+    const { Tags } = window.Freed;
     this.isEditing = false;
     const modal = document.getElementById("feed-modal");
     document.getElementById("feed-modal-title").textContent = "Add New Feed";
@@ -22,7 +47,7 @@ window.Freed.Feeds = {
     Tags.currentTags = [];
     Tags.renderTagEditor();
     Tags.renderColorPicker("color-picker-container", null);
-    modal.classList.add("open");
+    window.Freed.UI.toggleModal("feed-modal", true);
   },
 
   openEditFeedModal: async function (feed) {
@@ -58,7 +83,7 @@ window.Freed.Feeds = {
 
     Tags.renderTagEditor();
     Tags.renderColorPicker("color-picker-container", feed.color);
-    modal.classList.add("open");
+    window.Freed.UI.toggleModal("feed-modal", true);
   },
 
   // --- Helpers ---
@@ -102,7 +127,7 @@ window.Freed.Feeds = {
 
   // Core Logic extracted for re-use
   _createFeed: async function (url, title, color, tags, autofetch) {
-    const { DB, Service, Utils } = window.Freed;
+    const { DB, Service } = window.Freed;
 
     // Ensure tags exist in DB
     await this._saveTags(tags);
@@ -121,16 +146,16 @@ window.Freed.Feeds = {
 
     const finalTitle = title || result.articles[0].feedTitle || "New Feed";
 
-    const newFeed = {
-      id: Date.now().toString() + Math.floor(Math.random() * 1000),
+    // Use the shared factory method
+    const newFeed = this.createFeedObject({
       url: url,
       title: finalTitle,
-      color: color || null,
-      type: result.type || "rss",
-      parsingRule: result.parsingRule,
+      color: color,
       tags: tagNames,
-      autofetch: !!autofetch,
-    };
+      autofetch: autofetch,
+      type: result.type,
+      parsingRule: result.parsingRule,
+    });
 
     await DB.saveFeed(newFeed);
     await DB.saveArticles(
@@ -283,7 +308,7 @@ window.Freed.Feeds = {
   },
 
   handleSaveFeed: async function (onSuccessCallback) {
-    const { DB, Service, Utils } = window.Freed;
+    const { DB, Utils } = window.Freed;
     const values = this._getModalValues();
 
     if (!values.url) return;

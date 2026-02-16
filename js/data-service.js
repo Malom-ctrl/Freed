@@ -83,12 +83,11 @@ window.Freed.Data = {
   processImport: async function (xmlString, options) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlString, "text/xml");
-    const { DB, Utils, Theme } = window.Freed;
+    const { DB, Utils, Theme, Feeds } = window.Freed;
 
     let stats = { feeds: 0, favorites: 0, settings: false };
 
     // Parse Freed Data (Settings, Tags & Favorites)
-    // Selector finds tag anywhere in document (head or root)
     const freedDataNode = doc.querySelector("x-freed-data");
     if (freedDataNode) {
       try {
@@ -166,9 +165,17 @@ window.Freed.Data = {
       const outlines = doc.querySelectorAll("body > outline");
       const newFeeds = [];
 
-      outlines.forEach((node) => {
+      // Get existing feeds for upsert logic
+      const existingFeeds = await DB.getAllFeeds();
+      const existingMap = new Map(existingFeeds.map((f) => [f.url, f]));
+
+      // Load tags to check for existence
+      const currentTags = await DB.getAllTags();
+      const tagMap = new Map(currentTags.map((t) => [t.name, t]));
+
+      for (const node of outlines) {
         const url = node.getAttribute("xmlUrl");
-        if (!url) return;
+        if (!url) continue;
 
         const title =
           node.getAttribute("text") ||
@@ -196,8 +203,23 @@ window.Freed.Data = {
           } catch (e) {}
         }
 
-        newFeeds.push({
-          id: Date.now().toString() + Math.random().toString(36).substr(2, 5),
+        // Handle Tags Creation
+        for (const tName of tags) {
+          if (!tagMap.has(tName)) {
+            const newTag = { name: tName, color: Utils.getRandomFromPalette() };
+            await DB.saveTag(newTag);
+            tagMap.set(tName, newTag);
+          }
+        }
+
+        const existing = existingMap.get(url);
+
+        // If it exists and we aren't overwriting, skip.
+        if (existing && !options.overwrite) continue;
+
+        // Use the shared factory method to create the object
+        const feedObj = Feeds.createFeedObject({
+          id: existing ? existing.id : undefined, // Preserve ID if overwriting
           url,
           title,
           color,
@@ -206,41 +228,9 @@ window.Freed.Data = {
           type,
           parsingRule,
         });
-      });
 
-      // Upsert Logic
-      const existingFeeds = await DB.getAllFeeds();
-      const existingMap = new Map(existingFeeds.map((f) => [f.url, f]));
-
-      // Load tags to check for existence and avoid overwriting known colors
-      const currentTags = await DB.getAllTags();
-      const tagMap = new Map(currentTags.map((t) => [t.name, t]));
-
-      for (const feed of newFeeds) {
-        // Handle Tags
-        for (const tName of feed.tags) {
-          if (!tagMap.has(tName)) {
-            // Tag doesn't exist (not in DB and wasn't in imported JSON)
-            // Create it with a random color
-            const newTag = { name: tName, color: Utils.getRandomFromPalette() };
-            await DB.saveTag(newTag);
-            tagMap.set(tName, newTag);
-          }
-          // If tagMap has it, we respect the existing color (or the one we just imported from JSON)
-        }
-
-        const existing = existingMap.get(feed.url);
-        if (existing) {
-          if (options.overwrite) {
-            // Merge props, keep ID
-            const merged = { ...feed, id: existing.id };
-            await DB.saveFeed(merged);
-            stats.feeds++;
-          }
-        } else {
-          await DB.saveFeed(feed);
-          stats.feeds++;
-        }
+        await DB.saveFeed(feedObj);
+        stats.feeds++;
       }
     }
 

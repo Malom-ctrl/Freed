@@ -96,6 +96,41 @@ window.Freed.Utils = {
     });
   },
 
+  formatFullDate: function (dateStr) {
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return dateStr || "";
+    return date.toLocaleDateString(undefined, {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  },
+
+  proxifyUrl: function (url) {
+    return `https://corsproxy.io/?${encodeURIComponent(url)}`;
+  },
+
+  hexToRgba: function (hex, alpha = 1) {
+    if (!hex || typeof hex !== "string") return `rgba(0,0,0,${alpha})`;
+    let c = hex.replace("#", "");
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    if (c.length === 3) {
+      c = c
+        .split("")
+        .map((char) => char + char)
+        .join("");
+    }
+    if (c.length !== 6) return hex;
+
+    const r = parseInt(c.substring(0, 2), 16);
+    const g = parseInt(c.substring(2, 4), 16);
+    const b = parseInt(c.substring(4, 6), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  },
+
   throttle: function (func, limit) {
     let lastFunc;
     let lastRan;

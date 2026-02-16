@@ -72,7 +72,7 @@ window.Freed.Reader = {
   },
 
   openArticle: async function (articleInput, onRefreshNeeded) {
-    const { DB, Service, Tools, Utils, State } = window.Freed;
+    const { DB, Service, Tools, Utils, State, UI } = window.Freed;
     State.currentArticleGuid = articleInput.guid;
 
     const modal = document.getElementById("read-modal");
@@ -156,17 +156,7 @@ window.Freed.Reader = {
     if (dateEl) {
       try {
         dateEl.textContent = Utils.formatRelativeTime(article.pubDate);
-        const fullDate = new Date(article.pubDate).toLocaleDateString(
-          undefined,
-          {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-          },
-        );
+        const fullDate = Utils.formatFullDate(article.pubDate);
         dateEl.setAttribute("data-tooltip", fullDate);
         dateEl.style.cursor = "help";
       } catch (e) {
@@ -248,7 +238,7 @@ window.Freed.Reader = {
     }
 
     if (linkEl) linkEl.href = article.link;
-    modal.classList.add("open");
+    UI.toggleModal("read-modal", true);
     document.body.classList.add("modal-open");
 
     // Initial check if content is already there and not loading
@@ -333,7 +323,7 @@ window.Freed.Reader = {
 
     if (history.state && history.state.readingView) history.back();
     else {
-      document.getElementById("read-modal")?.classList.remove("open");
+      window.Freed.UI.toggleModal("read-modal", false);
       document.body.classList.remove("modal-open");
       window.Freed.State.currentArticleGuid = null;
       if (window.Freed.App && window.Freed.App.refreshUI) {

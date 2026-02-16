@@ -1,7 +1,18 @@
 window.Freed = window.Freed || {};
 
 window.Freed.UI = {
+  toggleModal: function (modalId, show) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    if (show) {
+      modal.classList.add("open");
+    } else {
+      modal.classList.remove("open");
+    }
+  },
+
   renderFeedList: function (feeds, currentFeedId, onSwitch, onEdit, onStats) {
+    const { hexToRgba } = window.Freed.Utils;
     const container = document.getElementById("feed-list-container");
     if (!container) return;
     container.innerHTML = "";
@@ -14,15 +25,7 @@ window.Freed.UI = {
       // Apply dynamic active color if present
       if (isActive && feed.color) {
         div.style.color = feed.color;
-
-        // Hex to RGBA for background opacity (10%)
-        const hex = feed.color.replace("#", "");
-        if (hex.length === 6) {
-          const r = parseInt(hex.substring(0, 2), 16);
-          const g = parseInt(hex.substring(2, 4), 16);
-          const b = parseInt(hex.substring(4, 6), 16);
-          div.style.backgroundColor = `rgba(${r}, ${g}, ${b}, 0.1)`;
-        }
+        div.style.backgroundColor = hexToRgba(feed.color, 0.1);
       }
 
       const strokeColor = feed.color ? feed.color : "currentColor";
@@ -457,7 +460,7 @@ window.Freed.UI = {
 
     document.getElementById("stats-modal-title").textContent =
       `${feed.title} Stats`;
-    modal.classList.add("open");
+    this.toggleModal("stats-modal", true);
   },
 
   renderArticles: function (
@@ -467,6 +470,8 @@ window.Freed.UI = {
     onDiscard,
     onToggleFavorite,
   ) {
+    const { formatRelativeTime, hexToRgba, formatFullDate } =
+      window.Freed.Utils;
     const list = document.getElementById("article-list");
     if (!list) return;
 
@@ -498,9 +503,8 @@ window.Freed.UI = {
     }
 
     articles.forEach((article) => {
-      const dateStr = window.Freed.Utils.formatRelativeTime(article.pubDate);
-      const dateObj = new Date(article.pubDate);
-      const fullDateStr = dateObj.toLocaleString();
+      const dateStr = formatRelativeTime(article.pubDate);
+      const fullDateStr = formatFullDate(article.pubDate);
 
       const card = document.createElement("article");
       card.className = `card ${article.read ? "read" : ""} ${article.favorite ? "favorite" : ""}`;
@@ -523,14 +527,7 @@ window.Freed.UI = {
       if (article.feedTags && article.feedTags.length > 0) {
         tagsHtml = `<div class="card-tags">`;
         article.feedTags.forEach((tag) => {
-          // Create simple hex-to-rgba for tag background
-          let bg = tag.color; // fallback
-          if (tag.color.startsWith("#") && tag.color.length === 7) {
-            const r = parseInt(tag.color.substring(1, 3), 16);
-            const g = parseInt(tag.color.substring(3, 5), 16);
-            const b = parseInt(tag.color.substring(5, 7), 16);
-            bg = `rgba(${r}, ${g}, ${b}, 0.15)`;
-          }
+          let bg = hexToRgba(tag.color, 0.15);
           tagsHtml += `<span class="tag-pill" style="color: ${tag.color}; background-color: ${bg}; border: 1px solid ${tag.color}40;">${tag.name}</span>`;
         });
         tagsHtml += `</div>`;

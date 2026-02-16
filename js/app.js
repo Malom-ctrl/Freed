@@ -418,7 +418,7 @@
         modal.classList.contains("open") &&
         (!event.state || !event.state.readingView)
       ) {
-        modal.classList.remove("open");
+        UI.toggleModal("read-modal", false);
         document.body.classList.remove("modal-open");
         State.currentArticleGuid = null;
         refreshUI(); // Ensure UI is updated on back navigation
@@ -427,7 +427,7 @@
 
     window.closeFeedModal = () => {
       const wasEditing = Feeds.isEditing;
-      document.getElementById("feed-modal")?.classList.remove("open");
+      UI.toggleModal("feed-modal", false);
       Feeds.isEditing = false;
 
       if (wasEditing) {
@@ -435,10 +435,8 @@
       }
     };
 
-    window.closeSettingsModal = () =>
-      document.getElementById("settings-modal")?.classList.remove("open");
-    window.closeStatsModal = () =>
-      document.getElementById("stats-modal")?.classList.remove("open");
+    window.closeSettingsModal = () => UI.toggleModal("settings-modal", false);
+    window.closeStatsModal = () => UI.toggleModal("stats-modal", false);
 
     document.getElementById("read-modal")?.addEventListener("click", (e) => {
       if (e.target === document.getElementById("read-modal"))
@@ -488,7 +486,7 @@
       ?.addEventListener("click", () => Reader.shareCurrentArticle());
 
     document.getElementById("btn-settings")?.addEventListener("click", () => {
-      document.getElementById("settings-modal")?.classList.add("open");
+      UI.toggleModal("settings-modal", true);
       const keyInput = document.getElementById("settings-api-key");
       if (keyInput)
         keyInput.value = localStorage.getItem("freed_api_key") || "";
