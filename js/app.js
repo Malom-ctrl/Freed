@@ -318,6 +318,11 @@
 
   async function switchFeed(id) {
     State.currentFeedId = id;
+
+    // Reset scroll position
+    const list = document.getElementById("article-list");
+    if (list) list.scrollTop = 0;
+
     await refreshUI();
     const sidebar = document.getElementById("sidebar");
     const backdrop = document.getElementById("sidebar-backdrop");

@@ -1,6 +1,83 @@
 window.Freed = window.Freed || {};
 
 window.Freed.UI = {
+  _articleObserver: null,
+
+  // --- Shared Lazy Loader ---
+  _initLazyLoader: function ({
+    container,
+    items,
+    renderItem,
+    batchSize = 20,
+    root = null,
+  }) {
+    // Create Sentinel
+    const sentinel = document.createElement("div");
+    sentinel.className = "lazy-loader-sentinel";
+    // Grid column span ensures it takes full width in grid layouts
+    sentinel.style.gridColumn = "1 / -1";
+    sentinel.style.width = "100%";
+    sentinel.style.height = "60px";
+    sentinel.style.display = "flex";
+    sentinel.style.alignItems = "center";
+    sentinel.style.justifyContent = "center";
+    sentinel.innerHTML = `<div style="text-align:center; color:var(--text-muted); opacity:0.5;">Loading more...</div>`;
+
+    container.appendChild(sentinel);
+
+    let renderedCount = 0;
+    let observer = null;
+
+    const renderBatch = () => {
+      const batch = items.slice(renderedCount, renderedCount + batchSize);
+      if (batch.length === 0) {
+        sentinel.style.display = "none";
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+      batch.forEach((item) => {
+        const el = renderItem(item);
+        if (el) fragment.appendChild(el);
+      });
+
+      container.insertBefore(fragment, sentinel);
+      renderedCount += batch.length;
+
+      if (renderedCount >= items.length) {
+        sentinel.style.display = "none";
+        if (observer) {
+          observer.disconnect();
+          observer = null;
+        }
+      }
+    };
+
+    // Initial render
+    renderBatch();
+
+    // Setup Observer
+    if (renderedCount < items.length) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            renderBatch();
+          }
+        },
+        {
+          root: root,
+          threshold: 0.01,
+          rootMargin: "0px 0px 800px 0px",
+        },
+      );
+      observer.observe(sentinel);
+    } else {
+      sentinel.style.display = "none";
+    }
+
+    return observer;
+  },
+
   toggleModal: function (modalId, show) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
@@ -94,14 +171,10 @@ window.Freed.UI = {
     const container = document.getElementById("article-list");
     if (!container) return;
 
-    // Apply override class for layout
     container.classList.add("discover-view");
     container.innerHTML = "";
 
-    // Helper to check if added
     const isFeedAdded = (url) => existingFeeds.some((f) => f.url === url);
-
-    // Helper to check if pack added (all constituent feeds exist)
     const isPackAdded = (pack) => {
       const packUrls = pack.feeds
         .map((fid) => {
@@ -112,7 +185,7 @@ window.Freed.UI = {
       return packUrls.length > 0 && packUrls.every((url) => isFeedAdded(url));
     };
 
-    // --- Header Search Area ---
+    // --- Header Search ---
     const searchRow = document.createElement("div");
     searchRow.className = "filter-bar discover-filter-bar";
     searchRow.innerHTML = `
@@ -125,7 +198,7 @@ window.Freed.UI = {
     const contentWrapper = document.createElement("div");
     contentWrapper.className = "discover-container";
 
-    // --- Tags Row (Expandable) ---
+    // --- Tags Row ---
     const allTags = new Set();
     data.feeds.forEach((f) => f.tags.forEach((t) => allTags.add(t)));
     const sortedTags = Array.from(allTags).sort();
@@ -145,116 +218,38 @@ window.Freed.UI = {
         <button id="btn-toggle-tags" class="btn-text" style="font-size:0.8rem; margin-top:4px;">Show all topics</button>
       `;
 
-    // --- Feed Grid (Lazy Loaded) ---
+    // --- Feed Grid Container ---
     const feedGrid = document.createElement("div");
     feedGrid.className = "feed-directory-grid";
 
-    // Sentinel for IntersectionObserver
-    const sentinel = document.createElement("div");
-    sentinel.className = "feed-loader-sentinel";
-    sentinel.style.height = "20px";
-    sentinel.style.width = "100%";
-    sentinel.innerHTML = `<div style="text-align:center; color:var(--text-muted); opacity:0.5;">Loading more...</div>`;
-    sentinel.style.display = "none"; // Hidden by default
-
-    let currentFilteredFeeds = [];
-    let renderedCount = 0;
-    const BATCH_SIZE = 20;
     let gridObserver = null;
-
-    // --- Render a Batch of Feeds ---
-    const renderBatch = () => {
-      const batch = currentFilteredFeeds.slice(
-        renderedCount,
-        renderedCount + BATCH_SIZE,
-      );
-      if (batch.length === 0) {
-        sentinel.style.display = "none";
-        return;
-      }
-
-      batch.forEach((feed) => {
-        const added = isFeedAdded(feed.url);
-        let domain = "";
-        try {
-          domain = new URL(feed.url).hostname;
-        } catch (e) {}
-        const iconUrl = domain
-          ? `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
-          : "";
-
-        const item = document.createElement("div");
-        item.className = "feed-directory-card";
-        item.innerHTML = `
-                <img src="${iconUrl}" class="feed-icon-large" onerror="this.style.display='none'">
-                <div class="feed-info">
-                    <div class="feed-title">${feed.title}</div>
-                    <div class="feed-desc">${feed.description}</div>
-                    <div class="card-tags" style="margin-top:8px;">
-                        ${feed.tags.map((t) => `<span class="tag-pill" style="background:transparent; color:var(--text-muted); font-size:0.7rem; border:1px solid var(--border);">${t}</span>`).join("")}
-                    </div>
-                </div>
-                <button class="feed-add-btn ${added ? "added" : ""}" ${added ? "disabled" : ""}>${added ? "Added" : "Add"}</button>
-              `;
-
-        if (!added) {
-          const btn = item.querySelector("button");
-          btn.onclick = async () => {
-            btn.textContent = "Adding...";
-            btn.disabled = true;
-            btn.style.cursor = "wait";
-
-            const success = await onAddFeed(feed);
-
-            if (success) {
-              btn.textContent = "Added";
-              btn.className = "feed-add-btn added";
-              btn.onclick = null;
-              btn.style.cursor = "default";
-            } else {
-              btn.textContent = "Add";
-              btn.className = "feed-add-btn";
-              btn.disabled = false;
-              btn.style.cursor = "pointer";
-            }
-          };
-        }
-        feedGrid.appendChild(item);
-      });
-
-      renderedCount += batch.length;
-
-      if (renderedCount >= currentFilteredFeeds.length) {
-        sentinel.style.display = "none";
-      } else {
-        sentinel.style.display = "block";
-      }
-    };
 
     // --- Main Render Controller ---
     const renderContent = (filterTag = "all", filterText = "") => {
+      // Disconnect previous observer if re-rendering
+      if (gridObserver) {
+        gridObserver.disconnect();
+        gridObserver = null;
+      }
+
       contentWrapper.innerHTML = "";
       contentWrapper.appendChild(tagsSection);
 
       const lowerFilter = filterText.toLowerCase();
 
-      // 1. Packs Section (Only show if no search or matches search)
+      // 1. Packs Section
       let visiblePacks = [];
-
       if (filterTag === "all") {
         if (!lowerFilter) {
           visiblePacks = data.packs;
         } else {
-          // Expanded Pack Search: Check Pack Title/Desc OR Contained Feeds Title/Tags
           visiblePacks = data.packs.filter((p) => {
-            // 1. Match Pack Metadata
             if (
               p.title.toLowerCase().includes(lowerFilter) ||
               p.description.toLowerCase().includes(lowerFilter)
             ) {
               return true;
             }
-            // 2. Match Contained Feeds
             const feedsInPack = p.feeds
               .map((fid) => data.feeds.find((f) => f.id === fid))
               .filter(Boolean);
@@ -279,13 +274,11 @@ window.Freed.UI = {
           card.className = "pack-card";
           const alreadyAdded = isPackAdded(pack);
 
-          // Resolve feed names
           const packFeeds = pack.feeds
             .map((fid) => data.feeds.find((f) => f.id === fid))
             .filter(Boolean);
           const feedNames = packFeeds.map((f) => f.title);
 
-          // Compact List
           let feedListText = "";
           if (feedNames.length > 0) {
             const displayNames = feedNames.slice(0, 3).join(", ");
@@ -326,10 +319,11 @@ window.Freed.UI = {
       directoryTitle.textContent = "Directory";
       contentWrapper.appendChild(directoryTitle);
 
-      // Reset Grid
       feedGrid.innerHTML = "";
-      renderedCount = 0;
-      currentFilteredFeeds = data.feeds.filter((feed) => {
+      contentWrapper.appendChild(feedGrid);
+
+      // Filtering Logic
+      const filteredFeeds = data.feeds.filter((feed) => {
         if (filterTag !== "all" && !feed.tags.includes(filterTag)) return false;
 
         if (lowerFilter) {
@@ -340,39 +334,70 @@ window.Freed.UI = {
           const matchesTags = feed.tags.some((t) =>
             t.toLowerCase().includes(lowerFilter),
           );
-
           if (!matchesTitle && !matchesDesc && !matchesTags) return false;
         }
         return true;
       });
 
-      if (currentFilteredFeeds.length === 0) {
+      if (filteredFeeds.length === 0) {
         feedGrid.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px; grid-column:1/-1;">No feeds found matching filters.</div>`;
       } else {
-        renderBatch(); // Initial batch
-      }
+        // Use Shared Lazy Loader
+        gridObserver = this._initLazyLoader({
+          container: feedGrid,
+          items: filteredFeeds,
+          batchSize: 20,
+          root: container, // Explicitly pass #article-list as root
+          renderItem: (feed) => {
+            const added = isFeedAdded(feed.url);
+            let domain = "";
+            try {
+              domain = new URL(feed.url).hostname;
+            } catch (e) {}
+            const iconUrl = domain
+              ? `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
+              : "";
 
-      contentWrapper.appendChild(feedGrid);
-      contentWrapper.appendChild(sentinel);
+            const item = document.createElement("div");
+            item.className = "feed-directory-card";
+            item.innerHTML = `
+                    <img src="${iconUrl}" class="feed-icon-large" onerror="this.style.display='none'">
+                    <div class="feed-info">
+                        <div class="feed-title">${feed.title}</div>
+                        <div class="feed-desc">${feed.description}</div>
+                        <div class="card-tags" style="margin-top:8px;">
+                            ${feed.tags.map((t) => `<span class="tag-pill" style="background:transparent; color:var(--text-muted); font-size:0.7rem; border:1px solid var(--border);">${t}</span>`).join("")}
+                        </div>
+                    </div>
+                    <button class="feed-add-btn ${added ? "added" : ""}" ${added ? "disabled" : ""}>${added ? "Added" : "Add"}</button>
+                `;
 
-      // Observe Sentinel
-      if (gridObserver) gridObserver.disconnect();
-
-      if (currentFilteredFeeds.length > 0) {
-        gridObserver = new IntersectionObserver(
-          (entries) => {
-            if (entries[0].isIntersecting) {
-              renderBatch();
+            if (!added) {
+              const btn = item.querySelector("button");
+              btn.onclick = async () => {
+                btn.textContent = "Adding...";
+                btn.disabled = true;
+                btn.style.cursor = "wait";
+                const success = await onAddFeed(feed);
+                if (success) {
+                  btn.textContent = "Added";
+                  btn.className = "feed-add-btn added";
+                  btn.onclick = null;
+                  btn.style.cursor = "default";
+                } else {
+                  btn.textContent = "Add";
+                  btn.className = "feed-add-btn";
+                  btn.disabled = false;
+                  btn.style.cursor = "pointer";
+                }
+              };
             }
+            return item;
           },
-          { root: container, threshold: 0.1 },
-        );
-
-        gridObserver.observe(sentinel);
+        });
       }
     };
 
-    // Event Listeners for Filters
     tagsSection.addEventListener("click", (e) => {
       if (e.target.classList.contains("discover-tag-pill")) {
         tagsSection
@@ -384,12 +409,10 @@ window.Freed.UI = {
       }
     });
 
-    // Toggle Tags Button
     const toggleTagsBtn = tagsSection.querySelector("#btn-toggle-tags");
     const tagsContainerDiv = tagsSection.querySelector(
       "#discover-tags-container",
     );
-
     toggleTagsBtn.onclick = () => {
       if (tagsContainerDiv.classList.contains("collapsed")) {
         tagsContainerDiv.classList.remove("collapsed");
@@ -409,7 +432,6 @@ window.Freed.UI = {
         renderContent(activeTag, e.target.value);
       });
 
-    // Initial Render
     container.appendChild(searchRow);
     container.appendChild(contentWrapper);
     renderContent();
@@ -429,7 +451,7 @@ window.Freed.UI = {
       wordCountTranslated: 0,
     };
 
-    const total = Math.max(stats.totalFetched, 1); // Avoid division by zero
+    const total = Math.max(stats.totalFetched, 1);
     const readPct = Math.round((stats.read / total) * 100);
     const discardPct = Math.round((stats.discarded / total) * 100);
     const favPct = Math.round((stats.favorited / total) * 100);
@@ -495,12 +517,16 @@ window.Freed.UI = {
     const list = document.getElementById("article-list");
     if (!list) return;
 
-    // Ensure we are in grid mode (standard view)
+    // Cleanup previous observer
+    if (this._articleObserver) {
+      this._articleObserver.disconnect();
+      this._articleObserver = null;
+    }
+
     list.classList.remove("discover-view");
     list.innerHTML = "";
 
     if (articles.length === 0) {
-      // Check if we are filtering or just have no feeds
       const hasFilters =
         document.getElementById("filter-status")?.value !== "all" ||
         document.getElementById("filter-date")?.value !== "all" ||
@@ -522,150 +548,130 @@ window.Freed.UI = {
       return;
     }
 
-    articles.forEach((article) => {
-      const dateStr = formatRelativeTime(article.pubDate);
-      const fullDateStr = formatFullDate(article.pubDate);
+    // Use Shared Lazy Loader
+    this._articleObserver = this._initLazyLoader({
+      container: list,
+      items: articles,
+      batchSize: 20,
+      root: list, // Explicitly pass #article-list as root
+      renderItem: (article) => {
+        const dateStr = formatRelativeTime(article.pubDate);
+        const fullDateStr = formatFullDate(article.pubDate);
 
-      const card = document.createElement("article");
-      card.className = `card ${article.read ? "read" : ""} ${article.favorite ? "favorite" : ""}`;
+        const card = document.createElement("article");
+        card.className = `card ${article.read ? "read" : ""} ${article.favorite ? "favorite" : ""}`;
 
-      // Handle Image Background logic
-      if (showImages && article.image) {
-        card.classList.add("has-image");
-        // Escape quotes for CSS url() safety
-        const cleanUrl = article.image.replace(/'/g, "%27");
-        card.style.setProperty("--card-bg", `url('${cleanUrl}')`);
-      }
+        // Handle Image Background logic
+        if (showImages && article.image) {
+          card.classList.add("has-image");
+          const cleanUrl = article.image.replace(/'/g, "%27");
+          card.style.setProperty("--card-bg", `url('${cleanUrl}')`);
+        }
 
-      // Apply feed color to the source name
-      const feedTitleStyle = article.feedColor
-        ? `style="color: ${article.feedColor}"`
-        : "";
+        const feedTitleStyle = article.feedColor
+          ? `style="color: ${article.feedColor}"`
+          : "";
 
-      // Generate Tags HTML
-      let tagsHtml = "";
-      if (article.feedTags && article.feedTags.length > 0) {
-        tagsHtml = `<div class="card-tags">`;
-        article.feedTags.forEach((tag) => {
-          let bg = hexToRgba(tag.color, 0.15);
-          tagsHtml += `<span class="tag-pill" style="color: ${tag.color}; background-color: ${bg}; border: 1px solid ${tag.color}40;">${tag.name}</span>`;
-        });
-        tagsHtml += `</div>`;
-      }
+        let tagsHtml = "";
+        if (article.feedTags && article.feedTags.length > 0) {
+          tagsHtml = `<div class="card-tags">`;
+          article.feedTags.forEach((tag) => {
+            let bg = hexToRgba(tag.color, 0.15);
+            tagsHtml += `<span class="tag-pill" style="color: ${tag.color}; background-color: ${bg}; border: 1px solid ${tag.color}40;">${tag.name}</span>`;
+          });
+          tagsHtml += `</div>`;
+        }
 
-      // --- Dynamic Status Icon Logic ---
-      let statusIconContent = "";
-      let statusTitle = "";
+        // --- Dynamic Status Icon Logic ---
+        let statusIconContent = "";
+        let statusTitle = "";
 
-      if (article.favorite) {
-        // 1. Favorite - Star
-        statusIconContent = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="color:#f59e0b;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
-        statusTitle = "Favorited";
-      } else if (article.contentFetchFailed && !article.fullContent) {
-        // 2. Fetch Failed - Alert Triangle
-        statusIconContent = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#f59e0b;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
-        statusTitle = "Content Unavailable";
-      } else if (article.read) {
-        // 3. Read - Checkmark in Circle
-        statusIconContent = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
-        statusTitle = "Read";
-      } else if (article.readingProgress > 0) {
-        // 4. In Progress - Ring
-        // SVG Dasharray circumference approx 56.5 (r=9)
-        const r = 9;
-        const c = 2 * Math.PI * r;
-        const pct = article.readingProgress;
-        const offset = c * (1 - pct);
+        if (article.favorite) {
+          statusIconContent = `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none" style="color:#f59e0b;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`;
+          statusTitle = "Favorited";
+        } else if (article.contentFetchFailed && !article.fullContent) {
+          statusIconContent = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:#f59e0b;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+          statusTitle = "Content Unavailable";
+        } else if (article.read) {
+          statusIconContent = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text-muted);"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
+          statusTitle = "Read";
+        } else if (article.readingProgress > 0) {
+          const r = 9;
+          const c = 2 * Math.PI * r;
+          const pct = article.readingProgress;
+          const offset = c * (1 - pct);
+          statusIconContent = `
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="color:var(--primary); transform:rotate(-90deg);">
+                        <circle cx="12" cy="12" r="${r}" stroke-opacity="0.2"></circle>
+                        <circle cx="12" cy="12" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${offset}"></circle>
+                        </svg>`;
+          statusTitle = "In Progress";
+        } else if (article.fullContent) {
+          statusIconContent = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px; color: var(--text-muted); opacity: 0.7;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line></svg>`;
+          statusTitle = "Offline Available";
+        }
 
-        statusIconContent = `
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="color:var(--primary); transform:rotate(-90deg);">
-                   <circle cx="12" cy="12" r="${r}" stroke-opacity="0.2"></circle>
-                   <circle cx="12" cy="12" r="${r}" stroke-dasharray="${c}" stroke-dashoffset="${offset}"></circle>
-                </svg>`;
-        statusTitle = "In Progress";
-      } else if (article.fullContent) {
-        // 5. Fetched/Offline - Download Icon
-        statusIconContent = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px; color: var(--text-muted); opacity: 0.7;"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line></svg>`;
-        statusTitle = "Offline Available";
-      } else {
-        // 6. Unread & Unfetched - No Icon
-        statusIconContent = "";
-      }
+        const statusHtml = statusIconContent
+          ? `<div class="dynamic-status-icon" style="margin-left:8px; display:flex; align-items:center; cursor:pointer;" data-tooltip="${statusTitle}">${statusIconContent}</div>`
+          : "";
 
-      const statusHtml = statusIconContent
-        ? `<div class="dynamic-status-icon" style="margin-left:8px; display:flex; align-items:center; cursor:pointer;" data-tooltip="${statusTitle}">${statusIconContent}</div>`
-        : "";
-      // ---------------------------------
+        // Discard structures
+        const isDiscarded = !!article.discarded;
+        const actionLabel = isDiscarded ? "Restore" : "Discard";
+        const iconSvg = isDiscarded
+          ? `<svg class="discard-icon-cross" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>`
+          : `<svg class="discard-icon-cross" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
-      // Discard structures
-      const isDiscarded = !!article.discarded;
-      const actionLabel = isDiscarded ? "Restore" : "Discard";
-      const iconSvg = isDiscarded
-        ? `<svg class="discard-icon-cross" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"></path><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"></path></svg>`
-        : `<svg class="discard-icon-cross" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+        const discardZone = `<div class="discard-zone" title="${actionLabel}"></div>`;
+        const discardOverlay = `<div class="discard-overlay">${iconSvg}${actionLabel}</div>`;
 
-      const discardZone = `<div class="discard-zone" title="${actionLabel}"></div>`;
-      const discardOverlay = `
-            <div class="discard-overlay">
-                ${iconSvg}
-                ${actionLabel}
-            </div>`;
-
-      card.innerHTML = `
-            ${discardZone}
-            ${discardOverlay}
-            <div class="card-body">
-                <div class="card-meta">
-                    <span ${feedTitleStyle}>${article.feedTitle}</span>
-                    <div style="display:flex; align-items:center;">
-                        <span data-tooltip="${fullDateStr}" style="cursor:help;">${dateStr}</span>
-                        ${statusHtml}
+        card.innerHTML = `
+                    ${discardZone}
+                    ${discardOverlay}
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span ${feedTitleStyle}>${article.feedTitle}</span>
+                            <div style="display:flex; align-items:center;">
+                                <span data-tooltip="${fullDateStr}" style="cursor:help;">${dateStr}</span>
+                                ${statusHtml}
+                            </div>
+                        </div>
+                        <h3 class="card-title">${article.title}</h3>
+                        ${tagsHtml}
                     </div>
-                </div>
-                <h3 class="card-title">${article.title}</h3>
-                ${tagsHtml}
-            </div>
-            `;
+                    `;
 
-      // Click Handler (Main)
-      card.onclick = (e) => {
-        // Ignore clicks on the discard zone/overlay
-        if (
-          e.target.closest(".discard-zone") ||
-          e.target.closest(".discard-overlay")
-        )
-          return;
-        // Ignore click on status icon if we want it to be a dedicated toggle
-        if (e.target.closest(".dynamic-status-icon")) return;
-        onOpen(article);
-      };
-
-      // Status Icon Click Handler (Toggle Favorite)
-      const statusBtn = card.querySelector(".dynamic-status-icon");
-      if (statusBtn) {
-        statusBtn.onclick = (e) => {
-          e.stopPropagation();
-          if (onToggleFavorite) onToggleFavorite(article);
+        card.onclick = (e) => {
+          if (
+            e.target.closest(".discard-zone") ||
+            e.target.closest(".discard-overlay")
+          )
+            return;
+          if (e.target.closest(".dynamic-status-icon")) return;
+          onOpen(article);
         };
-      }
 
-      // Desktop Discard Handler
-      const zone = card.querySelector(".discard-zone");
-      const overlay = card.querySelector(".discard-overlay");
+        const statusBtn = card.querySelector(".dynamic-status-icon");
+        if (statusBtn) {
+          statusBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (onToggleFavorite) onToggleFavorite(article);
+          };
+        }
 
-      const discardHandler = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        onDiscard(article);
-      };
+        const zone = card.querySelector(".discard-zone");
+        const overlay = card.querySelector(".discard-overlay");
+        const discardHandler = (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          onDiscard(article);
+        };
+        if (zone) zone.onclick = discardHandler;
+        if (overlay) overlay.onclick = discardHandler;
 
-      if (zone) zone.onclick = discardHandler;
-      if (overlay) overlay.onclick = discardHandler;
-
-      // Mobile Swipe Logic
-      this.attachSwipeHandlers(card, () => onDiscard(article));
-
-      list.appendChild(card);
+        this.attachSwipeHandlers(card, () => onDiscard(article));
+        return card;
+      },
     });
   },
 
@@ -696,12 +702,7 @@ window.Freed.UI = {
         // Detect horizontal swipe intention vs vertical scroll
         if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
           isSwiping = true;
-          // We cannot preventDefault on passive listeners, but standard mobile behavior
-          // usually locks scroll once a horizontal gesture is recognized.
-
           card.style.transform = `translateX(${diffX}px)`;
-
-          // Visual feedback (opacity fade)
           const opacity = Math.max(
             0.3,
             1 - Math.abs(diffX) / (window.innerWidth * 0.8),
