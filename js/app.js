@@ -443,24 +443,26 @@
     window.closeSettingsModal = () => UI.toggleModal("settings-modal", false);
     window.closeStatsModal = () => UI.toggleModal("stats-modal", false);
 
-    document.getElementById("read-modal")?.addEventListener("click", (e) => {
-      if (e.target === document.getElementById("read-modal"))
-        Reader.closeModal();
+    let mouseDownTarget = null;
+    document.addEventListener("mousedown", (e) => {
+      mouseDownTarget = e.target;
     });
-    document.getElementById("feed-modal")?.addEventListener("click", (e) => {
-      if (e.target === document.getElementById("feed-modal"))
-        window.closeFeedModal();
-    });
-    document
-      .getElementById("settings-modal")
-      ?.addEventListener("click", (e) => {
-        if (e.target === document.getElementById("settings-modal"))
-          window.closeSettingsModal();
+
+    const bindBackdropClose = (modalId, closeFn) => {
+      const el = document.getElementById(modalId);
+      if (!el) return;
+      el.addEventListener("click", (e) => {
+        // Only close if interaction started AND ended on the backdrop
+        if (e.target === el && mouseDownTarget === el) {
+          closeFn();
+        }
       });
-    document.getElementById("stats-modal")?.addEventListener("click", (e) => {
-      if (e.target === document.getElementById("stats-modal"))
-        window.closeStatsModal();
-    });
+    };
+
+    bindBackdropClose("read-modal", () => Reader.closeModal());
+    bindBackdropClose("feed-modal", () => window.closeFeedModal());
+    bindBackdropClose("settings-modal", () => window.closeSettingsModal());
+    bindBackdropClose("stats-modal", () => window.closeStatsModal());
 
     document
       .getElementById("btn-new-feed")
