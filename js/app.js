@@ -16,6 +16,10 @@
     DiscoverData,
   } = window.Freed;
 
+  // Runtime cache for computed icon colors (not saved to DB)
+  const iconColorCache = new Map();
+  const processingColorIds = new Set();
+
   // --- Initialization ---
   async function init() {
     Theme.init();
@@ -92,9 +96,46 @@
     const allTags = await DB.getAllTags();
     const tagMap = new Map(allTags.map((t) => [t.name, t]));
 
-    // Create map for metadata
+    // Prepare Feeds with Effective Display Color
+    // We use a separate 'displayColor' property for rendering, preserving the raw 'color' (which might be null)
+    // for editing logic.
+    const feedsWithEffectiveColor = feeds.map((f) => {
+      let displayColor = f.color;
+
+      // Priority 1: Manual Color Override (Persistent)
+      if (displayColor) {
+        return { ...f, displayColor };
+      }
+
+      // Priority 2: Icon Color (Runtime Calculated - Non-Persistent)
+      if (f.iconData) {
+        if (iconColorCache.has(f.id)) {
+          return { ...f, displayColor: iconColorCache.get(f.id) };
+        }
+
+        // If not in cache and not processing, trigger calculation
+        if (!processingColorIds.has(f.id)) {
+          processingColorIds.add(f.id);
+          // Compute in background
+          Utils.getDominantColor(f.iconData).then((color) => {
+            if (color) {
+              iconColorCache.set(f.id, color);
+              // Trigger UI update once color is ready
+              refreshUI();
+            }
+            processingColorIds.delete(f.id);
+          });
+        }
+        // While loading, fall through to default
+      }
+
+      // Priority 3: Global Default Color (Fixed)
+      return { ...f, displayColor: "#64748b" };
+    });
+
+    // Create map for metadata (using resolved feeds)
     const feedMap = {};
-    feeds.forEach((f) => {
+    feedsWithEffectiveColor.forEach((f) => {
       const resolvedTags = (f.tags || [])
         .map((tagName) => tagMap.get(tagName))
         .filter(Boolean);
@@ -103,7 +144,7 @@
 
     // 1. Render Feed Sidebar
     UI.renderFeedList(
-      feeds,
+      feedsWithEffectiveColor,
       State.currentFeedId,
       switchFeed,
       Feeds.openEditFeedModal.bind(Feeds),
@@ -133,10 +174,6 @@
     } else {
       // Standard View
       if (filterBar) {
-        // Restore filter bar style (flex/none handled by class/inline override)
-        // We reset explicit display but keep mobile logic intact
-        // Actually mobile logic toggles class 'open' on filter bar.
-        // We just need to make sure we don't force it hidden.
         filterBar.style.display = "";
       }
       if (filterToggleBtn) filterToggleBtn.style.display = "";
@@ -146,7 +183,7 @@
       // Enrich articles
       let enrichedArticles = articles.map((a) => ({
         ...a,
-        feedColor: feedMap[a.feedId]?.color,
+        feedColor: feedMap[a.feedId]?.displayColor,
         feedTitle: feedMap[a.feedId]?.title || a.feedTitle,
         feedTags: feedMap[a.feedId]?.tags || [],
       }));

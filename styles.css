@@ -296,6 +296,7 @@ body.modal-open {
     height: 20px;
     opacity: 0.7;
     flex-shrink: 0;
+    transition: stroke 0.2s ease;
 }
 .nav-item.active svg {
     opacity: 1;

@@ -136,13 +136,16 @@ window.Freed.UI = {
       const isActive = currentFeedId === feed.id;
       div.className = `nav-item ${isActive ? "active" : ""}`;
 
+      // Use displayColor for rendering logic
+      const activeColor = feed.displayColor;
+
       // Apply dynamic active color if present
-      if (isActive && feed.color) {
-        div.style.color = feed.color;
-        div.style.backgroundColor = hexToRgba(feed.color, 0.1);
+      if (isActive && activeColor) {
+        div.style.color = activeColor;
+        div.style.backgroundColor = hexToRgba(activeColor, 0.1);
       }
 
-      const strokeColor = feed.color ? feed.color : "currentColor";
+      const strokeColor = activeColor ? activeColor : "currentColor";
 
       // Choose icon based on feed type or use cached iconData
       let iconSvg;

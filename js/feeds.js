@@ -3,24 +3,28 @@ window.Freed = window.Freed || {};
 window.Freed.Feeds = {
   isEditing: false,
   tempIconData: null,
-  tempIconColor: null,
   _inputDebounce: null,
 
   // Factory method for creating a consistent Feed object
   createFeedObject: function (data) {
-    const { Utils } = window.Freed;
     return {
       id: data.id || Date.now().toString() + Math.floor(Math.random() * 1000),
       url: data.url,
       title: data.title || "New Feed",
       description: data.description || "",
-      color: data.color || Utils.getRandomFromPalette(),
+
+      // Core Color Properties
+      color: data.color, // Manual user selection only. If null, UI calculates fallback.
+
       type: data.type || "rss",
       parsingRule: data.parsingRule || null,
       tags: Array.isArray(data.tags) ? data.tags : [],
       autofetch: !!data.autofetch,
-      iconData: data.iconData || null, // Base64 icon string
-      // Default stats initialization
+
+      // Icon Properties
+      iconData: data.iconData || null,
+
+      // Stats
       stats: data.stats || {
         totalFetched: 0,
         read: 0,
@@ -69,6 +73,7 @@ window.Freed.Feeds = {
     const { Tags, DB, Utils } = window.Freed;
     this.isEditing = true;
     this._resetTempIconState();
+
     this.tempIconData = feed.iconData || null;
 
     const modal = document.getElementById("feed-modal");
@@ -82,13 +87,12 @@ window.Freed.Feeds = {
 
     const iconToggle = document.getElementById("feed-use-icon-input");
     iconToggle.checked = !!feed.iconData;
-    iconToggle.disabled = false; // Enabled for editing if data exists or we fetch it
+    iconToggle.disabled = false;
 
     if (feed.iconData) {
       const preview = document.getElementById("feed-icon-preview");
       preview.src = feed.iconData;
       preview.style.display = "block";
-      // We assume if iconData is present, color logic is already handled or handled on save
     } else {
       // If editing and no icon stored, try to init preview based on URL
       this._processUrlForIcon(feed.url);
@@ -122,7 +126,6 @@ window.Freed.Feeds = {
 
   _resetTempIconState: function () {
     this.tempIconData = null;
-    this.tempIconColor = null;
     const preview = document.getElementById("feed-icon-preview");
     const checkbox = document.getElementById("feed-use-icon-input");
     if (preview) {
@@ -137,7 +140,6 @@ window.Freed.Feeds = {
   _setupUrlListener: function () {
     const urlInput = document.getElementById("feed-url-input");
     const iconToggle = document.getElementById("feed-use-icon-input");
-    const { Tags } = window.Freed;
 
     // Debounce URL input
     urlInput.oninput = (e) => {
@@ -149,23 +151,12 @@ window.Freed.Feeds = {
 
     // Handle Toggle Change
     iconToggle.onchange = (e) => {
-      this._updateIconPreview(true); // Ensure visibility state is correct
-
-      // Logic: If disabling icon, and current color IS the icon color, reset to null
-      if (
-        !e.target.checked &&
-        this.tempIconColor &&
-        Tags.selectedColor === this.tempIconColor // TODO: doesn't work
-      ) {
-        Tags.selectedColor = null;
-        Tags.renderColorPicker("color-picker-container", null);
-      }
+      this._updateIconPreview(true);
     };
   },
 
   _updateIconPreview: function (forceShow) {
     const preview = document.getElementById("feed-icon-preview");
-    // We show the preview if we have data, regardless of toggle, unless data is missing
     if (this.tempIconData) {
       preview.src = this.tempIconData;
       preview.style.display = "block";
@@ -182,12 +173,10 @@ window.Freed.Feeds = {
 
     if (result) {
       this.tempIconData = result.iconData;
-      this.tempIconColor = result.color;
       checkbox.disabled = false;
       this._updateIconPreview(true);
     } else {
       this.tempIconData = null;
-      this.tempIconColor = null;
       checkbox.disabled = true;
       checkbox.checked = false;
       this._updateIconPreview(false);
@@ -238,7 +227,7 @@ window.Freed.Feeds = {
 
   // Core Logic extracted for re-use
   _createFeed: async function (url, title, color, tags, autofetch, iconData) {
-    const { DB, Service, Utils } = window.Freed;
+    const { DB, Service } = window.Freed;
 
     // Ensure tags exist in DB
     await this._saveTags(tags);
@@ -256,13 +245,11 @@ window.Freed.Feeds = {
       throw new Error("No articles found");
 
     const finalTitle = title || result.articles[0].feedTitle || "New Feed";
-    const finalColor = color || Utils.getRandomFromPalette();
 
-    // Use the shared factory method
     const newFeed = this.createFeedObject({
       url: url,
       title: finalTitle,
-      color: finalColor,
+      color: color,
       tags: tagNames,
       autofetch: autofetch,
       type: result.type,
@@ -287,16 +274,13 @@ window.Freed.Feeds = {
   addFeedDirectly: async function (feedData, onSuccess) {
     const { Utils, DB } = window.Freed;
     try {
-      // Fetch Icon Data for Discover feed (Default enabled)
+      // Fetch Icon Data for Discover feed
       let iconData = null;
-      let iconColor = null;
       const iconResult = await Utils.fetchFaviconAndColor(feedData.url);
       if (iconResult) {
         iconData = iconResult.iconData;
-        iconColor = iconResult.color;
       }
 
-      // Check if tags have colors, if not assign random from palette
       const tagsWithColors = feedData.tags.map((tName) => ({
         name: tName,
         color: Utils.getRandomFromPalette(),
@@ -310,23 +294,21 @@ window.Freed.Feeds = {
         if (tagMap.has(t.name)) t.color = tagMap.get(t.name);
       });
 
-      // Use accent color from discover data, fallback to icon color, then random
-      const finalColor =
-        feedData.accentColor || iconColor || Utils.getRandomFromPalette();
+      // Accent color from discover pack is treated as manual color preference
+      const manualColor = feedData.accentColor || null;
 
       const newFeed = await this._createFeed(
         feedData.url,
         feedData.title,
-        finalColor,
+        manualColor,
         tagsWithColors,
-        false, // Default autofetch to false for discover items
-        iconData, // Pass icon data
+        false,
+        iconData,
       );
 
       Utils.showToast(`Added ${newFeed.title}`);
       if (onSuccess) onSuccess(newFeed);
 
-      // Cleanup & Trigger
       await DB.cleanupOrphanedTags();
       if (newFeed.autofetch) this._triggerAutofetch(newFeed);
       return true;
@@ -347,7 +329,6 @@ window.Freed.Feeds = {
 
     Utils.showToast(`Adding ${feedsToAdd.length} feeds...`);
 
-    // Get existing to avoid duplicates
     const existingFeeds = await DB.getAllFeeds();
     const existingUrls = new Set(existingFeeds.map((f) => f.url));
 
@@ -399,15 +380,9 @@ window.Freed.Feeds = {
           feedChanged = true;
         }
 
-        // Color Logic: Use picker, else auto-detect if icon used, else keep existing
-        let finalColor = values.color;
-        if (values.useIcon && !finalColor && this.tempIconColor) {
-          finalColor = this.tempIconColor;
-        }
-
-        // Update if color changed (including setting to null/unsetting)
-        if (feed.color !== finalColor) {
-          feed.color = finalColor;
+        // Color Logic
+        if (feed.color !== values.color) {
+          feed.color = values.color;
           feedChanged = true;
         }
 
@@ -426,6 +401,7 @@ window.Freed.Feeds = {
         const newIconData = values.useIcon
           ? this.tempIconData || feed.iconData
           : null;
+
         if (feed.iconData !== newIconData) {
           feed.iconData = newIconData;
           feedChanged = true;
@@ -464,20 +440,13 @@ window.Freed.Feeds = {
     btn.textContent = "Saving...";
 
     try {
-      // Determine Color
-      let finalColor = values.color;
-      if (values.useIcon && !finalColor && this.tempIconColor) {
-        finalColor = this.tempIconColor;
-      }
-
       // Determine Icon Data
-      // If toggle is ON, use the cached tempIconData.
       const finalIconData = values.useIcon ? this.tempIconData : null;
 
       const newFeed = await this._createFeed(
         values.url,
         values.name,
-        finalColor,
+        values.color,
         values.tags,
         values.autofetch,
         finalIconData,

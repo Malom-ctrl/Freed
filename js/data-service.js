@@ -184,8 +184,8 @@ window.Freed.Data = {
           node.getAttribute("text") ||
           node.getAttribute("title") ||
           "Imported Feed";
-        let color =
-          node.getAttribute("data-freed-color") || Utils.getRandomFromPalette();
+        const color = node.getAttribute("data-freed-color") || null;
+
         const autofetch = node.getAttribute("data-freed-autofetch") === "true";
         const useIcon = node.getAttribute("data-freed-use-icon") === "true";
         const category = node.getAttribute("category");
@@ -222,9 +222,6 @@ window.Freed.Data = {
           const res = await Utils.fetchFaviconAndColor(url);
           if (res) {
             iconData = res.iconData;
-            if (!node.getAttribute("data-freed-color")) {
-              color = res.color;
-            }
           }
         }
 

@@ -65,6 +65,23 @@ window.Freed.Utils = {
     return palette[Math.floor(Math.random() * palette.length)];
   },
 
+  // Deterministically pick a color from the palette based on a string (ID)
+  // This allows consistency without storage.
+  getColorForId: function (str) {
+    if (!str) return "#64748b";
+    if (!window.Freed.Config || !window.Freed.Config.COLOR_PALETTE)
+      return "#64748b";
+
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    const palette = window.Freed.Config.COLOR_PALETTE;
+    const index = Math.abs(hash) % palette.length;
+    return palette[index];
+  },
+
   formatRelativeTime: function (dateStr) {
     const date = new Date(dateStr);
     if (isNaN(date.getTime())) return dateStr || "";
@@ -165,14 +182,12 @@ window.Freed.Utils = {
       const res = await fetch(proxy);
       if (!res.ok) throw new Error("Fetch failed");
       const blob = await res.blob();
-      // Check if valid image content type if possible, or just try to read
       if (blob.size === 0) throw new Error("Empty image");
 
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          if (reader.result === "data:")
-            resolve(null); // Failed read
+          if (reader.result === "data:") resolve(null);
           else resolve(reader.result);
         };
         reader.onerror = () => resolve(null);
