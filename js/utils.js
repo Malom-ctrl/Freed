@@ -1,6 +1,24 @@
 window.Freed = window.Freed || {};
 
 window.Freed.Utils = {
+  ensureUrlProtocol: function (input) {
+    if (!input) return "";
+    const url = input.trim();
+    try {
+      // Check if it's already a valid absolute URL (requires scheme)
+      new URL(url);
+      return url;
+    } catch (e) {
+      // If parsing failed, it's likely missing the protocol
+      // Handle protocol-relative URLs (starting with //)
+      if (url.startsWith("//")) {
+        return "https:" + url;
+      }
+      // Default to https
+      return "https://" + url;
+    }
+  },
+
   divToText: function (html) {
     const tmp = document.createElement("DIV");
     tmp.innerHTML = html;

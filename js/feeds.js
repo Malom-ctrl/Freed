@@ -169,7 +169,8 @@ window.Freed.Feeds = {
     if (!url) return;
     const checkbox = document.getElementById("feed-use-icon-input");
 
-    const result = await window.Freed.Utils.fetchFaviconAndColor(url);
+    const normalized = window.Freed.Utils.ensureUrlProtocol(url);
+    const result = await window.Freed.Utils.fetchFaviconAndColor(normalized);
 
     if (result) {
       this.tempIconData = result.iconData;
@@ -186,12 +187,13 @@ window.Freed.Feeds = {
   // --- Helpers ---
 
   _getModalValues: function () {
-    const { Tags } = window.Freed;
+    const { Tags, Utils } = window.Freed;
     const useIcon = document.getElementById("feed-use-icon-input").checked;
+    const rawUrl = document.getElementById("feed-url-input").value;
 
     return {
       id: document.getElementById("feed-id-input").value,
-      url: document.getElementById("feed-url-input").value.trim(),
+      url: Utils.ensureUrlProtocol(rawUrl),
       name: document.getElementById("feed-name-input").value.trim(),
       autofetch: document.getElementById("feed-autofetch-input").checked,
       color: Tags.selectedColor,
