@@ -78,7 +78,7 @@ window.Freed.DiscoverData = {
     {
       id: "au_independent",
       title: "Independent Australia",
-      url: "http://feeds.feedburner.com/IndependentAustralia",
+      url: "https://feeds.feedburner.com/IndependentAustralia",
       description: "Independent Australia News",
       tags: ["News", "Australia"],
       accentColor: "#000080",
@@ -118,7 +118,7 @@ window.Freed.DiscoverData = {
     {
       id: "au_kusa",
       title: "KUSA - News",
-      url: "http://rssfeeds.9news.com/kusa/home&x=1",
+      url: "https://rssfeeds.9news.com/kusa/home&x=1",
       description: "KUSA Rss Feed",
       tags: ["News", "USA"],
       accentColor: "#000080",
@@ -210,7 +210,7 @@ window.Freed.DiscoverData = {
     {
       id: "br_ebc",
       title: "Portal EBC",
-      url: "http://www.ebc.com.br/rss/feed.xml",
+      url: "https://www.ebc.com.br/rss/feed.xml",
       description: "RSS",
       tags: ["News", "Brazil", "Portuguese"],
       accentColor: "#009c3b",
@@ -226,7 +226,7 @@ window.Freed.DiscoverData = {
     {
       id: "br_uol",
       title: "UOL",
-      url: "http://rss.home.uol.com.br/index.xml",
+      url: "https://rss.home.uol.com.br/index.xml",
       description: "Home UOL",
       tags: ["News", "Brazil", "Portuguese"],
       accentColor: "#009c3b",
@@ -242,7 +242,7 @@ window.Freed.DiscoverData = {
     {
       id: "br_brasilwire",
       title: "Brasil Wire",
-      url: "http://www.brasilwire.com/feed/",
+      url: "https://www.brasilwire.com/feed/",
       description: "News",
       tags: ["News", "Brazil", "English"],
       accentColor: "#009c3b",
@@ -432,7 +432,7 @@ window.Freed.DiscoverData = {
     {
       id: "de_zeit",
       title: "ZEIT ONLINE",
-      url: "http://newsfeed.zeit.de/index",
+      url: "https://newsfeed.zeit.de/index",
       description: "Nachrichten",
       tags: ["News", "Germany", "German"],
       accentColor: "#DD0000",
@@ -456,7 +456,7 @@ window.Freed.DiscoverData = {
     {
       id: "de_tagesschau",
       title: "Tagesschau",
-      url: "http://www.tagesschau.de/xml/rss2",
+      url: "https://www.tagesschau.de/xml/rss2",
       description: "Nachrichten der ARD",
       tags: ["News", "Germany", "German"],
       accentColor: "#DD0000",
@@ -506,7 +506,7 @@ window.Freed.DiscoverData = {
     {
       id: "hk_hongkongnews",
       title: "hongkongnews.net",
-      url: "http://feeds.hongkongnews.net/rss/b82693edf38ebff8",
+      url: "https://feeds.hongkongnews.net/rss/b82693edf38ebff8",
       description: "Latest RSS headlines",
       tags: ["News", "Hong Kong"],
       accentColor: "#DE2910",
@@ -516,7 +516,7 @@ window.Freed.DiscoverData = {
     {
       id: "in_bbc",
       title: "BBC News - India",
-      url: "http://feeds.bbci.co.uk/news/world/asia/india/rss.xml",
+      url: "https://feeds.bbci.co.uk/news/world/asia/india/rss.xml",
       description: "BBC India",
       tags: ["News", "India"],
       accentColor: "#FF9933",
@@ -572,7 +572,7 @@ window.Freed.DiscoverData = {
     {
       id: "in_indianexpress",
       title: "The Indian Express",
-      url: "http://indianexpress.com/print/front-page/feed/",
+      url: "https://indianexpress.com/print/front-page/feed/",
       description: "Front Page",
       tags: ["News", "India"],
       accentColor: "#FF9933",
@@ -636,7 +636,7 @@ window.Freed.DiscoverData = {
     {
       id: "in_moneycontrol",
       title: "Moneycontrol",
-      url: "http://www.moneycontrol.com/rss/latestnews.xml",
+      url: "https://www.moneycontrol.com/rss/latestnews.xml",
       description: "Latest News",
       tags: ["News", "India", "Finance"],
       accentColor: "#FF9933",
@@ -660,7 +660,7 @@ window.Freed.DiscoverData = {
     {
       id: "in_scroll",
       title: "Scroll.in",
-      url: "http://feeds.feedburner.com/ScrollinArticles.rss",
+      url: "https://feeds.feedburner.com/ScrollinArticles.rss",
       description: "Digital daily",
       tags: ["News", "India"],
       accentColor: "#FF9933",
@@ -684,7 +684,7 @@ window.Freed.DiscoverData = {
     {
       id: "in_techgenyz",
       title: "TechGenyz",
-      url: "http://feeds.feedburner.com/techgenyz",
+      url: "https://feeds.feedburner.com/techgenyz",
       description: "Tech News",
       tags: ["News", "India", "Tech"],
       accentColor: "#FF9933",
@@ -764,7 +764,7 @@ window.Freed.DiscoverData = {
     {
       id: "in_patrika",
       title: "Patrika",
-      url: "http://api.patrika.com/rss/india-news",
+      url: "https://api.patrika.com/rss/india-news",
       description: "Hindi News",
       tags: ["News", "India", "Hindi"],
       accentColor: "#FF9933",
@@ -938,7 +938,7 @@ window.Freed.DiscoverData = {
     {
       id: "it_adnkronos",
       title: "Adnkronos",
-      url: "http://rss.adnkronos.com/RSS_PrimaPagina.xml",
+      url: "https://rss.adnkronos.com/RSS_PrimaPagina.xml",
       description: "Ultimora",
       tags: ["News", "Italy", "Italian"],
       accentColor: "#009246",
@@ -1012,7 +1012,7 @@ window.Freed.DiscoverData = {
     {
       id: "jp_newsonjapan",
       title: "News On Japan",
-      url: "http://www.newsonjapan.com/rss/top.xml",
+      url: "https://www.newsonjapan.com/rss/top.xml",
       description: "Latest news",
       tags: ["News", "Japan"],
       accentColor: "#BC002D",
@@ -1028,7 +1028,7 @@ window.Freed.DiscoverData = {
     {
       id: "jp_bridge",
       title: "BRIDGE",
-      url: "http://feeds.feedburner.com/SdJapan",
+      url: "https://feeds.feedburner.com/SdJapan",
       description: "Technology & Startups",
       tags: ["News", "Japan", "Tech"],
       accentColor: "#BC002D",
@@ -1036,7 +1036,7 @@ window.Freed.DiscoverData = {
     {
       id: "jp_nyt",
       title: "NYT > Japan",
-      url: "https://www.nytimes.com/svc/collections/v1/publish/http://www.nytimes.com/topic/destination/japan/rss.xml",
+      url: "https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/topic/destination/japan/rss.xml",
       description: "New York Times Japan",
       tags: ["News", "Japan"],
       accentColor: "#BC002D",
@@ -1052,7 +1052,7 @@ window.Freed.DiscoverData = {
     {
       id: "jp_asahi",
       title: "Asahi Shimbun",
-      url: "http://rss.asahi.com/rss/asahi/newsheadlines.rdf",
+      url: "https://rss.asahi.com/rss/asahi/newsheadlines.rdf",
       description: "News Headlines",
       tags: ["News", "Japan", "Japanese"],
       accentColor: "#BC002D",
@@ -1184,7 +1184,7 @@ window.Freed.DiscoverData = {
     {
       id: "mm_gazette",
       title: "Myanmar Gazette",
-      url: "http://myanmargazette.net/feed",
+      url: "https://myanmargazette.net/feed",
       description: "News Media",
       tags: ["News", "Myanmar"],
       accentColor: "#FECB00",
@@ -1192,7 +1192,7 @@ window.Freed.DiscoverData = {
     {
       id: "mm_dvb",
       title: "DVB",
-      url: "http://www.dvb.no/feed",
+      url: "https://www.dvb.no/feed",
       description: "Democratic Voice of Burma",
       tags: ["News", "Myanmar"],
       accentColor: "#FECB00",
@@ -1200,7 +1200,7 @@ window.Freed.DiscoverData = {
     {
       id: "mm_thithtoolwin",
       title: "THIT HTOO LWIN",
-      url: "http://www.thithtoolwin.com/feeds/posts/default",
+      url: "https://www.thithtoolwin.com/feeds/posts/default",
       description: "Daily News",
       tags: ["News", "Myanmar"],
       accentColor: "#FECB00",
@@ -1210,7 +1210,7 @@ window.Freed.DiscoverData = {
     {
       id: "ng_sahara",
       title: "Sahara Reporters",
-      url: "http://saharareporters.com/feeds/latest/feed",
+      url: "https://saharareporters.com/feeds/latest/feed",
       description: "All Content",
       tags: ["News", "Nigeria"],
       accentColor: "#008751",
@@ -1226,7 +1226,7 @@ window.Freed.DiscoverData = {
     {
       id: "ng_eye",
       title: "Nigerian News",
-      url: "http://feeds.feedburner.com/Nigerianeye",
+      url: "https://feeds.feedburner.com/Nigerianeye",
       description: "Latest Nigeria News",
       tags: ["News", "Nigeria"],
       accentColor: "#008751",
@@ -1282,7 +1282,7 @@ window.Freed.DiscoverData = {
     {
       id: "ng_tribune",
       title: "Tribune Online",
-      url: "http://tribuneonlineng.com/feed/",
+      url: "https://tribuneonlineng.com/feed/",
       description: "Breaking News",
       tags: ["News", "Nigeria"],
       accentColor: "#008751",
@@ -1462,7 +1462,7 @@ window.Freed.DiscoverData = {
     {
       id: "ph_tempo",
       title: "Tempo",
-      url: "http://tempo.com.ph/feed/",
+      url: "https://tempo.com.ph/feed/",
       description: "News in a Flash",
       tags: ["News", "Philippines"],
       accentColor: "#0038A8",
@@ -1494,7 +1494,7 @@ window.Freed.DiscoverData = {
     {
       id: "ph_techpinas",
       title: "TechPinas",
-      url: "http://feeds.feedburner.com/Techpinas",
+      url: "https://feeds.feedburner.com/Techpinas",
       description: "Tech Tips and Reviews",
       tags: ["News", "Philippines", "Tech"],
       accentColor: "#0038A8",
@@ -1502,7 +1502,7 @@ window.Freed.DiscoverData = {
     {
       id: "ph_bicol",
       title: "BICOL STANDARD",
-      url: "http://www.bicolstandard.com/feeds/posts/default?alt=rss",
+      url: "https://www.bicolstandard.com/feeds/posts/default?alt=rss",
       description: "Bicol News",
       tags: ["News", "Philippines"],
       accentColor: "#0038A8",
@@ -1512,7 +1512,7 @@ window.Freed.DiscoverData = {
     {
       id: "pl_wpolityce",
       title: "wPolityce.pl",
-      url: "http://feeds.feedburner.com/wPolitycepl",
+      url: "https://feeds.feedburner.com/wPolitycepl",
       description: "Najnowsze",
       tags: ["News", "Poland", "Polish"],
       accentColor: "#DC143C",
@@ -1528,7 +1528,7 @@ window.Freed.DiscoverData = {
     {
       id: "pl_dziennik",
       title: "Dziennik.pl",
-      url: "http://rss.dziennik.pl/Dziennik-PL/",
+      url: "https://rss.dziennik.pl/Dziennik-PL/",
       description: "Dziennik",
       tags: ["News", "Poland", "Polish"],
       accentColor: "#DC143C",
@@ -1544,7 +1544,7 @@ window.Freed.DiscoverData = {
     {
       id: "pl_gazetaprawna",
       title: "GazetaPrawna.pl",
-      url: "http://rss.gazetaprawna.pl/GazetaPrawna",
+      url: "https://rss.gazetaprawna.pl/GazetaPrawna",
       description: "Biznes, podatki, prawo",
       tags: ["News", "Poland", "Polish", "Business"],
       accentColor: "#DC143C",
@@ -1594,7 +1594,7 @@ window.Freed.DiscoverData = {
     {
       id: "za_news24",
       title: "News24",
-      url: "http://feeds.news24.com/articles/news24/TopStories/rss",
+      url: "https://feeds.news24.com/articles/news24/TopStories/rss",
       description: "Top Stories",
       tags: ["News", "South Africa"],
       accentColor: "#007749",
@@ -1634,7 +1634,7 @@ window.Freed.DiscoverData = {
     {
       id: "za_iol",
       title: "IOL News",
-      url: "http://rss.iol.io/iol/news",
+      url: "https://rss.iol.io/iol/news",
       description: "Independent Media",
       tags: ["News", "South Africa"],
       accentColor: "#007749",
@@ -1742,7 +1742,7 @@ window.Freed.DiscoverData = {
     {
       id: "uk_bbc",
       title: "BBC News",
-      url: "http://feeds.bbci.co.uk/news/rss.xml",
+      url: "https://feeds.bbci.co.uk/news/rss.xml",
       description: "Home",
       tags: ["News", "UK"],
       accentColor: "#012169",
@@ -1766,7 +1766,7 @@ window.Freed.DiscoverData = {
     {
       id: "uk_independent",
       title: "The Independent",
-      url: "http://www.independent.co.uk/news/uk/rss",
+      url: "https://www.independent.co.uk/news/uk/rss",
       description: "Latest News",
       tags: ["News", "UK"],
       accentColor: "#012169",
@@ -1774,7 +1774,7 @@ window.Freed.DiscoverData = {
     {
       id: "uk_express",
       title: "Daily Express",
-      url: "http://feeds.feedburner.com/daily-express-news-showbiz",
+      url: "https://feeds.feedburner.com/daily-express-news-showbiz",
       description: "News Feed",
       tags: ["News", "UK"],
       accentColor: "#012169",
@@ -1800,7 +1800,7 @@ window.Freed.DiscoverData = {
     {
       id: "us_fox",
       title: "FOX News",
-      url: "http://feeds.foxnews.com/foxnews/latest",
+      url: "https://feeds.foxnews.com/foxnews/latest",
       description: "Breaking news",
       tags: ["News", "USA"],
       accentColor: "#3C3B6E",
@@ -1808,7 +1808,7 @@ window.Freed.DiscoverData = {
     {
       id: "us_wapo",
       title: "Washington Post",
-      url: "http://feeds.washingtonpost.com/rss/world",
+      url: "https://feeds.washingtonpost.com/rss/world",
       description: "World",
       tags: ["News", "USA", "World"],
       accentColor: "#3C3B6E",
@@ -1832,7 +1832,7 @@ window.Freed.DiscoverData = {
     {
       id: "us_cnn",
       title: "CNN",
-      url: "http://rss.cnn.com/rss/edition.rss",
+      url: "https://rss.cnn.com/rss/edition.rss",
       description: "Top Stories",
       tags: ["News", "USA"],
       accentColor: "#3C3B6E",
@@ -1890,7 +1890,7 @@ window.Freed.DiscoverData = {
     {
       id: "dev_android_backstage",
       title: "Android Backstage",
-      url: "http://feeds.feedburner.com/blogspot/androiddevelopersbackstage",
+      url: "https://feeds.feedburner.com/blogspot/androiddevelopersbackstage",
       description: "Podcast",
       tags: ["Dev", "Android", "Podcast"],
       accentColor: "#3DDC84",
@@ -1898,7 +1898,7 @@ window.Freed.DiscoverData = {
     {
       id: "dev_android_blog",
       title: "Android Developers Blog",
-      url: "http://feeds.feedburner.com/blogspot/hsDu",
+      url: "https://feeds.feedburner.com/blogspot/hsDu",
       description: "Official Blog",
       tags: ["Dev", "Android"],
       accentColor: "#3DDC84",
@@ -2042,7 +2042,7 @@ window.Freed.DiscoverData = {
     {
       id: "dev_stylingandroid",
       title: "Styling Android",
-      url: "http://feeds.feedburner.com/StylingAndroid",
+      url: "https://feeds.feedburner.com/StylingAndroid",
       description: "UI/UX",
       tags: ["Dev", "Android", "UI"],
       accentColor: "#3DDC84",
@@ -2172,7 +2172,7 @@ window.Freed.DiscoverData = {
     {
       id: "and_central",
       title: "Android Central",
-      url: "http://feeds.androidcentral.com/androidcentral",
+      url: "https://feeds.androidcentral.com/androidcentral",
       description: "News",
       tags: ["Tech", "Android"],
       accentColor: "#3DDC84",
@@ -2180,7 +2180,7 @@ window.Freed.DiscoverData = {
     {
       id: "and_central_pod",
       title: "Android Central Podcast",
-      url: "http://feeds.feedburner.com/AndroidCentralPodcast",
+      url: "https://feeds.feedburner.com/AndroidCentralPodcast",
       description: "Podcast",
       tags: ["Tech", "Android", "Podcast"],
       accentColor: "#3DDC84",
@@ -2196,7 +2196,7 @@ window.Freed.DiscoverData = {
     {
       id: "and_police",
       title: "Android Police",
-      url: "http://feeds.feedburner.com/AndroidPolice",
+      url: "https://feeds.feedburner.com/AndroidPolice",
       description: "News",
       tags: ["Tech", "Android"],
       accentColor: "#3DDC84",
@@ -2244,7 +2244,7 @@ window.Freed.DiscoverData = {
     {
       id: "and_phandroid",
       title: "Phandroid",
-      url: "http://feeds2.feedburner.com/AndroidPhoneFans",
+      url: "https://feeds2.feedburner.com/AndroidPhoneFans",
       description: "News",
       tags: ["Tech", "Android"],
       accentColor: "#3DDC84",
@@ -2252,7 +2252,7 @@ window.Freed.DiscoverData = {
     {
       id: "and_talkandroid",
       title: "TalkAndroid",
-      url: "http://feeds.feedburner.com/AndroidNewsGoogleAndroidForums",
+      url: "https://feeds.feedburner.com/AndroidNewsGoogleAndroidForums",
       description: "News",
       tags: ["Tech", "Android"],
       accentColor: "#3DDC84",
@@ -2326,7 +2326,7 @@ window.Freed.DiscoverData = {
     {
       id: "apple_macrumors",
       title: "MacRumors",
-      url: "http://feeds.macrumors.com/MacRumors-Mac",
+      url: "https://feeds.macrumors.com/MacRumors-Mac",
       description: "News",
       tags: ["Tech", "Apple"],
       accentColor: "#A2AAAD",
@@ -2358,7 +2358,7 @@ window.Freed.DiscoverData = {
     {
       id: "apple_osxdaily",
       title: "OS X Daily",
-      url: "http://feeds.feedburner.com/osxdaily",
+      url: "https://feeds.feedburner.com/osxdaily",
       description: "News",
       tags: ["Tech", "Apple"],
       accentColor: "#A2AAAD",
@@ -2382,7 +2382,7 @@ window.Freed.DiscoverData = {
     {
       id: "apple_imore",
       title: "iMore",
-      url: "http://feeds.feedburner.com/TheiPhoneBlog",
+      url: "https://feeds.feedburner.com/TheiPhoneBlog",
       description: "News",
       tags: ["Tech", "Apple"],
       accentColor: "#A2AAAD",
@@ -2400,7 +2400,7 @@ window.Freed.DiscoverData = {
     {
       id: "arch_books",
       title: "Daily Dose of Arch Books",
-      url: "http://feeds.feedburner.com/archidose",
+      url: "https://feeds.feedburner.com/archidose",
       description: "Books",
       tags: ["Design", "Architecture"],
       accentColor: "#FFD700",
@@ -2408,7 +2408,7 @@ window.Freed.DiscoverData = {
     {
       id: "arch_daily",
       title: "ArchDaily",
-      url: "http://feeds.feedburner.com/Archdaily",
+      url: "https://feeds.feedburner.com/Archdaily",
       description: "Broadcasting Architecture",
       tags: ["Design", "Architecture"],
       accentColor: "#FFD700",
@@ -2554,7 +2554,7 @@ window.Freed.DiscoverData = {
     {
       id: "beauty_headtotoe",
       title: "From Head To Toe",
-      url: "http://feeds.feedburner.com/frmheadtotoe",
+      url: "https://feeds.feedburner.com/frmheadtotoe",
       description: "Jen",
       tags: ["Lifestyle", "Beauty"],
       accentColor: "#E91E63",
@@ -2734,7 +2734,7 @@ window.Freed.DiscoverData = {
     {
       id: "biz_hbr",
       title: "HBR IdeaCast",
-      url: "http://feeds.harvardbusiness.org/harvardbusiness/ideacast",
+      url: "https://feeds.harvardbusiness.org/harvardbusiness/ideacast",
       description: "Harvard Business Review",
       tags: ["Business", "Podcast"],
       accentColor: "#85BB65",
@@ -2774,7 +2774,7 @@ window.Freed.DiscoverData = {
     {
       id: "biz_growthshow",
       title: "The Growth Show",
-      url: "http://thegrowthshow.hubspot.libsynpro.com/",
+      url: "https://thegrowthshow.hubspot.libsynpro.com/",
       description: "HubSpot",
       tags: ["Business", "Podcast"],
       accentColor: "#85BB65",
@@ -2904,7 +2904,7 @@ window.Freed.DiscoverData = {
     {
       id: "car_autonews",
       title: "Automotive News",
-      url: "http://feeds.feedburner.com/autonews/AutomakerNews",
+      url: "https://feeds.feedburner.com/autonews/AutomakerNews",
       description: "Automaker News",
       tags: ["Auto", "Cars"],
       accentColor: "#FF4500",
@@ -2912,7 +2912,7 @@ window.Freed.DiscoverData = {
     {
       id: "car_autonews_editors",
       title: "Automotive News Editors",
-      url: "http://feeds.feedburner.com/autonews/EditorsPicks",
+      url: "https://feeds.feedburner.com/autonews/EditorsPicks",
       description: "Editors Picks",
       tags: ["Auto", "Cars"],
       accentColor: "#FF4500",
@@ -2920,7 +2920,7 @@ window.Freed.DiscoverData = {
     {
       id: "car_speedhunters",
       title: "Speedhunters",
-      url: "http://feeds.feedburner.com/speedhunters",
+      url: "https://feeds.feedburner.com/speedhunters",
       description: "Car Culture",
       tags: ["Auto", "Cars"],
       accentColor: "#FF4500",
@@ -2946,7 +2946,7 @@ window.Freed.DiscoverData = {
     {
       id: "cricket_bbc",
       title: "BBC Sport - Cricket",
-      url: "http://feeds.bbci.co.uk/sport/cricket/rss.xml",
+      url: "https://feeds.bbci.co.uk/sport/cricket/rss.xml",
       description: "BBC",
       tags: ["Sports", "Cricket"],
       accentColor: "#800000",
@@ -2954,7 +2954,7 @@ window.Freed.DiscoverData = {
     {
       id: "cricket_cantbowl",
       title: "Can't Bowl Can't Throw",
-      url: "http://feeds.feedburner.com/cantbowlcantthrow",
+      url: "https://feeds.feedburner.com/cantbowlcantthrow",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
       accentColor: "#800000",
@@ -2986,7 +2986,7 @@ window.Freed.DiscoverData = {
     {
       id: "cricket_espn",
       title: "ESPN Cricinfo",
-      url: "http://www.espncricinfo.com/rss/content/story/feeds/0.xml",
+      url: "https://www.espncricinfo.com/rss/content/story/feeds/0.xml",
       description: "News",
       tags: ["Sports", "Cricket"],
       accentColor: "#800000",
@@ -3018,7 +3018,7 @@ window.Freed.DiscoverData = {
     {
       id: "cricket_ndtv",
       title: "NDTV Sports",
-      url: "http://feeds.feedburner.com/ndtvsports-cricket",
+      url: "https://feeds.feedburner.com/ndtvsports-cricket",
       description: "NDTV",
       tags: ["Sports", "Cricket"],
       accentColor: "#800000",
@@ -3082,7 +3082,7 @@ window.Freed.DiscoverData = {
     {
       id: "cricket_analyst",
       title: "The Analyst",
-      url: "http://rss.acast.com/theanalystinsidecricket",
+      url: "https://rss.acast.com/theanalystinsidecricket",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
       accentColor: "#800000",
@@ -3106,7 +3106,7 @@ window.Freed.DiscoverData = {
     {
       id: "cricket_wisden_weekly",
       title: "Wisden Cricket Weekly",
-      url: "http://feeds.soundcloud.com/users/soundcloud:users:341034518/sounds.rss",
+      url: "https://feeds.soundcloud.com/users/soundcloud:users:341034518/sounds.rss",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
       accentColor: "#800000",
@@ -3196,7 +3196,7 @@ window.Freed.DiscoverData = {
     {
       id: "diy_ohhappyday",
       title: "Oh Happy Day!",
-      url: "http://ohhappyday.com/feed/",
+      url: "https://ohhappyday.com/feed/",
       description: "Party",
       tags: ["Lifestyle", "DIY"],
       accentColor: "#FFA500",
@@ -3336,7 +3336,7 @@ window.Freed.DiscoverData = {
     {
       id: "food_food52",
       title: "Food52",
-      url: "http://feeds.feedburner.com/food52-TheAandMBlog",
+      url: "https://feeds.feedburner.com/food52-TheAandMBlog",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
       accentColor: "#FF69B4",
@@ -3360,7 +3360,7 @@ window.Freed.DiscoverData = {
     {
       id: "food_joythebaker",
       title: "Joy the Baker",
-      url: "http://joythebaker.com/feed/",
+      url: "https://joythebaker.com/feed/",
       description: "Baking",
       tags: ["Lifestyle", "Food"],
       accentColor: "#FF69B4",
@@ -3416,7 +3416,7 @@ window.Freed.DiscoverData = {
     {
       id: "food_seriouseats",
       title: "Serious Eats: Recipes",
-      url: "http://feeds.feedburner.com/seriouseats/recipes",
+      url: "https://feeds.feedburner.com/seriouseats/recipes",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
       accentColor: "#FF69B4",
@@ -3424,7 +3424,7 @@ window.Freed.DiscoverData = {
     {
       id: "food_shutterbean",
       title: "Shutterbean",
-      url: "http://www.shutterbean.com/feed/",
+      url: "https://www.shutterbean.com/feed/",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
       accentColor: "#FF69B4",
@@ -3456,7 +3456,7 @@ window.Freed.DiscoverData = {
     {
       id: "food_smitten",
       title: "smitten kitchen",
-      url: "http://feeds.feedburner.com/smittenkitchen",
+      url: "https://feeds.feedburner.com/smittenkitchen",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
       accentColor: "#FF69B4",
@@ -3516,7 +3516,7 @@ window.Freed.DiscoverData = {
     {
       id: "fun_cracked",
       title: "Cracked",
-      url: "http://feeds.feedburner.com/CrackedRSS",
+      url: "https://feeds.feedburner.com/CrackedRSS",
       description: "Articles",
       tags: ["Funny"],
       accentColor: "#FFD700",
@@ -3524,7 +3524,7 @@ window.Freed.DiscoverData = {
     {
       id: "fun_explosm",
       title: "Explosm.net",
-      url: "http://feeds.feedburner.com/Explosm",
+      url: "https://feeds.feedburner.com/Explosm",
       description: "Comics",
       tags: ["Funny", "Comics"],
       accentColor: "#FFD700",
@@ -3532,7 +3532,7 @@ window.Freed.DiscoverData = {
     {
       id: "fun_failblog",
       title: "FAIL Blog",
-      url: "http://feeds.feedburner.com/failblog",
+      url: "https://feeds.feedburner.com/failblog",
       description: "Fail",
       tags: ["Funny"],
       accentColor: "#FFD700",
@@ -3540,7 +3540,7 @@ window.Freed.DiscoverData = {
     {
       id: "fun_cheezburger",
       title: "I Can Has Cheezburger?",
-      url: "http://feeds.feedburner.com/icanhascheezburger",
+      url: "https://feeds.feedburner.com/icanhascheezburger",
       description: "Cats",
       tags: ["Funny"],
       accentColor: "#FFD700",
@@ -3548,7 +3548,7 @@ window.Freed.DiscoverData = {
     {
       id: "fun_phd",
       title: "PHD Comics",
-      url: "http://phdcomics.com/gradfeed.php",
+      url: "https://phdcomics.com/gradfeed.php",
       description: "Comics",
       tags: ["Funny", "Comics"],
       accentColor: "#FFD700",
@@ -3588,7 +3588,7 @@ window.Freed.DiscoverData = {
     {
       id: "fun_dailywtf",
       title: "The Daily WTF",
-      url: "http://syndication.thedailywtf.com/TheDailyWtf",
+      url: "https://syndication.thedailywtf.com/TheDailyWtf",
       description: "IT Humor",
       tags: ["Funny", "Tech"],
       accentColor: "#FFD700",
@@ -3596,7 +3596,7 @@ window.Freed.DiscoverData = {
     {
       id: "fun_oatmeal",
       title: "The Oatmeal",
-      url: "http://feeds.feedburner.com/oatmealfeed",
+      url: "https://feeds.feedburner.com/oatmealfeed",
       description: "Comics",
       tags: ["Funny", "Comics"],
       accentColor: "#FFD700",
@@ -3638,7 +3638,7 @@ window.Freed.DiscoverData = {
     {
       id: "game_gamasutra",
       title: "Gamasutra",
-      url: "http://feeds.feedburner.com/GamasutraNews",
+      url: "https://feeds.feedburner.com/GamasutraNews",
       description: "Dev News",
       tags: ["Gaming", "Dev"],
       accentColor: "#800080",
@@ -3654,7 +3654,7 @@ window.Freed.DiscoverData = {
     {
       id: "game_ign",
       title: "IGN All",
-      url: "http://feeds.ign.com/ign/all",
+      url: "https://feeds.ign.com/ign/all",
       description: "IGN",
       tags: ["Gaming"],
       accentColor: "#800080",
@@ -3678,7 +3678,7 @@ window.Freed.DiscoverData = {
     {
       id: "game_playstation",
       title: "PlayStation.Blog",
-      url: "http://feeds.feedburner.com/psblog",
+      url: "https://feeds.feedburner.com/psblog",
       description: "Official Blog",
       tags: ["Gaming", "PlayStation"],
       accentColor: "#800080",
@@ -3694,7 +3694,7 @@ window.Freed.DiscoverData = {
     {
       id: "game_rps",
       title: "Rock, Paper, Shotgun",
-      url: "http://feeds.feedburner.com/RockPaperShotgun",
+      url: "https://feeds.feedburner.com/RockPaperShotgun",
       description: "PC Gaming",
       tags: ["Gaming"],
       accentColor: "#800080",
@@ -3710,7 +3710,7 @@ window.Freed.DiscoverData = {
     {
       id: "game_ancientnoob",
       title: "The Ancient Gaming Noob",
-      url: "http://feeds.feedburner.com/TheAncientGamingNoob",
+      url: "https://feeds.feedburner.com/TheAncientGamingNoob",
       description: "Blog",
       tags: ["Gaming"],
       accentColor: "#800080",
@@ -3776,7 +3776,7 @@ window.Freed.DiscoverData = {
     {
       id: "hist_historynet",
       title: "HistoryNet",
-      url: "http://www.historynet.com/feed",
+      url: "https://www.historynet.com/feed",
       description: "Articles",
       tags: ["History"],
       accentColor: "#8B4513",
@@ -3824,7 +3824,7 @@ window.Freed.DiscoverData = {
     {
       id: "hist_memorypalace",
       title: "the memory palace",
-      url: "http://feeds.thememorypalace.us/thememorypalace",
+      url: "https://feeds.thememorypalace.us/thememorypalace",
       description: "Podcast",
       tags: ["History", "Podcast"],
       accentColor: "#8B4513",
@@ -3842,7 +3842,7 @@ window.Freed.DiscoverData = {
     {
       id: "int_betterliving",
       title: "Better Living Through Design",
-      url: "http://www.betterlivingthroughdesign.com/feed/",
+      url: "https://www.betterlivingthroughdesign.com/feed/",
       description: "Guide",
       tags: ["Design", "Decor"],
       accentColor: "#20B2AA",
@@ -3858,7 +3858,7 @@ window.Freed.DiscoverData = {
     {
       id: "int_core77",
       title: "Core77",
-      url: "http://feeds.feedburner.com/core77/blog",
+      url: "https://feeds.feedburner.com/core77/blog",
       description: "Industrial Design",
       tags: ["Design"],
       accentColor: "#20B2AA",
@@ -3874,7 +3874,7 @@ window.Freed.DiscoverData = {
     {
       id: "int_fubiz",
       title: "Fubiz Media",
-      url: "http://feeds.feedburner.com/fubiz",
+      url: "https://feeds.feedburner.com/fubiz",
       description: "Creative",
       tags: ["Design", "Art"],
       accentColor: "#20B2AA",
@@ -3914,7 +3914,7 @@ window.Freed.DiscoverData = {
     {
       id: "int_home_designing",
       title: "Interior Design Ideas",
-      url: "http://www.home-designing.com/feed",
+      url: "https://www.home-designing.com/feed",
       description: "Ideas",
       tags: ["Design", "Decor"],
       accentColor: "#20B2AA",
@@ -3962,7 +3962,7 @@ window.Freed.DiscoverData = {
     {
       id: "int_thrifty",
       title: "Thrifty Decor Chick",
-      url: "http://feeds.feedburner.com/blogspot/ZBcZ",
+      url: "https://feeds.feedburner.com/blogspot/ZBcZ",
       description: "DIY",
       tags: ["Design", "DIY"],
       accentColor: "#20B2AA",
@@ -3978,7 +3978,7 @@ window.Freed.DiscoverData = {
     {
       id: "int_yanko",
       title: "Yanko Design",
-      url: "http://feeds.feedburner.com/yankodesign",
+      url: "https://feeds.feedburner.com/yankodesign",
       description: "Industrial Design",
       tags: ["Design"],
       accentColor: "#20B2AA",
@@ -4126,7 +4126,7 @@ window.Freed.DiscoverData = {
     {
       id: "music_consequence",
       title: "Consequence",
-      url: "http://consequenceofsound.net/feed",
+      url: "https://consequenceofsound.net/feed",
       description: "News",
       tags: ["Music"],
       accentColor: "#1a1a1a",
@@ -4142,7 +4142,7 @@ window.Freed.DiscoverData = {
     {
       id: "music_metalinjection",
       title: "Metal Injection",
-      url: "http://feeds.feedburner.com/metalinjection",
+      url: "https://feeds.feedburner.com/metalinjection",
       description: "Metal",
       tags: ["Music", "Metal"],
       accentColor: "#1a1a1a",
@@ -4158,7 +4158,7 @@ window.Freed.DiscoverData = {
     {
       id: "music_pitchfork",
       title: "Pitchfork",
-      url: "http://pitchfork.com/rss/news",
+      url: "https://pitchfork.com/rss/news",
       description: "News",
       tags: ["Music"],
       accentColor: "#1a1a1a",
@@ -4166,7 +4166,7 @@ window.Freed.DiscoverData = {
     {
       id: "music_songexploder",
       title: "Song Exploder",
-      url: "http://songexploder.net/feed",
+      url: "https://songexploder.net/feed",
       description: "Podcast",
       tags: ["Music", "Podcast"],
       accentColor: "#1a1a1a",
@@ -4184,7 +4184,7 @@ window.Freed.DiscoverData = {
     {
       id: "news_bbc_world",
       title: "BBC News - World",
-      url: "http://feeds.bbci.co.uk/news/world/rss.xml",
+      url: "https://feeds.bbci.co.uk/news/world/rss.xml",
       description: "BBC",
       tags: ["News", "World"],
       accentColor: "#bb1919",
@@ -4192,7 +4192,7 @@ window.Freed.DiscoverData = {
     {
       id: "news_cnn_world",
       title: "CNN World",
-      url: "http://rss.cnn.com/rss/edition_world.rss",
+      url: "https://rss.cnn.com/rss/edition_world.rss",
       description: "CNN",
       tags: ["News", "World"],
       accentColor: "#cc0000",
@@ -4208,7 +4208,7 @@ window.Freed.DiscoverData = {
     {
       id: "news_ndtv_world",
       title: "NDTV World",
-      url: "http://feeds.feedburner.com/ndtvnews-world-news",
+      url: "https://feeds.feedburner.com/ndtvnews-world-news",
       description: "NDTV",
       tags: ["News", "World"],
       accentColor: "#ca0008",
@@ -4232,7 +4232,7 @@ window.Freed.DiscoverData = {
     {
       id: "news_wapo_world",
       title: "Washington Post World",
-      url: "http://feeds.washingtonpost.com/rss/world",
+      url: "https://feeds.washingtonpost.com/rss/world",
       description: "WaPo",
       tags: ["News", "World"],
       accentColor: "#000000",
@@ -4394,7 +4394,7 @@ window.Freed.DiscoverData = {
     {
       id: "fin_moneyning",
       title: "MoneyNing",
-      url: "http://feeds.feedburner.com/MoneyNing",
+      url: "https://feeds.feedburner.com/MoneyNing",
       description: "Blog",
       tags: ["Finance"],
       accentColor: "#85BB65",
@@ -4410,7 +4410,7 @@ window.Freed.DiscoverData = {
     {
       id: "fin_kitces",
       title: "Nerd's Eye View",
-      url: "http://feeds.feedblitz.com/kitcesnerdseyeview&x=1",
+      url: "https://feeds.feedblitz.com/kitcesnerdseyeview&x=1",
       description: "Kitces",
       tags: ["Finance"],
       accentColor: "#85BB65",
@@ -4490,7 +4490,7 @@ window.Freed.DiscoverData = {
     {
       id: "fin_wisebread",
       title: "Wise Bread",
-      url: "http://feeds.killeraces.com/wisebread",
+      url: "https://feeds.killeraces.com/wisebread",
       description: "Blog",
       tags: ["Finance"],
       accentColor: "#85BB65",
@@ -4556,7 +4556,7 @@ window.Freed.DiscoverData = {
     {
       id: "photo_onebigphoto",
       title: "One Big Photo",
-      url: "http://feeds.feedburner.com/OneBigPhoto",
+      url: "https://feeds.feedburner.com/OneBigPhoto",
       description: "Blog",
       tags: ["Photography"],
       accentColor: "#9932CC",
@@ -4572,7 +4572,7 @@ window.Freed.DiscoverData = {
     {
       id: "photo_strobist",
       title: "Strobist",
-      url: "http://feeds.feedburner.com/blogspot/WOBq",
+      url: "https://feeds.feedburner.com/blogspot/WOBq",
       description: "Lighting",
       tags: ["Photography"],
       accentColor: "#9932CC",
@@ -4614,7 +4614,7 @@ window.Freed.DiscoverData = {
     {
       id: "prog_codenewbie",
       title: "CodeNewbie",
-      url: "http://feeds.codenewbie.org/cnpodcast.xml",
+      url: "https://feeds.codenewbie.org/cnpodcast.xml",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
       accentColor: "#0000FF",
@@ -4686,7 +4686,7 @@ window.Freed.DiscoverData = {
     {
       id: "prog_googledev",
       title: "Google Developers",
-      url: "http://feeds.feedburner.com/GDBcode",
+      url: "https://feeds.feedburner.com/GDBcode",
       description: "Blog",
       tags: ["Dev", "Google"],
       accentColor: "#0000FF",
@@ -4814,7 +4814,7 @@ window.Freed.DiscoverData = {
     {
       id: "prog_throwdown",
       title: "Programming Throwdown",
-      url: "http://feeds.feedburner.com/ProgrammingThrowdown",
+      url: "https://feeds.feedburner.com/ProgrammingThrowdown",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
       accentColor: "#0000FF",
@@ -4838,7 +4838,7 @@ window.Freed.DiscoverData = {
     {
       id: "prog_hanselman",
       title: "Scott Hanselman",
-      url: "http://feeds.hanselman.com/ScottHanselman",
+      url: "https://feeds.hanselman.com/ScottHanselman",
       description: "Blog",
       tags: ["Dev", "Programming"],
       accentColor: "#0000FF",
@@ -4846,7 +4846,7 @@ window.Freed.DiscoverData = {
     {
       id: "prog_scripting",
       title: "Scripting News",
-      url: "http://scripting.com/rss.xml",
+      url: "https://scripting.com/rss.xml",
       description: "Dave Winer",
       tags: ["Dev", "Programming"],
       accentColor: "#0000FF",
@@ -4878,7 +4878,7 @@ window.Freed.DiscoverData = {
     {
       id: "prog_seradio",
       title: "SE Radio",
-      url: "http://feeds.feedburner.com/se-radio",
+      url: "https://feeds.feedburner.com/se-radio",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
       accentColor: "#0000FF",
@@ -4918,7 +4918,7 @@ window.Freed.DiscoverData = {
     {
       id: "prog_6figure",
       title: "The 6 Figure Developer",
-      url: "http://6figuredev.com/feed/rss/",
+      url: "https://6figuredev.com/feed/rss/",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
       accentColor: "#0000FF",
@@ -4958,7 +4958,7 @@ window.Freed.DiscoverData = {
     {
       id: "prog_rabbithole",
       title: "The Rabbit Hole",
-      url: "http://therabbithole.libsyn.com/rss",
+      url: "https://therabbithole.libsyn.com/rss",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
       accentColor: "#0000FF",
@@ -5000,7 +5000,7 @@ window.Freed.DiscoverData = {
     {
       id: "sci_60sec",
       title: "60-Second Science",
-      url: "http://rss.sciam.com/sciam/60secsciencepodcast",
+      url: "https://rss.sciam.com/sciam/60secsciencepodcast",
       description: "Podcast",
       tags: ["Science", "Podcast"],
       accentColor: "#4682B4",
@@ -5008,7 +5008,7 @@ window.Freed.DiscoverData = {
     {
       id: "sci_bbc",
       title: "BBC Science",
-      url: "http://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
+      url: "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
       description: "BBC",
       tags: ["Science", "News"],
       accentColor: "#4682B4",
@@ -5104,7 +5104,7 @@ window.Freed.DiscoverData = {
     {
       id: "sci_radiolab",
       title: "Radiolab",
-      url: "http://feeds.wnyc.org/radiolab",
+      url: "https://feeds.wnyc.org/radiolab",
       description: "Podcast",
       tags: ["Science", "Podcast"],
       accentColor: "#4682B4",
@@ -5136,7 +5136,7 @@ window.Freed.DiscoverData = {
     {
       id: "sci_sciencevs",
       title: "Science Vs",
-      url: "http://feeds.gimletmedia.com/ScienceVs",
+      url: "https://feeds.gimletmedia.com/ScienceVs",
       description: "Podcast",
       tags: ["Science", "Podcast"],
       accentColor: "#4682B4",
@@ -5152,7 +5152,7 @@ window.Freed.DiscoverData = {
     {
       id: "sci_sciam",
       title: "Scientific American",
-      url: "http://rss.sciam.com/ScientificAmerican-Global",
+      url: "https://rss.sciam.com/ScientificAmerican-Global",
       description: "SciAm",
       tags: ["Science"],
       accentColor: "#4682B4",
@@ -5184,7 +5184,7 @@ window.Freed.DiscoverData = {
     {
       id: "sci_twis",
       title: "This Week in Science",
-      url: "http://www.twis.org/feed/",
+      url: "https://www.twis.org/feed/",
       description: "Podcast",
       tags: ["Science", "Podcast"],
       accentColor: "#4682B4",
@@ -5252,7 +5252,7 @@ window.Freed.DiscoverData = {
     {
       id: "sport_bbc",
       title: "BBC Sport",
-      url: "http://feeds.bbci.co.uk/sport/rss.xml",
+      url: "https://feeds.bbci.co.uk/sport/rss.xml",
       description: "BBC",
       tags: ["Sports"],
       accentColor: "#008000",
@@ -5268,7 +5268,7 @@ window.Freed.DiscoverData = {
     {
       id: "sport_sky",
       title: "Sky Sports",
-      url: "http://feeds.skynews.com/feeds/rss/sports.xml",
+      url: "https://feeds.skynews.com/feeds/rss/sports.xml",
       description: "Sky",
       tags: ["Sports"],
       accentColor: "#008000",
@@ -5318,7 +5318,7 @@ window.Freed.DiscoverData = {
     {
       id: "start_entrepreneur",
       title: "Entrepreneur",
-      url: "http://feeds.feedburner.com/entrepreneur/latest",
+      url: "https://feeds.feedburner.com/entrepreneur/latest",
       description: "Entrepreneur",
       tags: ["Startups", "Business"],
       accentColor: "#FF4500",
@@ -5390,7 +5390,7 @@ window.Freed.DiscoverData = {
     {
       id: "start_paulgraham",
       title: "Paul Graham",
-      url: "http://www.aaronsw.com/2002/feeds/pgessays.rss",
+      url: "https://www.aaronsw.com/2002/feeds/pgessays.rss",
       description: "Essays",
       tags: ["Startups"],
       accentColor: "#FF4500",
@@ -5422,7 +5422,7 @@ window.Freed.DiscoverData = {
     {
       id: "start_spi",
       title: "Smart Passive Income",
-      url: "http://feeds.feedburner.com/smartpassiveincome",
+      url: "https://feeds.feedburner.com/smartpassiveincome",
       description: "Pat Flynn",
       tags: ["Startups", "Business"],
       accentColor: "#FF4500",
@@ -5462,7 +5462,7 @@ window.Freed.DiscoverData = {
     {
       id: "start_twist",
       title: "This Week in Startups",
-      url: "http://feeds.feedburner.com/twistvid",
+      url: "https://feeds.feedburner.com/twistvid",
       description: "Jason Calacanis",
       tags: ["Startups", "Video"],
       accentColor: "#FF4500",
@@ -5504,7 +5504,7 @@ window.Freed.DiscoverData = {
     {
       id: "tech_arstechnica",
       title: "Ars Technica",
-      url: "http://feeds.arstechnica.com/arstechnica/index",
+      url: "https://feeds.arstechnica.com/arstechnica/index",
       description: "News",
       tags: ["Tech"],
       accentColor: "#000000",
@@ -5576,7 +5576,7 @@ window.Freed.DiscoverData = {
     {
       id: "tech_mashable",
       title: "Mashable",
-      url: "http://feeds.mashable.com/Mashable",
+      url: "https://feeds.mashable.com/Mashable",
       description: "News",
       tags: ["Tech"],
       accentColor: "#000000",
@@ -5608,7 +5608,7 @@ window.Freed.DiscoverData = {
     {
       id: "tech_slashdot",
       title: "Slashdot",
-      url: "http://rss.slashdot.org/Slashdot/slashdotMain",
+      url: "https://rss.slashdot.org/Slashdot/slashdotMain",
       description: "News",
       tags: ["Tech"],
       accentColor: "#000000",
@@ -5616,7 +5616,7 @@ window.Freed.DiscoverData = {
     {
       id: "tech_stratechery",
       title: "Stratechery",
-      url: "http://stratechery.com/feed/",
+      url: "https://stratechery.com/feed/",
       description: "Ben Thompson",
       tags: ["Tech", "Business"],
       accentColor: "#000000",
@@ -5624,7 +5624,7 @@ window.Freed.DiscoverData = {
     {
       id: "tech_techcrunch",
       title: "TechCrunch",
-      url: "http://feeds.feedburner.com/TechCrunch",
+      url: "https://feeds.feedburner.com/TechCrunch",
       description: "News",
       tags: ["Tech"],
       accentColor: "#000000",
@@ -5738,7 +5738,7 @@ window.Freed.DiscoverData = {
     {
       id: "tv_tvaddict",
       title: "the TV addict",
-      url: "http://feeds.feedburner.com/thetvaddict/AXob",
+      url: "https://feeds.feedburner.com/thetvaddict/AXob",
       description: "News",
       tags: ["TV"],
       accentColor: "#800080",
@@ -5748,7 +5748,7 @@ window.Freed.DiscoverData = {
     {
       id: "tennis_bbc",
       title: "BBC Tennis",
-      url: "http://feeds.bbci.co.uk/sport/tennis/rss.xml",
+      url: "https://feeds.bbci.co.uk/sport/tennis/rss.xml",
       description: "BBC",
       tags: ["Sports", "Tennis"],
       accentColor: "#008000",
@@ -5764,7 +5764,7 @@ window.Freed.DiscoverData = {
     {
       id: "tennis_grandslam",
       title: "Grand Slam Fantasy",
-      url: "http://www.grandslamfantasytennis.com/feed/?x=1",
+      url: "https://www.grandslamfantasytennis.com/feed/?x=1",
       description: "Fantasy",
       tags: ["Sports", "Tennis"],
       accentColor: "#008000",
@@ -5864,7 +5864,7 @@ window.Freed.DiscoverData = {
     {
       id: "ux_boxesandarrows",
       title: "Boxes and Arrows",
-      url: "http://boxesandarrows.com/rss/",
+      url: "https://boxesandarrows.com/rss/",
       description: "Design",
       tags: ["Design", "UX"],
       accentColor: "#FF00FF",
