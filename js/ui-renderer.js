@@ -17,7 +17,8 @@ window.Freed.UI = {
     // Grid column span ensures it takes full width in grid layouts
     sentinel.style.gridColumn = "1 / -1";
     sentinel.style.width = "100%";
-    sentinel.style.height = "60px";
+    sentinel.style.height = "20px";
+    sentinel.style.padding = "20px 0";
     sentinel.style.display = "flex";
     sentinel.style.alignItems = "center";
     sentinel.style.justifyContent = "center";
@@ -28,11 +29,12 @@ window.Freed.UI = {
     let renderedCount = 0;
     let observer = null;
 
+    // Returns true if there are more items available
     const renderBatch = () => {
       const batch = items.slice(renderedCount, renderedCount + batchSize);
       if (batch.length === 0) {
         sentinel.style.display = "none";
-        return;
+        return false;
       }
 
       const fragment = document.createDocumentFragment();
@@ -50,7 +52,34 @@ window.Freed.UI = {
           observer.disconnect();
           observer = null;
         }
+        return false;
       }
+      return true;
+    };
+
+    // Recursively check if we need to load more (e.g. wide screens, fast scroll)
+    const fillScreen = () => {
+      if (renderedCount >= items.length) return;
+
+      requestAnimationFrame(() => {
+        if (!sentinel.isConnected) return; // Safety check
+
+        const sentinelRect = sentinel.getBoundingClientRect();
+        let rootBottom = window.innerHeight;
+
+        if (root) {
+          const rootRect = root.getBoundingClientRect();
+          rootBottom = rootRect.bottom;
+        }
+
+        // Check if sentinel is within viewport + buffer (1000px)
+        if (sentinelRect.top <= rootBottom + 1000) {
+          const hasMore = renderBatch();
+          if (hasMore) {
+            fillScreen(); // Keep filling if we haven't pushed sentinel out yet
+          }
+        }
+      });
     };
 
     // Initial render
@@ -60,17 +89,25 @@ window.Freed.UI = {
     if (renderedCount < items.length) {
       observer = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting) {
-            renderBatch();
+          // If sentinel enters the viewport (or close to it)
+          if (entries.some((e) => e.isIntersecting)) {
+            const hasMore = renderBatch();
+            if (hasMore) {
+              // Ensure we filled enough space
+              fillScreen();
+            }
           }
         },
         {
           root: root,
-          threshold: 0.01,
-          rootMargin: "0px 0px 800px 0px",
+          threshold: 0,
+          rootMargin: "0px 0px 1000px 0px", // Load 1000px ahead of scroll
         },
       );
       observer.observe(sentinel);
+
+      // Trigger initial manual fill to handle empty/wide screens
+      fillScreen();
     } else {
       sentinel.style.display = "none";
     }
