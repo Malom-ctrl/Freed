@@ -116,11 +116,14 @@
                     <!-- JS will inject feeds here -->
                 </div>
 
-                <!-- Plugin Slots for Sidebar -->
+                <!-- Plugin Slots for Sidebar Primary -->
                 <div id="plugin-sidebar-container"></div>
             </div>
 
             <div class="sidebar-footer">
+                <!-- Plugin Slots for Sidebar Secondary -->
+                <div id="plugin-sidebar-secondary-container"></div>
+
                 <div class="nav-item" id="btn-settings">
                     <svg
                         width="24"
@@ -162,6 +165,18 @@
                     </svg>
                 </button>
                 <div class="header-title" id="page-title">All Articles</div>
+
+                <!-- Plugin Navbar Actions -->
+                <div
+                    id="navbar-actions"
+                    style="
+                        display: flex;
+                        align-items: center;
+                        margin-left: auto;
+                        margin-right: 8px;
+                    "
+                ></div>
+
                 <button
                     class="mobile-filter-btn"
                     id="btn-toggle-filters"
@@ -263,6 +278,16 @@
                         Reading View
                     </div>
                     <div style="display: flex; gap: 12px; align-items: center">
+                        <!-- Plugin Reader Actions -->
+                        <div
+                            id="reader-actions-container"
+                            style="
+                                display: flex;
+                                gap: 12px;
+                                align-items: center;
+                            "
+                        ></div>
+
                         <a
                             href="#"
                             target="_blank"
@@ -363,6 +388,9 @@
                     <div id="reader-hero" class="reader-hero"></div>
 
                     <div class="reader-header-content">
+                        <!-- Plugin Reader Header Slot -->
+                        <div id="reader-plugin-header"></div>
+
                         <div class="reader-meta-row">
                             <span id="reader-feed-title">Feed Source</span>
                             <span style="color: var(--border)">|</span>
@@ -379,8 +407,9 @@
                         <!-- Article Content Injected Here -->
                     </div>
 
-                    <div class="reader-footer">
+                    <div class="reader-footer" id="reader-footer">
                         <!-- Footer spacer or additional controls if needed later -->
+                        <!-- Plugin Reader Footer content appended here -->
                     </div>
                 </div>
             </div>

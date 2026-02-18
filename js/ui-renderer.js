@@ -375,6 +375,7 @@ window.Freed.UI = {
     }
 
     this.renderPluginSidebarItems();
+    this.renderPluginSidebarSecondaryItems();
   },
 
   renderDiscoverView: function (data, existingFeeds, onAddFeed, onAddPack) {
@@ -746,6 +747,113 @@ window.Freed.UI = {
     });
   },
 
+  renderReaderPlugins: function (article) {
+    // 1. Reader Header
+    const headerContainer = document.getElementById("reader-plugin-header");
+    if (headerContainer) {
+      headerContainer.innerHTML = "";
+      const headers =
+        window.Freed.Plugins.Registry.getExtensions("reader:header");
+      headers.forEach((item) => {
+        if (typeof item.render === "function") {
+          const el = item.render(article);
+          if (el) {
+            if (typeof el === "string") {
+              const div = document.createElement("div");
+              div.innerHTML = el;
+              headerContainer.appendChild(div);
+            } else {
+              headerContainer.appendChild(el);
+            }
+          }
+        }
+      });
+    }
+
+    // 2. Reader Footer
+    const footerContainer = document.getElementById("reader-footer");
+    // Clear previous plugin items but keep original footer structure if needed (currently empty)
+    if (footerContainer) {
+      footerContainer.innerHTML = "";
+      const footers =
+        window.Freed.Plugins.Registry.getExtensions("reader:footer");
+      footers.forEach((item) => {
+        if (typeof item.render === "function") {
+          const el = item.render(article);
+          if (el) {
+            if (typeof el === "string") {
+              const div = document.createElement("div");
+              div.innerHTML = el;
+              footerContainer.appendChild(div);
+            } else {
+              footerContainer.appendChild(el);
+            }
+          }
+        }
+      });
+    }
+
+    // 3. Reader Actions (Header Icons)
+    const actionsContainer = document.getElementById(
+      "reader-actions-container",
+    );
+    if (actionsContainer) {
+      actionsContainer.innerHTML = "";
+      const actions =
+        window.Freed.Plugins.Registry.getExtensions("reader:action");
+      actions.forEach((action) => {
+        const btn = document.createElement("button");
+        btn.className = "icon-btn";
+        btn.title = action.label || "";
+        btn.innerHTML = action.icon || "";
+        btn.onclick = () => {
+          if (action.onClick) action.onClick(article);
+        };
+        actionsContainer.appendChild(btn);
+      });
+    }
+  },
+
+  renderNavbarActions: function () {
+    const container = document.getElementById("navbar-actions");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const actions =
+      window.Freed.Plugins.Registry.getExtensions("navbar:action");
+    actions.forEach((action) => {
+      const btn = document.createElement("button");
+      btn.className = "icon-btn"; // Reuse existing icon-btn style
+      btn.style.marginLeft = "8px";
+      btn.title = action.label || "";
+      btn.innerHTML = action.icon || "";
+      btn.onclick = () => {
+        if (action.onClick) action.onClick();
+      };
+      container.appendChild(btn);
+    });
+  },
+
+  renderPluginSidebarSecondaryItems: function () {
+    const container = document.getElementById(
+      "plugin-sidebar-secondary-container",
+    );
+    if (!container) return;
+    container.innerHTML = "";
+
+    const items =
+      window.Freed.Plugins.Registry.getExtensions("sidebar:secondary");
+    items.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "nav-item";
+      div.innerHTML = `${item.icon || ""} ${item.label}`;
+      div.onclick = () => {
+        if (item.onClick) item.onClick();
+      };
+      container.appendChild(div);
+    });
+  },
+
   renderArticles: function (
     articles,
     onOpen,
@@ -860,6 +968,29 @@ window.Freed.UI = {
           ? `<div class="dynamic-status-icon" style="margin-left:8px; display:flex; align-items:center; cursor:pointer;" data-tooltip="${statusTitle}">${statusIconContent}</div>`
           : "";
 
+        // Plugin Indicators
+        let pluginIndicatorsHtml = "";
+        if (pluginIndicators.length > 0) {
+          pluginIndicators.forEach((ind) => {
+            // Render logic: either icon string, html, or a render function returning string/html
+            let content = "";
+            if (typeof ind.render === "function") {
+              const res = ind.render(article);
+              content =
+                res instanceof HTMLElement ? res.outerHTML : res || ind.icon;
+            } else {
+              content = ind.icon || "";
+            }
+
+            if (content) {
+              const tooltip = ind.tooltip
+                ? `data-tooltip="${ind.tooltip}" style="cursor:help;"`
+                : "";
+              pluginIndicatorsHtml += `<div class="plugin-indicator" style="margin-left:6px; display:flex; align-items:center;" ${tooltip}>${content}</div>`;
+            }
+          });
+        }
+
         // Discard structures
         const isDiscarded = !!article.discarded;
         const actionLabel = isDiscarded ? "Restore" : "Discard";
@@ -888,6 +1019,7 @@ window.Freed.UI = {
                             <div style="display:flex; align-items:center;">
                                 <span data-tooltip="${fullDateStr}" style="cursor:help;">${dateStr}</span>
                                 ${statusHtml}
+                                ${pluginIndicatorsHtml}
                             </div>
                         </div>
                         <h3 class="card-title">${article.title}</h3>

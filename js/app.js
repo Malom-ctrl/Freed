@@ -160,6 +160,9 @@
     const filterBar = document.getElementById("filter-bar");
     const filterToggleBtn = document.getElementById("btn-toggle-filters");
 
+    // Render Navbar Actions (Plugin)
+    UI.renderNavbarActions();
+
     if (State.currentFeedId === "discover") {
       // Discover View
       if (mainTitleEl) mainTitleEl.textContent = "Discover";

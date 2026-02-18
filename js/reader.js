@@ -110,6 +110,11 @@ window.Freed.Reader = {
     const scrollContainer = modal.querySelector(".reader-scroll-container");
     if (scrollContainer) scrollContainer.scrollTop = 0;
 
+    // Render Reader Plugins (Header, Footer, Actions)
+    if (UI.renderReaderPlugins) {
+      UI.renderReaderPlugins(article);
+    }
+
     // --- Scroll Tracking Logic ---
     if (this._scrollHandler && this._lastScrollContainer) {
       this._lastScrollContainer.removeEventListener(
