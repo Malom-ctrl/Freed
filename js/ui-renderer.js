@@ -62,17 +62,11 @@ window.Freed.UI = {
       if (renderedCount >= items.length) return;
 
       requestAnimationFrame(() => {
-        if (!sentinel.isConnected) return; // Safety check
-
+        if (!sentinel.isConnected) return;
         const sentinelRect = sentinel.getBoundingClientRect();
         let rootBottom = window.innerHeight;
+        if (root) rootBottom = root.getBoundingClientRect().bottom;
 
-        if (root) {
-          const rootRect = root.getBoundingClientRect();
-          rootBottom = rootRect.bottom;
-        }
-
-        // Check if sentinel is within viewport + buffer (1000px)
         if (sentinelRect.top <= rootBottom + 1000) {
           const hasMore = renderBatch();
           if (hasMore) {
@@ -125,6 +119,177 @@ window.Freed.UI = {
     }
   },
 
+  renderPluginSettings: function () {
+    const generalContainer = document.getElementById(
+      "plugin-settings-container-general",
+    );
+    if (generalContainer) generalContainer.innerHTML = "";
+
+    const settings =
+      window.Freed.Plugins.Registry.getExtensions("settings:section");
+    settings.forEach((item) => {
+      let container = null;
+      if (item.tab === "tab-general") container = generalContainer;
+
+      if (container && typeof item.render === "function") {
+        const wrapper = document.createElement("div");
+        wrapper.style.marginBottom = "20px";
+        if (item.title) {
+          const header = document.createElement("h4");
+          header.style.marginTop = "0";
+          header.style.marginBottom = "10px";
+          header.textContent = item.title;
+          wrapper.appendChild(header);
+        }
+        item.render(wrapper);
+        container.appendChild(wrapper);
+      }
+    });
+  },
+
+  renderPluginsList: function (installed, available, callbacks) {
+    const container = document.getElementById("plugins-list-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    // 1. Installed Plugins
+    if (installed.length > 0) {
+      installed.forEach((plugin) => {
+        const card = document.createElement("div");
+        card.style.border = "1px solid var(--border)";
+        card.style.borderRadius = "8px";
+        card.style.padding = "12px";
+        card.style.marginBottom = "12px";
+        card.style.background = "var(--bg-card)";
+
+        const header = document.createElement("div");
+        header.style.display = "flex";
+        header.style.justifyContent = "space-between";
+        header.style.alignItems = "start";
+        header.style.marginBottom = "8px";
+
+        const info = document.createElement("div");
+        info.innerHTML = `
+            <div style="font-weight:600; font-size:1rem; display:flex; align-items:center; gap:8px;">
+                ${plugin.name}
+                <span style="font-weight:400; color:var(--text-muted); font-size:0.8em;">v${plugin.version}</span>
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">${plugin.description || "No description"}</div>
+        `;
+
+        const toggleLabel = document.createElement("label");
+        toggleLabel.className = "toggle-switch";
+        toggleLabel.innerHTML = `<input type="checkbox" ${plugin.enabled ? "checked" : ""}><span class="slider"></span>`;
+        toggleLabel.querySelector("input").onchange = (e) =>
+          callbacks.onToggle(plugin.id, e.target.checked);
+
+        header.appendChild(info);
+        header.appendChild(toggleLabel);
+
+        const actions = document.createElement("div");
+        actions.style.display = "flex";
+        actions.style.gap = "8px";
+        actions.style.justifyContent = "flex-end";
+
+        const wipeBtn = document.createElement("button");
+        wipeBtn.className = "btn btn-outline";
+        wipeBtn.style.fontSize = "0.75rem";
+        wipeBtn.style.padding = "4px 8px";
+        wipeBtn.textContent = "Wipe Data";
+        wipeBtn.onclick = () => {
+          if (
+            confirm(
+              `Are you sure you want to clear stored data for ${plugin.name}? This cannot be undone.`,
+            )
+          ) {
+            callbacks.onWipe(plugin.id);
+          }
+        };
+
+        const uninstallBtn = document.createElement("button");
+        uninstallBtn.className = "btn btn-outline";
+        uninstallBtn.style.fontSize = "0.75rem";
+        uninstallBtn.style.padding = "4px 8px";
+        uninstallBtn.style.color = "#ef4444";
+        uninstallBtn.style.borderColor = "#ef4444";
+        uninstallBtn.textContent = "Uninstall";
+        uninstallBtn.onclick = () => {
+          if (confirm(`Uninstall ${plugin.name}?`)) {
+            callbacks.onUninstall(plugin.id);
+          }
+        };
+
+        actions.appendChild(wipeBtn);
+        actions.appendChild(uninstallBtn);
+
+        card.appendChild(header);
+        card.appendChild(actions);
+        container.appendChild(card);
+      });
+    } else {
+      const empty = document.createElement("div");
+      empty.style.color = "var(--text-muted)";
+      empty.style.textAlign = "center";
+      empty.style.padding = "20px";
+      empty.style.marginBottom = "20px";
+      empty.textContent = "No plugins installed.";
+      container.appendChild(empty);
+    }
+
+    // 2. Available Official Plugins (not installed)
+    const notInstalled = available.filter(
+      (a) => !installed.some((i) => i.id === a.id),
+    );
+
+    if (notInstalled.length > 0) {
+      const divider = document.createElement("div");
+      divider.style.height = "1px";
+      divider.style.background = "var(--border)";
+      divider.style.margin = "20px 0";
+      container.appendChild(divider);
+
+      const header = document.createElement("h4");
+      header.style.marginBottom = "10px";
+      header.textContent = "Available Official Plugins";
+      container.appendChild(header);
+
+      notInstalled.forEach((plugin) => {
+        const card = document.createElement("div");
+        card.style.border = "1px solid var(--border)";
+        card.style.borderRadius = "8px";
+        card.style.padding = "12px";
+        card.style.marginBottom = "12px";
+        card.style.background = "var(--bg-body)"; // Slightly different bg to distinguish
+
+        const content = document.createElement("div");
+        content.style.display = "flex";
+        content.style.justifyContent = "space-between";
+        content.style.alignItems = "center";
+
+        const info = document.createElement("div");
+        info.innerHTML = `
+            <div style="font-weight:600; font-size:1rem; display:flex; align-items:center; gap:8px;">
+                ${plugin.name}
+                <span style="font-weight:400; color:var(--text-muted); font-size:0.8em;">v${plugin.version}</span>
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">${plugin.description || "No description"}</div>
+        `;
+
+        const installBtn = document.createElement("button");
+        installBtn.className = "btn btn-primary";
+        installBtn.style.fontSize = "0.8rem";
+        installBtn.style.padding = "6px 12px";
+        installBtn.textContent = "Install";
+        installBtn.onclick = () => callbacks.onInstall(plugin.url);
+
+        content.appendChild(info);
+        content.appendChild(installBtn);
+        card.appendChild(content);
+        container.appendChild(card);
+      });
+    }
+  },
+
   renderFeedList: function (feeds, currentFeedId, onSwitch, onEdit, onStats) {
     const { hexToRgba } = window.Freed.Utils;
     const container = document.getElementById("feed-list-container");
@@ -164,7 +329,7 @@ window.Freed.UI = {
       const statsIcon = `<div class="feed-btn-icon feed-stats-btn" title="Stats"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>`;
 
       // Gear icon for settings
-      const settingsIcon = `<div class="feed-btn-icon feed-settings-btn" title="Edit Feed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></div>`;
+      const settingsIcon = `<div class="feed-btn-icon feed-settings-btn" title="Edit Feed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 0 2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></div>`;
 
       div.innerHTML = `
                 <div class="nav-item-content" style="display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden;">
@@ -208,6 +373,8 @@ window.Freed.UI = {
       if (currentFeedId === "discover") discBtn.classList.add("active");
       else discBtn.classList.remove("active");
     }
+
+    this.renderPluginSidebarItems();
   },
 
   renderDiscoverView: function (data, existingFeeds, onAddFeed, onAddPack) {
@@ -540,9 +707,43 @@ window.Freed.UI = {
             </div>
         `;
 
+    // Render Custom Plugin Stats
+    const customStats =
+      window.Freed.Plugins.Registry.getExtensions("stats:feed");
+    if (customStats.length > 0) {
+      customStats.forEach((item) => {
+        if (typeof item.render === "function") {
+          const html = item.render(feed);
+          if (html) {
+            const div = document.createElement("div");
+            div.innerHTML = html;
+            content.appendChild(div);
+          }
+        }
+      });
+    }
+
     document.getElementById("stats-modal-title").textContent =
       `${feed.title} Stats`;
     this.toggleModal("stats-modal", true);
+  },
+
+  renderPluginSidebarItems: function () {
+    const container = document.getElementById("plugin-sidebar-container");
+    if (!container) return;
+    container.innerHTML = "";
+
+    const items =
+      window.Freed.Plugins.Registry.getExtensions("sidebar:primary");
+    items.forEach((item) => {
+      const div = document.createElement("div");
+      div.className = "nav-item";
+      div.innerHTML = `${item.icon || ""} ${item.label}`;
+      div.onclick = () => {
+        if (item.onClick) item.onClick();
+      };
+      container.appendChild(div);
+    });
   },
 
   renderArticles: function (
@@ -588,12 +789,16 @@ window.Freed.UI = {
       return;
     }
 
-    // Use Shared Lazy Loader
+    const pluginActions =
+      window.Freed.Plugins.Registry.getExtensions("card:action");
+    const pluginIndicators =
+      window.Freed.Plugins.Registry.getExtensions("card:indicator");
+
     this._articleObserver = this._initLazyLoader({
       container: list,
       items: articles,
       batchSize: 20,
-      root: list, // Explicitly pass #article-list as root
+      root: list,
       renderItem: (article) => {
         const dateStr = formatRelativeTime(article.pubDate);
         const fullDateStr = formatFullDate(article.pubDate);
@@ -665,6 +870,15 @@ window.Freed.UI = {
         const discardZone = `<div class="discard-zone" title="${actionLabel}"></div>`;
         const discardOverlay = `<div class="discard-overlay">${iconSvg}${actionLabel}</div>`;
 
+        let pluginActionsHtml = "";
+        if (pluginActions.length > 0) {
+          pluginActionsHtml = `<div class="card-plugin-actions" style="display:flex; gap:8px; margin-left:auto;">`;
+          pluginActions.forEach((action, idx) => {
+            pluginActionsHtml += `<div class="plugin-action-btn" data-plugin-idx="${idx}" title="${action.label}" style="cursor:pointer; opacity:0.6;">${action.icon}</div>`;
+          });
+          pluginActionsHtml += `</div>`;
+        }
+
         card.innerHTML = `
                     ${discardZone}
                     ${discardOverlay}
@@ -678,6 +892,7 @@ window.Freed.UI = {
                         </div>
                         <h3 class="card-title">${article.title}</h3>
                         ${tagsHtml}
+                        ${pluginActionsHtml}
                     </div>
                     `;
 
@@ -688,6 +903,7 @@ window.Freed.UI = {
           )
             return;
           if (e.target.closest(".dynamic-status-icon")) return;
+          if (e.target.closest(".plugin-action-btn")) return;
           onOpen(article);
         };
 
@@ -696,6 +912,17 @@ window.Freed.UI = {
           statusBtn.onclick = (e) => {
             e.stopPropagation();
             if (onToggleFavorite) onToggleFavorite(article);
+          };
+        }
+
+        const pluginBtn = card.querySelector(".plugin-action-btn");
+        if (pluginBtn) {
+          pluginBtn.onclick = (e) => {
+            e.stopPropagation();
+            const idx = parseInt(pluginBtn.dataset.pluginIdx);
+            if (pluginActions[idx] && pluginActions[idx].onClick) {
+              pluginActions[idx].onClick(article);
+            }
           };
         }
 

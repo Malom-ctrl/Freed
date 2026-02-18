@@ -16,7 +16,6 @@ window.Freed = window.Freed || {};
         isDateFromFeed = true;
       }
     }
-
     const link = data.link || "";
     // If guid is missing, fallback to link or composite key
     let guid = data.guid;
@@ -33,7 +32,6 @@ window.Freed = window.Freed || {};
       snippet: data.snippet || "",
       image: data.image || "",
       isDateFromFeed,
-      // Allow override if provided (e.g. from existing DB merge outside this scope) but usually undefined here
       fullContent: data.fullContent,
       read: false,
       favorite: false,
@@ -42,7 +40,17 @@ window.Freed = window.Freed || {};
   }
 
   async function fetchAndParseFeed(feed) {
-    const proxyUrl = proxifyUrl(feed.url);
+    // Hook: feed:fetch:before
+    // Plugins can modify the URL (e.g., to use a different proxy)
+    let targetUrl = feed.url;
+    if (window.Freed.Plugins && window.Freed.Plugins.Registry) {
+      targetUrl = await window.Freed.Plugins.Registry.executePipeline(
+        "feed:fetch:before",
+        targetUrl,
+      );
+    }
+
+    const proxyUrl = proxifyUrl(targetUrl);
     let rawText = "";
 
     try {
@@ -55,65 +63,81 @@ window.Freed = window.Freed || {};
       return { articles: [], error: e.message };
     }
 
-    // 1. Try Standard RSS Parsing
+    let resultArticles = [];
+    let type = "rss";
+    let newParsingRule = null;
+
+    // 1. Try Standard RSS
     try {
       const parser = new DOMParser();
       const xml = parser.parseFromString(rawText, "text/xml");
       if (!xml.querySelector("parsererror")) {
-        const articles = parseRSS(xml, feed);
-        return { articles, type: "rss" };
+        resultArticles = parseRSS(xml, feed);
+      } else {
+        throw new Error("Not XML");
       }
     } catch (e) {
-      // Not XML, proceed to web parsing
-    }
-
-    // 2. Web Parsing with AI Rules
-    try {
-      let parsingRule = feed.parsingRule;
-      let articles = [];
-      let newParsingRule = null;
-
-      // First attempt with existing rule if available
-      if (parsingRule) {
-        articles = parseWebWithRule(rawText, parsingRule, feed.url, feed);
-      }
-
-      // If no articles found (no rule or rule outdated), generate new rule
-      if (articles.length === 0 && window.Freed.AI) {
-        console.log("Generating parsing rule for", feed.url);
-        parsingRule = await window.Freed.AI.generateParsingRule(
-          rawText,
-          feed.url,
-        );
-
+      // 2. Web Parsing with AI
+      type = "web";
+      try {
+        let parsingRule = feed.parsingRule;
         if (parsingRule) {
-          articles = parseWebWithRule(rawText, parsingRule, feed.url, feed);
-          newParsingRule = parsingRule;
+          resultArticles = parseWebWithRule(
+            rawText,
+            parsingRule,
+            feed.url,
+            feed,
+          );
         }
+        if (resultArticles.length === 0 && window.Freed.AI) {
+          parsingRule = await window.Freed.AI.generateParsingRule(
+            rawText,
+            feed.url,
+          );
+          if (parsingRule) {
+            resultArticles = parseWebWithRule(
+              rawText,
+              parsingRule,
+              feed.url,
+              feed,
+            );
+            newParsingRule = parsingRule;
+          }
+        }
+      } catch (webErr) {
+        console.error("Web parsing failed", webErr);
       }
-
-      return { articles, type: "web", parsingRule: newParsingRule };
-    } catch (e) {
-      console.error("Web parsing failed", e);
-      return { articles: [], error: e.message };
     }
+
+    // Hook: articles:process
+    // Plugins can filter or modify the list of articles (e.g., deduplicate, analysis)
+    if (window.Freed.Plugins && window.Freed.Plugins.Registry) {
+      resultArticles = await window.Freed.Plugins.Registry.executePipeline(
+        "articles:process",
+        resultArticles,
+      );
+    }
+
+    return { articles: resultArticles, type, parsingRule: newParsingRule };
   }
 
   function parseRSS(xml, feed) {
     const items = Array.from(xml.querySelectorAll("item, entry"));
     return items.map((item) => {
       const title = item.querySelector("title")?.textContent;
-      let link = item.querySelector("link")?.textContent || "";
-      if (!link) link = item.querySelector("link")?.getAttribute("href") || "";
-
-      const dateNode = item.querySelector("pubDate, published, updated");
-      const dateStr = dateNode ? dateNode.textContent : null;
-
-      const contentEncoded = item.getElementsByTagNameNS("*", "encoded")[0]
-        ?.textContent;
+      let link =
+        item.querySelector("link")?.textContent ||
+        item.querySelector("link")?.getAttribute("href") ||
+        "";
+      const dateStr = item.querySelector(
+        "pubDate, published, updated",
+      )?.textContent;
       const description =
         item.querySelector("description, summary")?.textContent || "";
-      const content = contentEncoded || description || "";
+      const content =
+        item.getElementsByTagNameNS("*", "encoded")[0]?.textContent ||
+        description ||
+        "";
 
       let image = "";
       const mediaContent = item.getElementsByTagNameNS("*", "content");
@@ -123,6 +147,7 @@ window.Freed = window.Freed || {};
       ) {
         image = mediaContent[0].getAttribute("url") || "";
       }
+      // Simple extraction if description has img
       if (!image && description) {
         const div = document.createElement("div");
         div.innerHTML = description;
@@ -130,11 +155,7 @@ window.Freed = window.Freed || {};
         if (img) image = img.src;
       }
 
-      const guidNode = item.querySelector("guid, id");
-      const guidRaw = guidNode ? guidNode.textContent : null;
-      // Prefer link as guid if available to avoid duplicates if ID changes but link is same
-      const guid = link || guidRaw;
-
+      const guid = item.querySelector("guid, id")?.textContent || link;
       const snippet = divToText(description).substring(0, 150) + "...";
 
       return _normalizeArticle({
@@ -159,9 +180,7 @@ window.Freed = window.Freed || {};
     const base = doc.createElement("base");
     base.href = baseUrl;
     doc.head.appendChild(base);
-
     const items = Array.from(doc.querySelectorAll(rule.container));
-
     return items
       .map((item) => {
         try {
@@ -198,7 +217,7 @@ window.Freed = window.Freed || {};
             link,
             dateStr,
             guid: link,
-            content: "", // Web feeds usually don't have full content in list
+            content: "",
             snippet,
             image,
           });
@@ -216,22 +235,15 @@ window.Freed = window.Freed || {};
     }
 
     const proxyUrl = proxifyUrl(url);
-
     try {
       const response = await fetch(proxyUrl);
       if (!response.ok) throw new Error("Network response was not ok");
       const htmlText = await response.text();
-
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlText, "text/html");
-
+      const doc = new DOMParser().parseFromString(htmlText, "text/html");
       const base = doc.createElement("base");
       base.href = url;
       doc.head.appendChild(base);
-
-      const reader = new window.Readability(doc);
-      const article = reader.parse();
-
+      const article = new window.Readability(doc).parse();
       return article ? article.content : null;
     } catch (error) {
       console.warn("Failed to fetch full content", error);

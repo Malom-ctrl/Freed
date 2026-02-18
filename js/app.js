@@ -14,6 +14,7 @@
     Feeds,
     Data,
     DiscoverData,
+    Plugins, // New namespace
   } = window.Freed;
 
   // Runtime cache for computed icon colors (not saved to DB)
@@ -31,13 +32,17 @@
     }
 
     registerSW();
+
+    await DB.openDB();
+
+    // Initialize Plugins System (loads installed & builtins)
+    await Plugins.Manager.init();
+
     setupEventListeners();
     Tools.setupSelectionTools();
     UI.setupGlobalTooltip();
     Tags.setupTagColorPopup();
-    Tags.setupTagInputs(() => refreshUI()); // Pass callback for filter updates
-
-    await DB.openDB();
+    Tags.setupTagInputs(() => refreshUI());
 
     // Run Data Cleanup Policy
     const cleanupSettings = {
@@ -61,7 +66,6 @@
     // Initial Routing Logic
     const allFeeds = await DB.getAllFeeds();
     if (allFeeds.length === 0) {
-      // New user experience
       State.currentFeedId = "discover";
     }
 
@@ -148,7 +152,7 @@
       State.currentFeedId,
       switchFeed,
       Feeds.openEditFeedModal.bind(Feeds),
-      (feed) => UI.renderStatsModal(feed), // Stats callback
+      (feed) => UI.renderStatsModal(feed),
     );
 
     // 2. Render Main Content (Discover vs Articles)
@@ -463,7 +467,7 @@
         UI.toggleModal("read-modal", false);
         document.body.classList.remove("modal-open");
         State.currentArticleGuid = null;
-        refreshUI(); // Ensure UI is updated on back navigation
+        refreshUI();
       }
     });
 
@@ -531,13 +535,10 @@
 
     document.getElementById("btn-settings")?.addEventListener("click", () => {
       UI.toggleModal("settings-modal", true);
+      UI.renderPluginSettings(); // Ensure plugin settings are rendered
       const keyInput = document.getElementById("settings-api-key");
       if (keyInput)
         keyInput.value = localStorage.getItem("freed_api_key") || "";
-
-      const langInput = document.getElementById("settings-language");
-      if (langInput)
-        langInput.value = localStorage.getItem("freed_target_lang") || "en";
 
       const themeInput = document.getElementById("settings-theme");
       if (themeInput)
@@ -566,7 +567,7 @@
     const tabPanes = document.querySelectorAll(".settings-tab-pane");
 
     tabButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
         const target = btn.getAttribute("data-target");
 
         tabButtons.forEach((b) => b.classList.remove("active"));
@@ -574,6 +575,68 @@
 
         btn.classList.add("active");
         document.getElementById(target).classList.add("active");
+
+        // Load Plugins List if plugin tab
+        if (target === "tab-plugins") {
+          const installed = await DB.getPlugins();
+
+          // Fetch Official Plugins
+          const official = [];
+          if (Config.OFFICIAL_PLUGINS) {
+            for (const url of Config.OFFICIAL_PLUGINS) {
+              try {
+                const res = await fetch(url);
+                if (res.ok) {
+                  const manifest = await res.json();
+                  official.push({ ...manifest, url });
+                }
+              } catch (e) {
+                console.warn(
+                  "Failed to fetch official plugin manifest:",
+                  url,
+                  e,
+                );
+              }
+            }
+          }
+
+          UI.renderPluginsList(installed, official, {
+            onToggle: async (id, enabled) => {
+              await Plugins.Manager.togglePlugin(id, enabled);
+              if (
+                confirm(
+                  "App reload required to change plugin state. Reload now?",
+                )
+              ) {
+                window.location.reload();
+              }
+            },
+            onWipe: async (id) => {
+              await Plugins.Manager.wipeData(id);
+              Utils.showToast("Plugin data cleared");
+            },
+            onUninstall: async (id) => {
+              await Plugins.Manager.uninstall(id);
+            },
+            onInstall: async (url) => {
+              try {
+                await Plugins.Manager.installFromUrl(url);
+                Utils.showToast("Plugin installed successfully");
+                // Refresh the view
+                btn.click();
+                if (
+                  confirm(
+                    "App reload required to activate new plugin. Reload now?",
+                  )
+                ) {
+                  window.location.reload();
+                }
+              } catch (e) {
+                Utils.showToast("Installation failed: " + e.message);
+              }
+            },
+          });
+        }
       });
     });
 
@@ -583,10 +646,6 @@
         localStorage.setItem(
           "freed_api_key",
           document.getElementById("settings-api-key").value.trim(),
-        );
-        localStorage.setItem(
-          "freed_target_lang",
-          document.getElementById("settings-language").value,
         );
 
         const theme = document.getElementById("settings-theme").value;
@@ -619,6 +678,43 @@
         Utils.showToast("Settings saved");
         window.closeSettingsModal();
         refreshUI();
+      });
+
+    // --- Plugin Install ---
+    document
+      .getElementById("btn-install-plugin")
+      ?.addEventListener("click", async () => {
+        const input = document.getElementById("plugin-install-url");
+        const url = input.value.trim();
+        if (!url) return;
+
+        const btn = document.getElementById("btn-install-plugin");
+        const originalText = btn.textContent;
+        btn.textContent = "Installing...";
+        btn.disabled = true;
+
+        try {
+          await Plugins.Manager.installFromUrl(url);
+          Utils.showToast("Plugin installed successfully");
+          input.value = "";
+
+          if (
+            confirm("App reload required to activate new plugin. Reload now?")
+          ) {
+            window.location.reload();
+          } else {
+            // Refresh list just in case
+            const tabBtn = document.querySelector(
+              '.settings-tab-btn[data-target="tab-plugins"]',
+            );
+            if (tabBtn) tabBtn.click();
+          }
+        } catch (e) {
+          Utils.showToast("Installation failed: " + e.message);
+        } finally {
+          btn.textContent = originalText;
+          btn.disabled = false;
+        }
       });
 
     // --- Export / Import Listeners ---

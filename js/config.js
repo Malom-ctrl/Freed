@@ -3,7 +3,7 @@ window.Freed = window.Freed || {};
 window.Freed.Config = {
   APP_VERSION: "1.0.0",
   DB_NAME: "freed_db",
-  DB_VERSION: 2,
+  DB_VERSION: 3,
   COLOR_PALETTE: [
     "#ef4444", // Red
     "#f97316", // Orange
@@ -24,6 +24,10 @@ window.Freed.Config = {
     "#64748b", // Slate
   ],
   DEFAULT_FEEDS: [],
+  // Registry of official plugins available for one-click install
+  OFFICIAL_PLUGINS: [
+    "https://raw.githubusercontent.com/Malom-ctrl/Freed-Language-Learning/refs/heads/main/manifest.json",
+  ],
   DEFAULTS: {
     CLEANUP_UNREAD_DAYS: 30,
     CLEANUP_CONTENT_DAYS: 7,

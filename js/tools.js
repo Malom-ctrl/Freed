@@ -5,6 +5,8 @@ window.Freed.Tools = {
     const readerContent = document.getElementById("reader-content");
     const toolbar = document.getElementById("selection-toolbar");
     const clearBtn = document.getElementById("btn-tool-clear");
+    const pluginContainer = document.getElementById("plugin-tools-container");
+    const divider = document.getElementById("toolbar-divider");
 
     if (!readerContent || !toolbar) return;
 
@@ -15,9 +17,6 @@ window.Freed.Tools = {
     const clearHighlightBtn = document.getElementById("btn-tool-clear");
     if (clearHighlightBtn)
       clearHighlightBtn.onclick = this.handleClearHighlight.bind(this);
-
-    const translateBtn = document.getElementById("btn-tool-translate");
-    if (translateBtn) translateBtn.onclick = this.handleTranslate.bind(this);
 
     const updateToolbar = () => {
       const selection = window.getSelection();
@@ -32,6 +31,7 @@ window.Freed.Tools = {
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
 
+      // Check overlaps for "Clear" button
       const highlights = readerContent.querySelectorAll(".highlight-outline");
       let hasOverlap = false;
       for (const h of highlights) {
@@ -41,6 +41,31 @@ window.Freed.Tools = {
         }
       }
       if (clearBtn) clearBtn.style.display = hasOverlap ? "flex" : "none";
+
+      // Render Plugin Tools using reader:tool slot
+      if (pluginContainer) {
+        pluginContainer.innerHTML = "";
+        const tools =
+          window.Freed.Plugins.Registry.getExtensions("reader:tool");
+
+        if (tools.length > 0) {
+          if (divider) divider.style.display = "block";
+          tools.forEach((tool) => {
+            const btn = document.createElement("button");
+            btn.innerHTML = `${tool.icon || ""} ${tool.label}`;
+            btn.onclick = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const text = selection.toString().trim();
+              if (tool.onClick) tool.onClick(text, range);
+            };
+            pluginContainer.appendChild(btn);
+          });
+        } else {
+          if (divider) divider.style.display = "none";
+        }
+      }
+
       toolbar.style.display = "flex";
       toolbar.style.top = `${rect.top}px`;
       toolbar.style.left = `${rect.left + rect.width / 2}px`;
@@ -62,7 +87,6 @@ window.Freed.Tools = {
     if (!selection.rangeCount) return;
     const contentEl = document.getElementById("reader-content");
 
-    // Use ExecCommand for robust range highlighting
     contentEl.contentEditable = "true";
     document.execCommand("hiliteColor", false, "#ffff00");
     contentEl.contentEditable = "false";
@@ -81,7 +105,7 @@ window.Freed.Tools = {
 
     await this.saveCurrentArticleContent();
 
-    // Enforce Favorite Logic
+    // Auto-favorite logic
     const guid = window.Freed.State.currentArticleGuid;
     if (guid) {
       try {
@@ -133,94 +157,13 @@ window.Freed.Tools = {
     }
   },
 
-  handleTranslate: async function (e) {
-    e.preventDefault();
-    const selection = window.getSelection();
-    const text = selection.toString().trim();
-    if (!text) return;
-    const range = selection.getRangeAt(0);
-
-    // Use MyMemory default flow.
-    const targetLang = localStorage.getItem("freed_target_lang") || "en";
-
-    const span = document.createElement("span");
-    span.className = "translating";
-    span.textContent = text;
-    range.deleteContents();
-    range.insertNode(span);
-
-    window.getSelection().removeAllRanges();
-    document.getElementById("selection-toolbar").style.display = "none";
-
-    try {
-      const translatedText = await this.fetchTranslation(text, targetLang);
-      if (translatedText) {
-        span.className = "translated-text";
-        span.setAttribute("data-tooltip", translatedText);
-        window.Freed.Utils.showToast("Translation ready");
-
-        // Check if currently hovering and show tooltip immediately
-        if (
-          span.matches(":hover") &&
-          window.Freed.UI &&
-          window.Freed.UI.showTooltip
-        ) {
-          window.Freed.UI.showTooltip(span, translatedText);
-        }
-
-        this.saveCurrentArticleContent();
-
-        // Update Stats
-        const guid = window.Freed.State.currentArticleGuid;
-        if (guid) {
-          const article = await window.Freed.DB.getArticle(guid);
-          if (article && article.feedId) {
-            const wordCount = window.Freed.Utils.countWords(text);
-            await window.Freed.DB.updateTranslationStats(
-              article.feedId,
-              wordCount,
-            );
-
-            // Force refresh UI to update stats in background so that when stats modal opens it is fresh
-            if (window.Freed.App && window.Freed.App.refreshUI) {
-              window.Freed.App.refreshUI();
-            }
-          }
-        }
-      } else {
-        throw new Error("Empty");
-      }
-    } catch (error) {
-      const parent = span.parentNode;
-      parent.replaceChild(document.createTextNode(text), span);
-      window.Freed.Utils.showToast("Translation failed.");
-    }
-  },
-
-  fetchTranslation: async function (text, targetLang) {
-    // Enforce MyMemory
-    try {
-      const lang = targetLang || "en";
-      const pair = `Autodetect|${lang}`;
-      const res = await fetch(
-        `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${pair}`,
-      );
-      const data = await res.json();
-      return data.responseStatus === 200
-        ? data.responseData.translatedText
-        : null;
-    } catch (e) {
-      console.error("Translation failed", e);
-      return null;
-    }
-  },
-
   saveCurrentArticleContent: async function () {
     const guid = window.Freed.State.currentArticleGuid;
     if (!guid) return;
     const contentEl = document.getElementById("reader-content");
-    const newHtml = contentEl.innerHTML;
-    await window.Freed.DB.saveArticles([{ guid: guid, fullContent: newHtml }]);
+    await window.Freed.DB.saveArticles([
+      { guid: guid, fullContent: contentEl.innerHTML },
+    ]);
   },
 
   normalizeHighlights: function (container) {

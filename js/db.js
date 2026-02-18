@@ -28,6 +28,13 @@ window.Freed = window.Freed || {};
         if (!db.objectStoreNames.contains("tags")) {
           db.createObjectStore("tags", { keyPath: "name" });
         }
+
+        if (!db.objectStoreNames.contains("plugins")) {
+          db.createObjectStore("plugins", { keyPath: "id" });
+        }
+        if (!db.objectStoreNames.contains("plugin_storage")) {
+          db.createObjectStore("plugin_storage", { keyPath: "key" });
+        }
       };
 
       request.onsuccess = (e) => {
@@ -45,7 +52,6 @@ window.Freed = window.Freed || {};
               const tags = feed.tags || [];
               feedStore.add(feed);
               tags.forEach((tagName) => {
-                // Default random color for seeded tags if not exists
                 tagStore.get(tagName).onsuccess = (ev) => {
                   if (!ev.target.result) {
                     tagStore.put({
@@ -75,7 +81,6 @@ window.Freed = window.Freed || {};
         discarded: 0,
         favorited: 0,
         wordCountRead: 0,
-        wordCountTranslated: 0,
       };
     }
     return feed.stats;
@@ -124,7 +129,7 @@ window.Freed = window.Freed || {};
       const tx = db.transaction("tags", "readonly");
       const store = tx.objectStore("tags");
       const request = store.getAll();
-      request.onsuccess = () => resolve(request.result); // Returns array of {name, color}
+      request.onsuccess = () => resolve(request.result);
       request.onerror = () => reject(request.error);
     });
   }
@@ -134,7 +139,6 @@ window.Freed = window.Freed || {};
     return new Promise((resolve, reject) => {
       const tx = db.transaction("tags", "readwrite");
       const store = tx.objectStore("tags");
-      // tag: {name, color}
       const request = store.put(tag);
       request.onsuccess = () => resolve();
       request.onerror = () => reject(request.error);
@@ -219,36 +223,24 @@ window.Freed = window.Freed || {};
       const tx = db.transaction(["articles", "feeds"], "readwrite");
       const articleStore = tx.objectStore("articles");
       const feedStore = tx.objectStore("feeds");
-
-      // Track new articles per feed to update stats
-      const newCounts = {}; // feedId -> count
-
+      const newCounts = {};
       let processed = 0;
-
-      // If no articles, resolve immediately
       if (articles.length === 0) {
         resolve();
         return;
       }
-
       articles.forEach((article) => {
         const getReq = articleStore.get(article.guid);
-
         getReq.onsuccess = () => {
           const existing = getReq.result;
-
           if (!existing) {
-            // Count as new
             if (article.feedId) {
               newCounts[article.feedId] = (newCounts[article.feedId] || 0) + 1;
             }
           }
-
-          // Merge existing data
           const finalArticle = existing
             ? { ...existing, ...article }
             : { ...article };
-
           if (existing) {
             if (!article.isDateFromFeed)
               finalArticle.pubDate = existing.pubDate;
@@ -271,15 +263,12 @@ window.Freed = window.Freed || {};
           }
           delete finalArticle.isDateFromFeed;
           articleStore.put(finalArticle);
-
           processed++;
           checkComplete();
         };
       });
-
       function checkComplete() {
         if (processed === articles.length) {
-          // Update stats for feeds
           const feedIds = Object.keys(newCounts);
           if (feedIds.length > 0) {
             feedIds.forEach((fid) => {
@@ -291,7 +280,6 @@ window.Freed = window.Freed || {};
           resolve();
         }
       }
-
       tx.onerror = () => reject(tx.error);
     });
   }
@@ -302,7 +290,6 @@ window.Freed = window.Freed || {};
       const tx = db.transaction(["articles", "feeds"], "readwrite");
       const articleStore = tx.objectStore("articles");
       const feedStore = tx.objectStore("feeds");
-
       const req = articleStore.get(guid);
       req.onsuccess = () => {
         const article = req.result;
@@ -310,13 +297,9 @@ window.Freed = window.Freed || {};
           resolve();
           return;
         }
-
         const previousRead = !!article.read;
         const previousProgress = article.readingProgress || 0;
-
         let changed = false;
-
-        // Update Progress if provided
         if (progress !== undefined && article.readingProgress !== progress) {
           article.readingProgress = progress;
           changed = true;
@@ -331,21 +314,15 @@ window.Freed = window.Freed || {};
           article.readingProgress = 1;
           changed = true;
         }
-
-        // Update Read Status if provided
         if (isRead !== undefined && article.read !== isRead) {
           article.read = isRead;
           changed = true;
         }
-
         if (!changed) {
           resolve();
           return;
         }
-
         articleStore.put(article);
-
-        // Update Feed Stats
         if (article.feedId) {
           const delta = {};
 
@@ -367,7 +344,6 @@ window.Freed = window.Freed || {};
           if (article.read !== previousRead) {
             delta.read = article.read ? 1 : -1;
           }
-
           if (Object.keys(delta).length > 0) {
             _applyFeedStatsDelta(feedStore, article.feedId, delta);
           }
@@ -385,7 +361,6 @@ window.Freed = window.Freed || {};
       const articleStore = tx.objectStore("articles");
       const feedStore = tx.objectStore("feeds");
       const request = articleStore.get(guid);
-
       request.onsuccess = () => {
         const article = request.result;
         if (article && article.favorite !== isFavorite) {
@@ -412,10 +387,8 @@ window.Freed = window.Freed || {};
       const articleStore = tx.objectStore("articles");
       const feedStore = tx.objectStore("feeds");
       const request = articleStore.get(guid);
-
       request.onsuccess = () => {
         const article = request.result;
-        // Only update if value actually changes
         const currentVal = !!article.discarded;
         if (article && currentVal !== isDiscarded) {
           article.discarded = isDiscarded;
@@ -441,14 +414,12 @@ window.Freed = window.Freed || {};
       const articleStore = tx.objectStore("articles");
       const feedStore = tx.objectStore("feeds");
       const request = articleStore.get(guid);
-
       request.onsuccess = () => {
         const article = request.result;
         if (article) {
           const newState = !article.favorite;
           article.favorite = newState;
           articleStore.put(article);
-
           if (article.feedId) {
             _applyFeedStatsDelta(feedStore, article.feedId, {
               favorited: newState ? 1 : -1,
@@ -463,30 +434,23 @@ window.Freed = window.Freed || {};
     });
   }
 
-  async function updateTranslationStats(feedId, wordCount) {
-    if (!feedId || !wordCount) return;
+  // Generic Stat Update for Plugins
+  async function updateFeedStat(feedId, key, delta) {
+    if (!feedId || !key || !delta) return;
     const db = await openDB();
     return new Promise((resolve, reject) => {
       const tx = db.transaction("feeds", "readwrite");
       const store = tx.objectStore("feeds");
-      _applyFeedStatsDelta(store, feedId, { wordCountTranslated: wordCount });
-
+      const change = {};
+      change[key] = delta;
+      _applyFeedStatsDelta(store, feedId, change);
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
     });
   }
 
   async function updateFeedReadStats(feedId, wordCountDelta) {
-    if (!feedId || !wordCountDelta) return;
-    const db = await openDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction("feeds", "readwrite");
-      const store = tx.objectStore("feeds");
-      _applyFeedStatsDelta(store, feedId, { wordCountRead: wordCountDelta });
-
-      tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error);
-    });
+    return updateFeedStat(feedId, "wordCountRead", wordCountDelta);
   }
 
   async function getArticlesByFeed(feedId) {
@@ -494,7 +458,6 @@ window.Freed = window.Freed || {};
     return new Promise((resolve) => {
       const tx = db.transaction("articles", "readonly");
       const store = tx.objectStore("articles");
-
       if (feedId === "all") {
         const request = store.getAll();
         request.onsuccess = () =>
@@ -523,7 +486,6 @@ window.Freed = window.Freed || {};
       const store = tx.objectStore("articles");
       const request = store.openCursor();
       const results = [];
-
       request.onsuccess = (e) => {
         const cursor = e.target.result;
         if (cursor) {
@@ -557,10 +519,8 @@ window.Freed = window.Freed || {};
       const tx = db.transaction("articles", "readwrite");
       const store = tx.objectStore("articles");
       const request = store.openCursor();
-
       const now = Date.now();
       const msPerDay = 24 * 60 * 60 * 1000;
-
       request.onsuccess = (e) => {
         const cursor = e.target.result;
         if (cursor) {
@@ -572,7 +532,6 @@ window.Freed = window.Freed || {};
           const articleDate = new Date(article.pubDate);
           const ageInMs = now - articleDate.getTime();
           const ageInDays = ageInMs / msPerDay;
-
           if (!article.read && ageInDays > settings.unreadDays) cursor.delete();
           else if (article.read && ageInDays > settings.readDays)
             cursor.delete();
@@ -587,6 +546,90 @@ window.Freed = window.Freed || {};
         }
       };
       request.onerror = () => reject(request.error);
+    });
+  }
+
+  // --- Plugin Storage Methods ---
+
+  async function getPlugins() {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("plugins", "readonly");
+      const store = tx.objectStore("plugins");
+      const req = store.getAll();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function savePlugin(pluginData) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("plugins", "readwrite");
+      const store = tx.objectStore("plugins");
+      const req = store.put(pluginData);
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  async function deletePlugin(id) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("plugins", "readwrite");
+      const store = tx.objectStore("plugins");
+      store.delete(id);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  // Delete all storage data for a specific plugin
+  async function deletePluginData(pluginId) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("plugin_storage", "readwrite");
+      const store = tx.objectStore("plugin_storage");
+      const prefix = `plugin:${pluginId}:`;
+      const range = IDBKeyRange.bound(prefix, prefix + "\uffff");
+      const req = store.openCursor(range);
+
+      req.onsuccess = (e) => {
+        const cursor = e.target.result;
+        if (cursor) {
+          cursor.delete();
+          cursor.continue();
+        }
+      };
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  // Generic key-value store for plugins
+  async function pluginStoragePut(key, value) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("plugin_storage", "readwrite");
+      const store = tx.objectStore("plugin_storage");
+      if (value === undefined) {
+        store.delete(key);
+      } else {
+        store.put({ key, value });
+      }
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async function pluginStorageGet(key) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction("plugin_storage", "readonly");
+      const store = tx.objectStore("plugin_storage");
+      const req = store.get(key);
+      req.onsuccess = () => resolve(req.result ? req.result.value : null);
+      req.onerror = () => reject(req.error);
     });
   }
 
@@ -606,8 +649,14 @@ window.Freed = window.Freed || {};
     setFavorite,
     setArticleDiscarded,
     toggleFavorite,
-    updateTranslationStats,
+    updateFeedStat,
     updateFeedReadStats,
     performCleanup,
+    getPlugins,
+    savePlugin,
+    deletePlugin,
+    deletePluginData,
+    pluginStoragePut,
+    pluginStorageGet,
   };
 })();

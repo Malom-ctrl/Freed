@@ -115,6 +115,9 @@
                 <div id="feed-list-container">
                     <!-- JS will inject feeds here -->
                 </div>
+
+                <!-- Plugin Slots for Sidebar -->
+                <div id="plugin-sidebar-container"></div>
             </div>
 
             <div class="sidebar-footer">
@@ -400,6 +403,7 @@
             class="selection-toolbar"
             style="display: none"
         >
+            <!-- Core Buttons -->
             <button id="btn-tool-highlight">
                 <svg
                     width="16"
@@ -434,25 +438,17 @@
                 </svg>
                 Clear
             </button>
-            <div class="divider"></div>
-            <button id="btn-tool-translate">
-                <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                >
-                    <path d="m5 8 6 6"></path>
-                    <path d="m4 14 6-6 2-3"></path>
-                    <path d="M2 5h12"></path>
-                    <path d="M7 2h1"></path>
-                    <path d="m22 22-5-10-5 10"></path>
-                    <path d="M14 18h6"></path>
-                </svg>
-                Translate
-            </button>
+            <!-- Divider for Plugins -->
+            <div
+                class="divider"
+                id="toolbar-divider"
+                style="display: none"
+            ></div>
+            <!-- Plugin buttons injected here -->
+            <div
+                id="plugin-tools-container"
+                style="display: flex; gap: 4px"
+            ></div>
         </div>
 
         <!-- Feed Modal (Add/Edit) -->
@@ -730,6 +726,9 @@
                     <button class="settings-tab-btn" data-target="tab-data">
                         Data
                     </button>
+                    <button class="settings-tab-btn" data-target="tab-plugins">
+                        Plugins
+                    </button>
                 </div>
 
                 <div class="modal-content settings-tab-content-container">
@@ -811,40 +810,8 @@
 
                     <!-- Tab: General -->
                     <div id="tab-general" class="settings-tab-pane">
-                        <h4 style="margin-top: 0; margin-bottom: 10px">
-                            Translation
-                        </h4>
-                        <label
-                            style="
-                                font-size: 0.85rem;
-                                font-weight: 600;
-                                color: var(--text-muted);
-                                display: block;
-                                margin-bottom: 6px;
-                            "
-                            >Target Language</label
-                        >
-                        <select
-                            id="settings-language"
-                            style="width: 100%; margin-bottom: 24px"
-                        >
-                            <option value="en">🇬🇧 English</option>
-                            <option value="es">🇪🇸 Spanish</option>
-                            <option value="fr">🇫🇷 French</option>
-                            <option value="de">🇩🇪 German</option>
-                            <option value="it">🇮🇹 Italian</option>
-                            <option value="pt">🇵🇹 Portuguese</option>
-                            <option value="nl">🇳🇱 Dutch</option>
-                            <option value="ru">🇷🇺 Russian</option>
-                            <option value="zh">🇨🇳 Chinese</option>
-                            <option value="ja">🇯🇵 Japanese</option>
-                            <option value="ko">🇰🇷 Korean</option>
-                            <option value="hi">🇮🇳 Hindi</option>
-                            <option value="ar">🇸🇦 Arabic</option>
-                            <option value="tr">🇹🇷 Turkish</option>
-                            <option value="pl">🇵🇱 Polish</option>
-                            <option value="sv">🇸🇪 Swedish</option>
-                        </select>
+                        <!-- Plugin settings will be injected here -->
+                        <div id="plugin-settings-container-general"></div>
 
                         <div
                             style="
@@ -1122,6 +1089,42 @@
                             style="width: 100%; margin-bottom: 16px"
                         />
                     </div>
+
+                    <!-- Tab: Plugins -->
+                    <div id="tab-plugins" class="settings-tab-pane">
+                        <h4 style="margin-top: 0; margin-bottom: 10px">
+                            Install Plugin
+                        </h4>
+                        <div
+                            style="display: flex; gap: 8px; margin-bottom: 20px"
+                        >
+                            <input
+                                type="url"
+                                id="plugin-install-url"
+                                placeholder="https://example.com/manifest.json"
+                                style="flex: 1"
+                            />
+                            <button
+                                id="btn-install-plugin"
+                                class="btn btn-primary"
+                            >
+                                Install
+                            </button>
+                        </div>
+
+                        <div
+                            style="
+                                height: 1px;
+                                background: var(--border);
+                                margin: 20px 0;
+                            "
+                        ></div>
+
+                        <h4 style="margin-bottom: 10px">Installed Plugins</h4>
+                        <div id="plugins-list-container">
+                            <!-- Injected JS -->
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-actions" style="justify-content: flex-end">
                     <button class="btn btn-primary" id="btn-save-settings">
@@ -1133,7 +1136,7 @@
 
         <div id="toast" class="toast"></div>
 
-        <!-- Dependencies loaded sequentially for no-build/file:// support -->
+        <!-- Dependencies loaded sequentially -->
         <script src="./js/config.js"></script>
         <script src="./js/state.js"></script>
         <script src="./js/utils.js"></script>
@@ -1142,6 +1145,9 @@
         <script src="./js/ai-service.js"></script>
         <script src="./js/rss-service.js"></script>
         <script src="./js/data-service.js"></script>
+        <script src="./js/plugin-system/registry.js"></script>
+        <script src="./js/plugin-system/interface.js"></script>
+        <script src="./js/plugin-system/manager.js"></script>
         <script src="./js/ui-renderer.js"></script>
         <script src="./js/tools.js"></script>
         <script src="./js/tags.js"></script>
