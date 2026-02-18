@@ -3,29 +3,74 @@ window.Freed.Plugins = window.Freed.Plugins || {};
 
 window.Freed.Plugins.Manager = {
   activePlugins: new Map(),
+  incompatiblePlugins: new Map(), // Stores plugins that failed compat check
 
   init: async function () {
+    const { Config, Utils } = window.Freed;
     // 1. Load existing plugins from DB
     const plugins = await window.Freed.DB.getPlugins();
+
     for (const p of plugins) {
+      // Compatibility Check
+      const compatRule = p.compatibleAppVersion || "*";
+      const isCompatible = Utils.SemVer.satisfies(
+        Config.APP_VERSION,
+        compatRule,
+      );
+
+      if (!isCompatible) {
+        console.warn(
+          `Plugin ${p.name} is incompatible with app version ${Config.APP_VERSION}. Required: ${compatRule}`,
+        );
+        // Disable locally in memory and mark as incompatible
+        this.incompatiblePlugins.set(p.id, true);
+        if (p.enabled) {
+          // Auto-disable in DB so we don't try next time, but user can see it
+          p.enabled = false;
+          await window.Freed.DB.savePlugin(p);
+        }
+        continue;
+      } else {
+        this.incompatiblePlugins.set(p.id, false);
+      }
+
       if (p.enabled) {
         await this.loadAndActivate(p);
       }
     }
   },
 
-  install: async function (manifest, sourceCode) {
+  install: async function (manifest, sourceCode, installUrl) {
+    const { Config, Utils } = window.Freed;
+
+    // Pre-install Compatibility Check
+    const compatRule = manifest.compatibleAppVersion || "*";
+    if (!Utils.SemVer.satisfies(Config.APP_VERSION, compatRule)) {
+      throw new Error(
+        `Plugin requires app version ${compatRule}. Current: ${Config.APP_VERSION}`,
+      );
+    }
+
     const pluginData = {
       id: manifest.id,
       name: manifest.name,
       version: manifest.version,
       description: manifest.description,
+      compatibleAppVersion: manifest.compatibleAppVersion,
       code: sourceCode,
+      url: installUrl, // Save source URL for updates
       enabled: true,
       installedAt: Date.now(),
     };
     await window.Freed.DB.savePlugin(pluginData);
-    await this.loadAndActivate(pluginData);
+
+    // If updating, refresh activation
+    if (this.activePlugins.has(manifest.id)) {
+      // Just save to DB is enough, reload required usually to clear mem
+    } else {
+      await this.loadAndActivate(pluginData);
+    }
+
     console.log(`Plugin ${manifest.name} installed.`);
   },
 
@@ -51,7 +96,7 @@ window.Freed.Plugins.Manager = {
       const code = await scriptRes.text();
 
       // 4. Install
-      await this.install(manifest, code);
+      await this.install(manifest, code, url);
       return true;
     } catch (e) {
       console.error("Install from URL failed:", e);
@@ -78,6 +123,11 @@ window.Freed.Plugins.Manager = {
 
   togglePlugin: async function (id, enabled) {
     const { DB } = window.Freed;
+    // Prevent enabling if incompatible
+    if (enabled && this.incompatiblePlugins.get(id)) {
+      throw new Error("Cannot enable incompatible plugin.");
+    }
+
     const plugins = await DB.getPlugins();
     const plugin = plugins.find((p) => p.id === id);
     if (plugin) {
@@ -102,5 +152,52 @@ window.Freed.Plugins.Manager = {
       // Reload is usually best after uninstall to clear memory hooks
       window.location.reload();
     }
+  },
+
+  autoUpdatePlugins: async function () {
+    const { Utils, Config, DB } = window.Freed;
+    const plugins = await DB.getPlugins();
+
+    const updatePromises = plugins.map(async (plugin) => {
+      if (!plugin.url) return false;
+
+      try {
+        const res = await fetch(plugin.url);
+        if (!res.ok) return false;
+        const remoteManifest = await res.json();
+
+        // Check Version
+        if (Utils.SemVer.compare(remoteManifest.version, plugin.version) > 0) {
+          // Check Compatibility
+          const compatRule = remoteManifest.compatibleAppVersion || "*";
+          if (Utils.SemVer.satisfies(Config.APP_VERSION, compatRule)) {
+            // Fetch Code
+            const mainScriptUrl = new URL(remoteManifest.main, plugin.url).href;
+            const scriptRes = await fetch(mainScriptUrl);
+            if (scriptRes.ok) {
+              const code = await scriptRes.text();
+
+              // Update DB
+              const newPluginData = {
+                ...plugin,
+                name: remoteManifest.name,
+                version: remoteManifest.version,
+                description: remoteManifest.description,
+                compatibleAppVersion: remoteManifest.compatibleAppVersion,
+                code: code,
+              };
+              await DB.savePlugin(newPluginData);
+              return true;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Auto-update failed for", plugin.name, e);
+      }
+      return false;
+    });
+
+    const results = await Promise.all(updatePromises);
+    return results.filter(Boolean).length;
   },
 };

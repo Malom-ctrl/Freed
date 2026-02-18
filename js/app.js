@@ -38,6 +38,16 @@
     // Initialize Plugins System (loads installed & builtins)
     await Plugins.Manager.init();
 
+    // Auto-update plugins in background
+    Plugins.Manager.autoUpdatePlugins().then((count) => {
+      if (count > 0) {
+        Utils.showToast(`${count} plugin${count > 1 ? "s" : ""} updated.`, {
+          label: "Reload",
+          callback: () => window.location.reload(),
+        });
+      }
+    });
+
     setupEventListeners();
     Tools.setupSelectionTools();
     UI.setupGlobalTooltip();

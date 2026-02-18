@@ -154,13 +154,20 @@ window.Freed.UI = {
 
     // 1. Installed Plugins
     if (installed.length > 0) {
-      installed.forEach((plugin) => {
+      installed.forEach(async (plugin) => {
+        const isIncompatible =
+          window.Freed.Plugins.Manager.incompatiblePlugins.get(plugin.id);
+
         const card = document.createElement("div");
         card.style.border = "1px solid var(--border)";
         card.style.borderRadius = "8px";
         card.style.padding = "12px";
         card.style.marginBottom = "12px";
         card.style.background = "var(--bg-card)";
+        if (isIncompatible) {
+          card.style.borderColor = "#ef4444";
+          card.style.backgroundColor = "rgba(239, 68, 68, 0.05)";
+        }
 
         const header = document.createElement("div");
         header.style.display = "flex";
@@ -168,20 +175,42 @@ window.Freed.UI = {
         header.style.alignItems = "start";
         header.style.marginBottom = "8px";
 
+        let badge = "";
+        if (isIncompatible) {
+          badge = `<span style="background:#ef4444; color:white; font-size:0.7rem; padding:2px 6px; border-radius:4px; margin-left:8px;">Incompatible</span>`;
+        }
+
         const info = document.createElement("div");
         info.innerHTML = `
             <div style="font-weight:600; font-size:1rem; display:flex; align-items:center; gap:8px;">
                 ${plugin.name}
                 <span style="font-weight:400; color:var(--text-muted); font-size:0.8em;">v${plugin.version}</span>
+                ${badge}
             </div>
             <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;">${plugin.description || "No description"}</div>
         `;
 
         const toggleLabel = document.createElement("label");
         toggleLabel.className = "toggle-switch";
-        toggleLabel.innerHTML = `<input type="checkbox" ${plugin.enabled ? "checked" : ""}><span class="slider"></span>`;
-        toggleLabel.querySelector("input").onchange = (e) =>
-          callbacks.onToggle(plugin.id, e.target.checked);
+
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.checked = !!plugin.enabled;
+
+        if (isIncompatible) {
+          input.disabled = true;
+          toggleLabel.style.opacity = "0.5";
+          toggleLabel.title = "Incompatible with current app version";
+        } else {
+          input.onchange = (e) =>
+            callbacks.onToggle(plugin.id, e.target.checked);
+        }
+
+        const slider = document.createElement("span");
+        slider.className = "slider";
+
+        toggleLabel.appendChild(input);
+        toggleLabel.appendChild(slider);
 
         header.appendChild(info);
         header.appendChild(toggleLabel);
@@ -190,6 +219,9 @@ window.Freed.UI = {
         actions.style.display = "flex";
         actions.style.gap = "8px";
         actions.style.justifyContent = "flex-end";
+        actions.style.flexWrap = "wrap";
+
+        // Removed manual update check button logic here
 
         const wipeBtn = document.createElement("button");
         wipeBtn.className = "btn btn-outline";
@@ -254,6 +286,13 @@ window.Freed.UI = {
       container.appendChild(header);
 
       notInstalled.forEach((plugin) => {
+        // Check compat for uninstalled official plugins
+        const compatRule = plugin.compatibleAppVersion || "*";
+        const isCompatible = window.Freed.Utils.SemVer.satisfies(
+          window.Freed.Config.APP_VERSION,
+          compatRule,
+        );
+
         const card = document.createElement("div");
         card.style.border = "1px solid var(--border)";
         card.style.borderRadius = "8px";
@@ -280,7 +319,15 @@ window.Freed.UI = {
         installBtn.style.fontSize = "0.8rem";
         installBtn.style.padding = "6px 12px";
         installBtn.textContent = "Install";
-        installBtn.onclick = () => callbacks.onInstall(plugin.url);
+
+        if (isCompatible) {
+          installBtn.onclick = () => callbacks.onInstall(plugin.url);
+        } else {
+          installBtn.disabled = true;
+          installBtn.textContent = "Incompatible";
+          installBtn.title = `Requires app version ${compatRule}`;
+          installBtn.style.opacity = "0.6";
+        }
 
         content.appendChild(info);
         content.appendChild(installBtn);

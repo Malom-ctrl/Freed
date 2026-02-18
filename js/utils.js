@@ -264,4 +264,36 @@ window.Freed.Utils = {
       return null;
     }
   },
+
+  SemVer: {
+    // 1 = greater, -1 = smaller, 0 = equal
+    compare: function (v1, v2) {
+      const p1 = v1.split(".").map(Number);
+      const p2 = v2.split(".").map(Number);
+      for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
+        const n1 = p1[i] || 0;
+        const n2 = p2[i] || 0;
+        if (n1 > n2) return 1;
+        if (n1 < n2) return -1;
+      }
+      return 0;
+    },
+    // Supports: "1.0.0", ">1.0.0", ">=1.0.0", "<1.0.0", "<=1.0.0", "1.0.0 || 2.0.0", "*"
+    satisfies: function (version, range) {
+      if (!range || range === "*") return true;
+      const orParts = range.split("||");
+      return orParts.some((part) => {
+        const p = part.trim();
+        if (p.startsWith(">="))
+          return this.compare(version, p.substring(2)) >= 0;
+        if (p.startsWith("<="))
+          return this.compare(version, p.substring(2)) <= 0;
+        if (p.startsWith(">")) return this.compare(version, p.substring(1)) > 0;
+        if (p.startsWith("<")) return this.compare(version, p.substring(1)) < 0;
+        if (p.startsWith("="))
+          return this.compare(version, p.substring(1)) === 0;
+        return this.compare(version, p) === 0;
+      });
+    },
+  },
 };

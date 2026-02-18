@@ -1,7 +1,7 @@
 window.Freed = window.Freed || {};
 
 window.Freed.Config = {
-  APP_VERSION: "1.0.0",
+  APP_VERSION: "1.1.0",
   DB_NAME: "freed_db",
   DB_VERSION: 3,
   COLOR_PALETTE: [
