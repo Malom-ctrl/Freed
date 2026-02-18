@@ -1,4 +1,4 @@
-const CACHE_NAME = "freed-v40";
+const CACHE_NAME = "freed-v41";
 const ASSETS = [
   "./",
   "./index.html",
@@ -21,7 +21,6 @@ const ASSETS = [
   "./js/plugin-system/registry.js",
   "./js/plugin-system/interface.js",
   "./js/plugin-system/manager.js",
-  "./plugins/translation/main.js",
   "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
 ];
 

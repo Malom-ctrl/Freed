@@ -1055,42 +1055,7 @@ header {
     padding: 0 2px;
 }
 
-/* Translation Styles */
-
-/* 1. Loading State */
-.translating {
-    animation: pulse-underline 1.5s infinite;
-    border-bottom: 2px solid var(--primary);
-    background: rgba(79, 70, 229, 0.1);
-    border-radius: 2px;
-}
-
-@keyframes pulse-underline {
-    0% {
-        border-color: rgba(79, 70, 229, 0.3);
-    }
-    50% {
-        border-color: rgba(79, 70, 229, 1);
-    }
-    100% {
-        border-color: rgba(79, 70, 229, 0.3);
-    }
-}
-
-/* 2. Finished State */
-.translated-text {
-    border-bottom: 2px dotted var(--primary);
-    cursor: help;
-    background-color: rgba(79, 70, 229, 0.05);
-    border-radius: 2px;
-    transition: background-color 0.2s;
-}
-
-.translated-text:hover {
-    background-color: rgba(79, 70, 229, 0.2);
-}
-
-/* 3. Global Tooltip */
+/* Global Tooltip */
 .global-tooltip {
     position: fixed;
     z-index: 200;

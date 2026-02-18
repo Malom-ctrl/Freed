@@ -673,18 +673,9 @@ window.Freed.UI = {
       discarded: 0,
       favorited: 0,
       wordCountRead: 0,
-      wordCountTranslated: 0,
     };
 
     const total = Math.max(stats.totalFetched, 1);
-
-    let transPct = 0;
-    if (stats.wordCountRead > 0) {
-      transPct = (
-        (stats.wordCountTranslated / stats.wordCountRead) *
-        100
-      ).toFixed(1);
-    }
 
     content.innerHTML = `
             <div style="text-align:center; padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:20px;">
@@ -695,17 +686,6 @@ window.Freed.UI = {
             ${this._createStatBar("Read", stats.read, total, "#10b981")}
             ${this._createStatBar("Discarded", stats.discarded, total, "#ef4444")}
             ${this._createStatBar("Favorited", stats.favorited, total, "#f59e0b")}
-
-            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);">
-                <div style="font-size: 0.9rem; margin-bottom: 6px; font-weight: 600;">Translation</div>
-                <div style="display: flex; align-items: baseline; gap: 8px;">
-                    <span style="font-size: 2rem; color: var(--primary);">${transPct}%</span>
-                    <span style="color: var(--text-muted); font-size: 0.85rem;">of read words translated</span>
-                </div>
-                <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">
-                   ${stats.wordCountTranslated.toLocaleString()} words translated / ${stats.wordCountRead.toLocaleString()} read
-                </div>
-            </div>
         `;
 
     // Render Custom Plugin Stats

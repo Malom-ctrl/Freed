@@ -31,7 +31,6 @@ window.Freed.Feeds = {
         discarded: 0,
         favorited: 0,
         wordCountRead: 0,
-        wordCountTranslated: 0,
       },
     };
   },

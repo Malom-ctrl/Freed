@@ -91,33 +91,4 @@ window.Freed.AI = {
       return null;
     }
   },
-
-  translateText: async function (text, targetLanguage) {
-    const apiKey = localStorage.getItem("freed_api_key");
-    if (!apiKey) throw new Error("Gemini API Key is missing in Settings");
-
-    try {
-      const { GoogleGenAI } = await import("@google/genai");
-
-      const ai = new GoogleGenAI({ apiKey: apiKey });
-
-      // Using flash for speed
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: `Translate the following text to ${targetLanguage}. Return only the translated text, no markdown, no explanations:\n\n${text}`,
-      });
-
-      return response.text;
-    } catch (e) {
-      console.error("Translation Error:", e);
-      if (
-        e.message &&
-        (e.message.toLowerCase().includes("api key") ||
-          e.message.includes("403"))
-      ) {
-        throw new Error("Invalid Gemini API Key");
-      }
-      return null;
-    }
-  },
 };
