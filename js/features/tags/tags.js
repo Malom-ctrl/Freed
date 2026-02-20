@@ -1,7 +1,7 @@
-import { DB } from "./db.js";
-import { Utils } from "./utils.js";
-import { State } from "./state.js";
-import { Config } from "./config.js";
+import { DB } from "../../core/db.js";
+import { Utils } from "../../core/utils.js";
+import { State } from "../../core/state.js";
+import { Config } from "../../core/config.js";
 import DOMPurify from "dompurify";
 
 export const Tags = {

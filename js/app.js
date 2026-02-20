@@ -1,21 +1,24 @@
-import { DB } from "./db.js";
-import { UI } from "./ui-renderer.js";
-import { Utils } from "./utils.js";
-import { Config } from "./config.js";
-import { State } from "./state.js";
-import { Theme } from "./theme.js";
-import { Tools } from "./tools.js";
-import { Tags } from "./tags.js";
-import { Reader } from "./reader.js";
-import { Feeds } from "./feeds.js";
-import { DiscoverData } from "./discover-data.js";
+import { DB } from "./core/db.js";
+import { Utils } from "./core/utils.js";
+import { Config } from "./core/config.js";
+import { State } from "./core/state.js";
+import { Events } from "./core/events.js";
+import { Theme } from "./features/settings/theme.js";
+import { Tools } from "./features/tools/tools.js";
+import { Tags } from "./features/tags/tags.js";
+import { FeedService } from "./features/feeds/feed-service.js";
+import { DiscoverData } from "./features/discover/discover-data.js";
 import { Manager as PluginManager } from "./plugin-system/manager.js";
-import { FilterBar } from "./components/FilterBar.js";
-import { SettingsModal } from "./components/SettingsModal.js";
-
-// Runtime cache for computed icon colors (not saved to DB)
-const iconColorCache = new Map();
-const processingColorIds = new Set();
+import { FilterBar } from "./components/filter-bar.js";
+import { SettingsModal } from "./features/settings/settings-modal.js";
+import { ReaderView } from "./features/reader/reader-view.js";
+import { FeedModal } from "./features/feeds/feed-modal.js";
+import { Sidebar } from "./components/sidebar.js";
+import { Modals } from "./components/modals.js";
+import { FeedList } from "./features/feeds/feed-list.js";
+import { ArticleList } from "./features/reader/article-list.js";
+import { DiscoverView } from "./features/discover/discover-view.js";
+import { Navbar } from "./components/navbar.js";
 
 // --- Initialization ---
 async function init() {
@@ -46,9 +49,9 @@ async function init() {
 
   setupEventListeners();
   Tools.setupSelectionTools();
-  UI.setupGlobalTooltip();
+  Modals.setupGlobalTooltip();
   Tags.setupTagColorPopup();
-  Tags.setupTagInputs(() => refreshUI());
+  Tags.setupTagInputs(() => Events.emit(Events.FILTER_CHANGED));
 
   // Run Data Cleanup Policy
   const cleanupSettings = {
@@ -75,14 +78,13 @@ async function init() {
     State.currentFeedId = "discover";
   }
 
-  // Initial Render
+  // Initial Render (triggers components to fetch data)
   await refreshUI();
 
   // Background Network Sync
   if (allFeeds.length > 0) {
-    Feeds.syncFeeds(refreshUI);
+    FeedService.syncFeeds(); // No callback needed, it emits events
   }
-  window.addEventListener("freed:refresh-ui", () => refreshUI());
 }
 
 function registerSW() {
@@ -103,44 +105,10 @@ function registerSW() {
 }
 
 async function refreshUI() {
-  const feeds = await DB.getAllFeeds();
+  // Use FeedService to get display-ready feeds (with colors)
+  const feedsWithEffectiveColor = await FeedService.getFeedsForDisplay();
   const allTags = await DB.getAllTags();
   const tagMap = new Map(allTags.map((t) => [t.name, t]));
-
-  // Prepare Feeds with Effective Display Color
-  const feedsWithEffectiveColor = feeds.map((f) => {
-    let displayColor = f.color;
-
-    // Priority 1: Manual Color Override (Persistent)
-    if (displayColor) {
-      return { ...f, displayColor };
-    }
-
-    // Priority 2: Icon Color (Runtime Calculated - Non-Persistent)
-    if (f.iconData) {
-      if (iconColorCache.has(f.id)) {
-        return { ...f, displayColor: iconColorCache.get(f.id) };
-      }
-
-      // If not in cache and not processing, trigger calculation
-      if (!processingColorIds.has(f.id)) {
-        processingColorIds.add(f.id);
-        // Compute in background
-        Utils.getDominantColor(f.iconData).then((color) => {
-          if (color) {
-            iconColorCache.set(f.id, color);
-            // Trigger UI update once color is ready
-            refreshUI();
-          }
-          processingColorIds.delete(f.id);
-        });
-      }
-      // While loading, fall through to default
-    }
-
-    // Priority 3: Global Default Color (Fixed)
-    return { ...f, displayColor: "#64748b" };
-  });
 
   // Create map for metadata (using resolved feeds)
   const feedMap = {};
@@ -152,21 +120,21 @@ async function refreshUI() {
   });
 
   // 1. Render Feed Sidebar
-  UI.renderFeedList(
+  FeedList.render(
     feedsWithEffectiveColor,
     State.currentFeedId,
     switchFeed,
-    Feeds.openEditFeedModal.bind(Feeds),
-    (feed) => UI.renderStatsModal(feed),
+    FeedModal.openEditFeedModal.bind(FeedModal),
+    (feed) => Modals.renderStatsModal(feed),
   );
 
-  // 2. Render Main Content (Discover vs Articles)
+  // 2. Render Navbar Actions (Plugin)
+  Navbar.renderActions();
+
+  // 3. Render Main Content (Discover vs Articles)
   const mainTitleEl = document.getElementById("page-title");
   const filterBar = document.getElementById("filter-bar");
   const filterToggleBtn = document.getElementById("btn-toggle-filters");
-
-  // Render Navbar Actions (Plugin)
-  UI.renderNavbarActions();
 
   if (State.currentFeedId === "discover") {
     // Discover View
@@ -176,12 +144,11 @@ async function refreshUI() {
     if (filterBar) filterBar.style.display = "none";
     if (filterToggleBtn) filterToggleBtn.style.display = "none";
 
-    UI.renderDiscoverView(
+    DiscoverView.render(
       DiscoverData,
-      feeds,
-      (feed) => Feeds.addFeedDirectly(feed, () => refreshUI()),
-      (pack) =>
-        Feeds.addDiscoverPack(pack, DiscoverData.feeds, () => refreshUI()),
+      feedsWithEffectiveColor,
+      (feed) => FeedService.addFeedDirectly(feed),
+      (pack) => FeedService.addDiscoverPack(pack, DiscoverData.feeds),
     );
   } else {
     // Standard View
@@ -208,14 +175,16 @@ async function refreshUI() {
       if (State.currentFeedId === "all")
         mainTitleEl.textContent = "All Articles";
       else {
-        const f = feeds.find((x) => x.id === State.currentFeedId);
+        const f = feedsWithEffectiveColor.find(
+          (x) => x.id === State.currentFeedId,
+        );
         if (f) mainTitleEl.textContent = f.title;
       }
     }
 
-    UI.renderArticles(
+    ArticleList.render(
       enrichedArticles,
-      (article) => Reader.openArticle(article, refreshUI),
+      (article) => ReaderView.openArticle(article),
       State.showArticleImages,
       (article) => handleDiscard(article),
       (article) => handleToggleFavorite(article),
@@ -228,7 +197,7 @@ async function refreshUI() {
 function handleDiscard(article) {
   const newState = !article.discarded;
   DB.setArticleDiscarded(article.guid, newState).then(() => {
-    refreshUI();
+    Events.emit(Events.ARTICLES_UPDATED);
 
     let msg, label, callback;
 
@@ -237,7 +206,9 @@ function handleDiscard(article) {
       msg = "Article discarded";
       label = "Undo";
       callback = () => {
-        DB.setArticleDiscarded(article.guid, false).then(() => refreshUI());
+        DB.setArticleDiscarded(article.guid, false).then(() => {
+          Events.emit(Events.ARTICLES_UPDATED);
+        });
       };
     } else {
       // Was discarded, now Restored
@@ -250,133 +221,50 @@ function handleDiscard(article) {
 
 function handleToggleFavorite(article) {
   DB.toggleFavorite(article.guid).then((newState) => {
-    refreshUI();
+    Events.emit(Events.ARTICLES_UPDATED);
     Utils.showToast(newState ? "Added to Favorites" : "Removed from Favorites");
   });
 }
 
 async function switchFeed(id) {
-  State.currentFeedId = id;
-
-  // Reset scroll position
-  const list = document.getElementById("article-list");
-  if (list) list.scrollTop = 0;
-
-  await refreshUI();
-  const sidebar = document.getElementById("sidebar");
-  const backdrop = document.getElementById("sidebar-backdrop");
-  if (sidebar && window.innerWidth <= 768) {
-    sidebar.classList.remove("open");
-    backdrop?.classList.remove("open");
-  }
+  Events.emit(Events.FEED_SELECTED, { id });
 }
 
 function setupEventListeners() {
-  const sidebar = document.getElementById("sidebar");
-  const backdrop = document.getElementById("sidebar-backdrop");
-
-  const toggleMenu = () => {
-    sidebar?.classList.toggle("open");
-    backdrop?.classList.toggle("open");
-  };
-
-  document.getElementById("menu-btn")?.addEventListener("click", toggleMenu);
-  backdrop?.addEventListener("click", toggleMenu);
-
-  document
-    .querySelector('[data-id="all"]')
-    ?.addEventListener("click", () => switchFeed("all"));
-  document
-    .querySelector('[data-id="discover"]')
-    ?.addEventListener("click", () => switchFeed("discover"));
-
-  window.closeModal = () => Reader.closeModal();
-
-  window.addEventListener("popstate", (event) => {
-    const modal = document.getElementById("read-modal");
-    if (
-      modal &&
-      modal.classList.contains("open") &&
-      (!event.state || !event.state.readingView)
-    ) {
-      UI.toggleModal("read-modal", false);
-      document.body.classList.remove("modal-open");
-      State.currentArticleGuid = null;
-      refreshUI();
-    }
-  });
-
-  window.closeFeedModal = () => {
-    const wasEditing = Feeds.isEditing;
-    UI.toggleModal("feed-modal", false);
-    Feeds.isEditing = false;
-
-    if (wasEditing) {
-      Feeds.saveCurrentEdit();
-    }
-  };
-
-  window.closeSettingsModal = () => UI.toggleModal("settings-modal", false);
-  window.closeStatsModal = () => UI.toggleModal("stats-modal", false);
-
-  let mouseDownTarget = null;
-  document.addEventListener("mousedown", (e) => {
-    mouseDownTarget = e.target;
-  });
-
-  const bindBackdropClose = (modalId, closeFn) => {
-    const el = document.getElementById(modalId);
-    if (!el) return;
-    el.addEventListener("click", (e) => {
-      // Only close if interaction started AND ended on the backdrop
-      if (e.target === el && mouseDownTarget === el) {
-        closeFn();
-      }
-    });
-  };
-
-  bindBackdropClose("read-modal", () => Reader.closeModal());
-  bindBackdropClose("feed-modal", () => window.closeFeedModal());
-  bindBackdropClose("settings-modal", () => window.closeSettingsModal());
-  bindBackdropClose("stats-modal", () => window.closeStatsModal());
-
-  document
-    .getElementById("btn-new-feed")
-    ?.addEventListener("click", Feeds.openAddFeedModal.bind(Feeds));
-
-  document.getElementById("btn-save-feed")?.addEventListener("click", () => {
-    Feeds.handleSaveFeed((id, isNew) => {
-      refreshUI();
-      if (isNew) switchFeed(id);
-    });
-  });
-
-  const originalDelete = Feeds.handleDeleteFeed;
-  Feeds.handleDeleteFeed = (id) => {
-    originalDelete.call(Feeds, id, (deletedId) => {
-      if (State.currentFeedId === deletedId) switchFeed("all");
-      else refreshUI();
-    });
-  };
-
-  document
-    .getElementById("btn-toggle-favorite")
-    ?.addEventListener("click", () =>
-      Reader.toggleCurrentFavorite(() => refreshUI()),
-    );
-  document
-    .getElementById("btn-share-article")
-    ?.addEventListener("click", () => Reader.shareCurrentArticle());
-
   // Setup Component Listeners
-  FilterBar.setupListeners(refreshUI);
-  SettingsModal.setupListeners(refreshUI);
+  Modals.setupListeners();
+  FilterBar.setupListeners();
+  SettingsModal.setupListeners();
+  ReaderView.setupListeners();
+  FeedModal.setupListeners();
+  Sidebar.setupListeners();
+
+  // Global Event Handlers
+  Events.on(Events.REFRESH_UI, () => refreshUI());
+  Events.on(Events.SETTINGS_UPDATED, () => refreshUI());
+  Events.on(Events.FEEDS_UPDATED, () => refreshUI());
+  Events.on(Events.ARTICLES_UPDATED, () => refreshUI());
+  Events.on(Events.FILTER_CHANGED, () => refreshUI());
+
+  Events.on(Events.FEED_SELECTED, async (detail) => {
+    if (detail.id) {
+      State.currentFeedId = detail.id;
+    }
+
+    // Reset scroll position
+    const list = document.getElementById("article-list");
+    if (list) list.scrollTop = 0;
+
+    await refreshUI();
+
+    // Sidebar closing is handled in Sidebar.js
+  });
 }
 
 export const App = {
   refreshUI,
   switchFeed,
-  syncFeeds: Feeds.syncFeeds,
+  syncFeeds: FeedService.syncFeeds,
 };
 
 // Initialize

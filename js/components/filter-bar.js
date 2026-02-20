@@ -1,5 +1,6 @@
-import { State } from "../state.js";
-import { DB } from "../db.js";
+import { State } from "../core/state.js";
+import { DB } from "../core/db.js";
+import { Events } from "../core/events.js";
 import DOMPurify from "dompurify";
 
 export const FilterBar = {
@@ -85,7 +86,7 @@ export const FilterBar = {
     }
   },
 
-  renderTags: async function (refreshCallback) {
+  renderTags: async function () {
     const container = document.getElementById("filter-active-tags");
     if (!container) return;
     container.innerHTML = "";
@@ -112,8 +113,7 @@ export const FilterBar = {
       removeSpan.onclick = () => {
         State.filters.tags = State.filters.tags.filter((t) => t !== tagName);
         State.saveFilters();
-        if (refreshCallback) refreshCallback();
-        else window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
+        Events.emit(Events.FILTER_CHANGED);
       };
 
       pill.appendChild(removeSpan);
@@ -121,11 +121,11 @@ export const FilterBar = {
     });
   },
 
-  setupListeners: function (refreshCallback) {
+  setupListeners: function () {
     document.getElementById("filter-search")?.addEventListener("input", (e) => {
       State.filters.search = e.target.value;
       State.saveFilters();
-      refreshCallback();
+      Events.emit(Events.FILTER_CHANGED);
     });
 
     document
@@ -133,13 +133,13 @@ export const FilterBar = {
       ?.addEventListener("change", (e) => {
         State.filters.status = e.target.value;
         State.saveFilters();
-        refreshCallback();
+        Events.emit(Events.FILTER_CHANGED);
       });
 
     document.getElementById("filter-date")?.addEventListener("change", (e) => {
       State.filters.date = e.target.value;
       State.saveFilters();
-      refreshCallback();
+      Events.emit(Events.FILTER_CHANGED);
     });
 
     document
@@ -150,7 +150,7 @@ export const FilterBar = {
         State.filters.tags = [];
         State.filters.search = "";
         State.saveFilters();
-        refreshCallback();
+        Events.emit(Events.FILTER_CHANGED);
       });
 
     // Filter Toggle (Mobile)

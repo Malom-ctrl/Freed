@@ -1,15 +1,16 @@
-import { Tags } from "./tags.js";
-import { DB } from "./db.js";
-import { Utils } from "./utils.js";
+import { Tags } from "../../features/tags/tags.js";
+import { DB } from "../../core/db.js";
+import { Utils } from "../../core/utils.js";
 import { Service } from "./rss-service.js";
-import { Config } from "./config.js";
-import { UI } from "./ui-renderer.js";
+import { Config } from "../../core/config.js";
+import { State } from "../../core/state.js";
+import { Events } from "../../core/events.js";
 
-export const Feeds = {
-  isEditing: false,
-  tempIconData: null,
-  _inputDebounce: null,
+// Runtime cache for computed icon colors (not saved to DB)
+const iconColorCache = new Map();
+const processingColorIds = new Set();
 
+export const FeedService = {
   // Factory method for creating a consistent Feed object
   createFeedObject: function (data) {
     return {
@@ -40,167 +41,43 @@ export const Feeds = {
     };
   },
 
-  openAddFeedModal: function () {
-    this.isEditing = false;
-    this._resetTempIconState();
+  // Prepare Feeds with Effective Display Color
+  getFeedsForDisplay: async function () {
+    const feeds = await DB.getAllFeeds();
 
-    const modal = document.getElementById("feed-modal");
-    document.getElementById("feed-modal-title").textContent = "Add New Feed";
+    return feeds.map((f) => {
+      let displayColor = f.color;
 
-    document.getElementById("feed-id-input").value = "";
-    const urlInput = document.getElementById("feed-url-input");
-    urlInput.value = "";
-    urlInput.disabled = false;
+      // Priority 1: Manual Color Override (Persistent)
+      if (displayColor) {
+        return { ...f, displayColor };
+      }
 
-    document.getElementById("feed-name-input").value = "";
-    document.getElementById("feed-autofetch-input").checked = false;
-    document.getElementById("btn-delete-feed").style.display = "none";
-
-    const iconToggle = document.getElementById("feed-use-icon-input");
-    iconToggle.checked = false;
-    iconToggle.disabled = true; // Disabled until URL processed
-    this._updateIconPreview(false);
-
-    const actionBtns = document.getElementById("feed-modal-action-buttons");
-    if (actionBtns) actionBtns.style.display = "flex";
-
-    Tags.currentTags = [];
-    Tags.renderTagEditor();
-    Tags.renderColorPicker("color-picker-container", null);
-
-    this._setupUrlListener();
-    UI.toggleModal("feed-modal", true);
-  },
-
-  openEditFeedModal: async function (feed) {
-    this.isEditing = true;
-    this._resetTempIconState();
-
-    this.tempIconData = feed.iconData || null;
-
-    const modal = document.getElementById("feed-modal");
-    document.getElementById("feed-modal-title").textContent = "Edit Feed";
-
-    document.getElementById("feed-id-input").value = feed.id;
-    document.getElementById("feed-url-input").value = feed.url;
-    document.getElementById("feed-url-input").disabled = true;
-    document.getElementById("feed-name-input").value = feed.title;
-    document.getElementById("feed-autofetch-input").checked = !!feed.autofetch;
-
-    const iconToggle = document.getElementById("feed-use-icon-input");
-    iconToggle.checked = !!feed.iconData;
-    iconToggle.disabled = false;
-
-    if (feed.iconData) {
-      const preview = document.getElementById("feed-icon-preview");
-      preview.src = feed.iconData;
-      preview.style.display = "block";
-    } else {
-      // If editing and no icon stored, try to init preview based on URL
-      this._processUrlForIcon(feed.url);
-    }
-
-    const deleteBtn = document.getElementById("btn-delete-feed");
-    deleteBtn.style.display = "block";
-    deleteBtn.onclick = () => this.handleDeleteFeed(feed.id);
-
-    const actionBtns = document.getElementById("feed-modal-action-buttons");
-    if (actionBtns) actionBtns.style.display = "none";
-
-    const allTags = await DB.getAllTags();
-    const tagMap = new Map(allTags.map((t) => [t.name, t]));
-
-    Tags.currentTags = (feed.tags || []).map((tagName) => {
-      return (
-        tagMap.get(tagName) || {
-          name: tagName,
-          color: Utils.getRandomFromPalette(),
+      // Priority 2: Icon Color (Runtime Calculated - Non-Persistent)
+      if (f.iconData) {
+        if (iconColorCache.has(f.id)) {
+          return { ...f, displayColor: iconColorCache.get(f.id) };
         }
-      );
+
+        // If not in cache and not processing, trigger calculation
+        if (!processingColorIds.has(f.id)) {
+          processingColorIds.add(f.id);
+          // Compute in background
+          Utils.getDominantColor(f.iconData).then((color) => {
+            if (color) {
+              iconColorCache.set(f.id, color);
+              // Trigger UI update once color is ready
+              Events.emit(Events.FEEDS_UPDATED);
+            }
+            processingColorIds.delete(f.id);
+          });
+        }
+        // While loading, fall through to default
+      }
+
+      // Priority 3: Global Default Color (Fixed)
+      return { ...f, displayColor: "#64748b" };
     });
-
-    Tags.renderTagEditor();
-    Tags.renderColorPicker("color-picker-container", feed.color);
-
-    this._setupUrlListener();
-    UI.toggleModal("feed-modal", true);
-  },
-
-  _resetTempIconState: function () {
-    this.tempIconData = null;
-    const preview = document.getElementById("feed-icon-preview");
-    const checkbox = document.getElementById("feed-use-icon-input");
-    if (preview) {
-      preview.src = "";
-      preview.style.display = "none";
-    }
-    if (checkbox) {
-      checkbox.disabled = true;
-    }
-  },
-
-  _setupUrlListener: function () {
-    const urlInput = document.getElementById("feed-url-input");
-    const iconToggle = document.getElementById("feed-use-icon-input");
-
-    // Debounce URL input
-    urlInput.oninput = (e) => {
-      if (this._inputDebounce) clearTimeout(this._inputDebounce);
-      this._inputDebounce = setTimeout(() => {
-        this._processUrlForIcon(e.target.value);
-      }, 500);
-    };
-
-    // Handle Toggle Change
-    iconToggle.onchange = (e) => {
-      this._updateIconPreview(true);
-    };
-  },
-
-  _updateIconPreview: function (forceShow) {
-    const preview = document.getElementById("feed-icon-preview");
-    if (this.tempIconData) {
-      preview.src = this.tempIconData;
-      preview.style.display = "block";
-    } else {
-      preview.style.display = "none";
-    }
-  },
-
-  _processUrlForIcon: async function (url) {
-    if (!url) return;
-    const checkbox = document.getElementById("feed-use-icon-input");
-
-    const normalized = Utils.ensureUrlProtocol(url);
-    const result = await Utils.fetchFaviconAndColor(normalized);
-
-    if (result) {
-      this.tempIconData = result.iconData;
-      checkbox.disabled = false;
-      this._updateIconPreview(true);
-    } else {
-      this.tempIconData = null;
-      checkbox.disabled = true;
-      checkbox.checked = false;
-      this._updateIconPreview(false);
-    }
-  },
-
-  // --- Helpers ---
-
-  _getModalValues: function () {
-    const useIcon = document.getElementById("feed-use-icon-input").checked;
-    const rawUrl = document.getElementById("feed-url-input").value;
-
-    return {
-      id: document.getElementById("feed-id-input").value,
-      url: Utils.ensureUrlProtocol(rawUrl),
-      name: document.getElementById("feed-name-input").value.trim(),
-      autofetch: document.getElementById("feed-autofetch-input").checked,
-      color: Tags.selectedColor,
-      tags: Tags.currentTags,
-      useIcon: useIcon,
-    };
   },
 
   _saveTags: async function (tags) {
@@ -219,7 +96,7 @@ export const Feeds = {
     if (articles.length > 0) {
       Utils.showToast(`Background fetch started`);
       Service.processAutofetch(feed, articles, contentRetentionDays, () => {
-        window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
+        Events.emit(Events.ARTICLES_UPDATED);
       });
     }
   },
@@ -306,6 +183,10 @@ export const Feeds = {
       if (onSuccess) onSuccess(newFeed);
 
       await DB.cleanupOrphanedTags();
+
+      Events.emit(Events.FEEDS_UPDATED);
+      Events.emit(Events.ARTICLES_UPDATED);
+
       if (newFeed.autofetch) this._triggerAutofetch(newFeed);
       return true;
     } catch (e) {
@@ -337,6 +218,8 @@ export const Feeds = {
 
     if (addedCount > 0) {
       Utils.showToast(`Pack added (${addedCount} new feeds)`);
+      Events.emit(Events.FEEDS_UPDATED);
+      Events.emit(Events.ARTICLES_UPDATED);
     } else {
       Utils.showToast(`All feeds in pack already exist`);
     }
@@ -344,9 +227,7 @@ export const Feeds = {
     if (onComplete) onComplete();
   },
 
-  saveCurrentEdit: async function () {
-    const values = this._getModalValues();
-
+  updateFeed: async function (values) {
     if (!values.id) return;
 
     try {
@@ -392,12 +273,12 @@ export const Feeds = {
         }
 
         // Icon logic
-        const newIconData = values.useIcon
-          ? this.tempIconData || feed.iconData
-          : null;
-
-        if (feed.iconData !== newIconData) {
-          feed.iconData = newIconData;
+        // values.iconData should be passed in if it changed
+        if (
+          values.iconData !== undefined &&
+          feed.iconData !== values.iconData
+        ) {
+          feed.iconData = values.iconData;
           feedChanged = true;
         }
 
@@ -412,7 +293,7 @@ export const Feeds = {
             Utils.showToast(`Saved changes`);
           }
 
-          window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
+          Events.emit(Events.FEEDS_UPDATED);
         }
       }
     } catch (e) {
@@ -420,27 +301,17 @@ export const Feeds = {
     }
   },
 
-  handleSaveFeed: async function (onSuccessCallback) {
-    const values = this._getModalValues();
-
+  addFeed: async function (values, onSuccessCallback) {
     if (!values.url) return;
 
-    const btn = document.getElementById("btn-save-feed");
-    btn.disabled = true;
-    const originalText = btn.textContent;
-    btn.textContent = "Saving...";
-
     try {
-      // Determine Icon Data
-      const finalIconData = values.useIcon ? this.tempIconData : null;
-
       const newFeed = await this._createFeed(
         values.url,
         values.name,
         values.color,
         values.tags,
         values.autofetch,
-        finalIconData,
+        values.iconData,
       );
 
       Utils.showToast(`Added ${newFeed.title}`);
@@ -448,7 +319,9 @@ export const Feeds = {
       if (onSuccessCallback) onSuccessCallback(newFeed.id, true);
 
       await DB.cleanupOrphanedTags();
-      window.closeFeedModal();
+
+      Events.emit(Events.FEEDS_UPDATED);
+      Events.emit(Events.ARTICLES_UPDATED);
 
       if (newFeed.autofetch) {
         this._triggerAutofetch(newFeed);
@@ -480,19 +353,16 @@ export const Feeds = {
       } else msg = `Error: ${e.message}`;
 
       Utils.showToast(msg, action);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = originalText;
+      throw e; // Re-throw to let UI know it failed
     }
   },
 
-  handleDeleteFeed: async function (id, onDeleteCallback) {
-    if (!confirm("Are you sure you want to delete this feed?")) return;
-    this.isEditing = false; // Prevent auto-save on close
+  deleteFeed: async function (id, onDeleteCallback) {
     await DB.deleteFeed(id);
     await DB.cleanupOrphanedTags();
     Utils.showToast("Feed deleted");
-    window.closeFeedModal();
+    Events.emit(Events.FEEDS_UPDATED);
+    Events.emit(Events.ARTICLES_UPDATED);
     if (onDeleteCallback) onDeleteCallback(id);
   },
 
@@ -535,16 +405,16 @@ export const Feeds = {
               State.currentFeedId === feed.id ||
               State.currentFeedId === "all"
             ) {
-              if (onRefreshUI) onRefreshUI();
-              else window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
+              Events.emit(Events.ARTICLES_UPDATED);
             }
           },
         );
       }
     }
 
+    Events.emit(Events.FEEDS_UPDATED);
+    Events.emit(Events.ARTICLES_UPDATED);
     if (onRefreshUI) onRefreshUI();
-    else window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
 
     if (failCount > 0) {
       if (successCount === 0)

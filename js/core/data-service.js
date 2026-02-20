@@ -1,7 +1,7 @@
 import { DB } from "./db.js";
 import { Utils } from "./utils.js";
-import { Theme } from "./theme.js";
-import { Feeds } from "./feeds.js";
+import { Theme } from "../features/settings/theme.js";
+import { FeedService } from "../features/feeds/feed-service.js";
 import { State } from "./state.js";
 
 export const Data = {
@@ -232,7 +232,7 @@ export const Data = {
         if (existing && !options.overwrite) continue;
 
         // Use the shared factory method to create the object
-        const feedObj = Feeds.createFeedObject({
+        const feedObj = FeedService.createFeedObject({
           id: existing ? existing.id : undefined, // Preserve ID if overwriting
           url,
           title,

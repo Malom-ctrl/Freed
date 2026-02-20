@@ -1,5 +1,5 @@
-import { Utils } from "../utils.js";
-import { Registry } from "../plugin-system/registry.js";
+import { Utils } from "../../core/utils.js";
+import { Registry } from "../../plugin-system/registry.js";
 import DOMPurify from "dompurify";
 
 export const ArticleList = {

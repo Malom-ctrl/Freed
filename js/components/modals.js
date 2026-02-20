@@ -1,9 +1,46 @@
-import { Utils } from "../utils.js";
+import { Utils } from "../core/utils.js";
 import { Registry } from "../plugin-system/registry.js";
-import { Config } from "../config.js";
+import { Config } from "../core/config.js";
 import DOMPurify from "dompurify";
 
 export const Modals = {
+  setupListeners: function () {
+    window.closeStatsModal = () => this.toggleModal("stats-modal", false);
+
+    let mouseDownTarget = null;
+    document.addEventListener("mousedown", (e) => {
+      mouseDownTarget = e.target;
+    });
+
+    const bindBackdropClose = (modalId, closeFn) => {
+      const el = document.getElementById(modalId);
+      if (!el) return;
+      el.addEventListener("click", (e) => {
+        // Only close if interaction started AND ended on the backdrop
+        if (e.target === el && mouseDownTarget === el) {
+          closeFn();
+        }
+      });
+    };
+
+    bindBackdropClose(
+      "read-modal",
+      () => window.closeModal && window.closeModal(),
+    );
+    bindBackdropClose(
+      "feed-modal",
+      () => window.closeFeedModal && window.closeFeedModal(),
+    );
+    bindBackdropClose(
+      "settings-modal",
+      () => window.closeSettingsModal && window.closeSettingsModal(),
+    );
+    bindBackdropClose(
+      "stats-modal",
+      () => window.closeStatsModal && window.closeStatsModal(),
+    );
+  },
+
   toggleModal: function (modalId, show) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
@@ -45,7 +82,7 @@ export const Modals = {
     installed,
     available,
     callbacks,
-    incompatiblePlugins,
+    incompatiblePlugins = new Map(),
   ) {
     const container = document.getElementById("plugins-list-container");
     if (!container) return;
@@ -146,9 +183,7 @@ export const Modals = {
         uninstallBtn.style.borderColor = "#ef4444";
         uninstallBtn.textContent = "Uninstall";
         uninstallBtn.onclick = () => {
-          if (confirm(`Uninstall ${plugin.name}?`)) {
-            callbacks.onUninstall(plugin.id);
-          }
+          callbacks.onUninstall(plugin.id);
         };
 
         actions.appendChild(wipeBtn);

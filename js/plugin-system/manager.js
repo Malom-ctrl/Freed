@@ -1,6 +1,6 @@
-import { DB } from "../db.js";
-import { Config } from "../config.js";
-import { Utils } from "../utils.js";
+import { DB } from "../core/db.js";
+import { Config } from "../core/config.js";
+import { Utils } from "../core/utils.js";
 import { Interface } from "./interface.js";
 
 export const Manager = {
@@ -146,8 +146,6 @@ export const Manager = {
 
     if (this.activePlugins.has(id)) {
       this.activePlugins.delete(id);
-      // Reload is usually best after uninstall to clear memory hooks
-      window.location.reload();
     }
   },
 

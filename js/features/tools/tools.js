@@ -1,8 +1,9 @@
-import { Registry } from "./plugin-system/registry.js";
-import { State } from "./state.js";
-import { DB } from "./db.js";
-import { Utils } from "./utils.js";
-import { Reader } from "./reader.js";
+import { Registry } from "../../plugin-system/registry.js";
+import { State } from "../../core/state.js";
+import { DB } from "../../core/db.js";
+import { Utils } from "../../core/utils.js";
+import { ReaderView } from "../reader/reader-view.js";
+import { Events } from "../../core/events.js";
 import DOMPurify from "dompurify";
 
 export const Tools = {
@@ -120,11 +121,11 @@ export const Tools = {
           await DB.setFavorite(guid, true);
 
           // Update UI state in Reader
-          if (Reader && Reader.updateFavoriteButtonState) {
-            Reader.updateFavoriteButtonState(true);
+          if (ReaderView && ReaderView.updateFavoriteButtonState) {
+            ReaderView.updateFavoriteButtonState(true);
           }
           // Update List in background
-          window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
+          Events.emit(Events.ARTICLES_UPDATED);
 
           Utils.showToast("Article automatically added to favorites");
         }

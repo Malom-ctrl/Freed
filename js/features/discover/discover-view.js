@@ -1,4 +1,4 @@
-import { Utils } from "../utils.js";
+import { Utils } from "../../core/utils.js";
 import DOMPurify from "dompurify";
 
 export const DiscoverView = {
@@ -183,10 +183,6 @@ export const DiscoverView = {
       if (filteredFeeds.length === 0) {
         feedGrid.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px; grid-column:1/-1;">No feeds found matching filters.</div>`;
       } else {
-        // Use Shared Lazy Loader Logic (duplicated here or imported? Let's implement simple batching here to avoid circular dep or complex imports if ArticleList is specific)
-        // Actually, we can just render all for now or implement a simple observer.
-        // Let's implement a simple batch renderer here.
-
         const batchSize = 20;
         let renderedCount = 0;
 

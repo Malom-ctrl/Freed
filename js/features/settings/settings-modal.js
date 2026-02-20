@@ -1,17 +1,21 @@
-import { UI } from "../ui-renderer.js";
-import { Theme } from "../theme.js";
-import { State } from "../state.js";
-import { Config } from "../config.js";
-import { Utils } from "../utils.js";
-import { Data } from "../data-service.js";
-import { DB } from "../db.js";
-import { Manager as PluginManager } from "../plugin-system/manager.js";
+import { Modals } from "../../components/modals.js";
+import { Theme } from "./theme.js";
+import { State } from "../../core/state.js";
+import { Config } from "../../core/config.js";
+import { Utils } from "../../core/utils.js";
+import { Data } from "../../core/data-service.js";
+import { DB } from "../../core/db.js";
+import { Manager as PluginManager } from "../../plugin-system/manager.js";
+import { Events } from "../../core/events.js";
 
 export const SettingsModal = {
-  setupListeners: function (refreshCallback) {
+  setupListeners: function () {
+    window.closeSettingsModal = () =>
+      Modals.toggleModal("settings-modal", false);
+
     document.getElementById("btn-settings")?.addEventListener("click", () => {
-      UI.toggleModal("settings-modal", true);
-      UI.renderPluginSettings(); // Ensure plugin settings are rendered
+      Modals.toggleModal("settings-modal", true);
+      Modals.renderPluginSettings(); // Ensure plugin settings are rendered
       const keyInput = document.getElementById("settings-api-key");
       if (keyInput)
         keyInput.value = localStorage.getItem("freed_api_key") || "";
@@ -76,42 +80,54 @@ export const SettingsModal = {
             }
           }
 
-          UI.renderPluginsList(installed, official, {
-            onToggle: async (id, enabled) => {
-              await PluginManager.togglePlugin(id, enabled);
-              if (
-                confirm(
-                  "App reload required to change plugin state. Reload now?",
-                )
-              ) {
-                window.location.reload();
-              }
-            },
-            onWipe: async (id) => {
-              await PluginManager.wipeData(id);
-              Utils.showToast("Plugin data cleared");
-            },
-            onUninstall: async (id) => {
-              await PluginManager.uninstall(id);
-            },
-            onInstall: async (url) => {
-              try {
-                await PluginManager.installFromUrl(url);
-                Utils.showToast("Plugin installed successfully");
-                // Refresh the view
-                btn.click();
+          Modals.renderPluginsList(
+            installed,
+            official,
+            {
+              onToggle: async (id, enabled) => {
+                await PluginManager.togglePlugin(id, enabled);
                 if (
                   confirm(
-                    "App reload required to activate new plugin. Reload now?",
+                    "App reload required to change plugin state. Reload now?",
                   )
                 ) {
                   window.location.reload();
                 }
-              } catch (e) {
-                Utils.showToast("Installation failed: " + e.message);
-              }
+              },
+              onWipe: async (id) => {
+                await PluginManager.wipeData(id);
+                Utils.showToast("Plugin data cleared");
+              },
+              onUninstall: async (id) => {
+                if (
+                  confirm(
+                    "Are you sure you want to uninstall this plugin? The app will reload to apply changes.",
+                  )
+                ) {
+                  await PluginManager.uninstall(id);
+                  window.location.reload();
+                }
+              },
+              onInstall: async (url) => {
+                try {
+                  await PluginManager.installFromUrl(url);
+                  Utils.showToast("Plugin installed successfully");
+                  // Refresh the view
+                  btn.click();
+                  if (
+                    confirm(
+                      "App reload required to activate new plugin. Reload now?",
+                    )
+                  ) {
+                    window.location.reload();
+                  }
+                } catch (e) {
+                  Utils.showToast("Installation failed: " + e.message);
+                }
+              },
             },
-          });
+            PluginManager.incompatiblePlugins,
+          );
         }
       });
     });
@@ -153,7 +169,7 @@ export const SettingsModal = {
 
         Utils.showToast("Settings saved");
         window.closeSettingsModal();
-        if (refreshCallback) refreshCallback();
+        Events.emit(Events.SETTINGS_UPDATED);
       });
 
     // --- Plugin Install ---

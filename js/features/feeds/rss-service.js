@@ -1,7 +1,7 @@
-import { Utils } from "./utils.js";
-import { DB } from "./db.js";
-import { Registry } from "./plugin-system/registry.js";
-import { AI } from "./ai-service.js";
+import { Utils } from "../../core/utils.js";
+import { DB } from "../../core/db.js";
+import { Registry } from "../../plugin-system/registry.js";
+import { AI } from "../../core/ai-service.js";
 import DOMPurify from "dompurify";
 import { Readability } from "@mozilla/readability";
 

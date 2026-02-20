@@ -1,8 +1,9 @@
 import { Registry } from "./registry.js";
-import { State } from "../state.js";
-import { Utils } from "../utils.js";
-import { DB } from "../db.js";
-import { UI } from "../ui-renderer.js";
+import { State } from "../core/state.js";
+import { Utils } from "../core/utils.js";
+import { DB } from "../core/db.js";
+import { Modals } from "../components/modals.js";
+import { Events } from "../core/events.js";
 
 export class Interface {
   constructor(pluginId) {
@@ -13,7 +14,7 @@ export class Interface {
   get app() {
     return {
       refresh: () => {
-        window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
+        Events.emit(Events.REFRESH_UI);
       },
       getState: () => ({ ...State }),
       isMobile: () => window.innerWidth <= 768,
@@ -90,10 +91,10 @@ export class Interface {
       toast: (msg, action) => Utils.showToast(msg, action),
       tooltip: {
         show: (el, text) => {
-          if (UI.showTooltip) UI.showTooltip(el, text);
+          if (Modals.showTooltip) Modals.showTooltip(el, text);
         },
         hide: () => {
-          if (UI.hideTooltip) UI.hideTooltip();
+          if (Modals.hideTooltip) Modals.hideTooltip();
         },
       },
       dialog: {

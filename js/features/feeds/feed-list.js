@@ -1,4 +1,4 @@
-import { Utils } from "../utils.js";
+import { Utils } from "../../core/utils.js";
 import DOMPurify from "dompurify";
 
 export const FeedList = {
