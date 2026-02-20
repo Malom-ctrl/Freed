@@ -36,6 +36,10 @@ export const Utils = {
       .filter((w) => w.length > 0).length;
   },
 
+  generateId: function () {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+  },
+
   toastTimeout: null,
 
   showToast: function (msg, action) {
