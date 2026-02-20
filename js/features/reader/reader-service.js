@@ -113,4 +113,25 @@ export const ReaderService = {
   updateFeedReadStats: async function (feedId, diff) {
     return await DB.updateFeedReadStats(feedId, diff);
   },
+
+  addCAD: async function (articleGuid, cadData) {
+    const article = await DB.getArticle(articleGuid);
+    if (!article) return;
+
+    if (!article.cads) article.cads = [];
+    // Generate ID if missing
+    if (!cadData.id) cadData.id = Utils.generateId();
+
+    article.cads.push(cadData);
+    await this.saveArticle(article);
+    return cadData;
+  },
+
+  removeCAD: async function (articleGuid, cadId) {
+    const article = await DB.getArticle(articleGuid);
+    if (!article || !article.cads) return;
+
+    article.cads = article.cads.filter((c) => c.id !== cadId);
+    await this.saveArticle(article);
+  },
 };

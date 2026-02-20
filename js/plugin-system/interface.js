@@ -5,6 +5,8 @@ import { DB } from "../core/db.js";
 import { Modals } from "../components/modals.js";
 import { Events } from "../core/events.js";
 
+import { ReaderView } from "../features/reader/reader-view.js";
+
 export class Interface {
   constructor(pluginId) {
     this.pluginId = pluginId;
@@ -57,6 +59,16 @@ export class Interface {
             render: renderFn,
             pluginId: self.pluginId,
           }),
+        createCAD: (type, dataOrGenerator) => {
+          return ReaderView.createCADFromSelection(type, dataOrGenerator);
+        },
+        addCADRenderer: (type, renderFn) => {
+          self.registry.registerSlot("cad:renderer", {
+            type: type,
+            render: renderFn,
+            pluginId: self.pluginId,
+          });
+        },
       },
       card: {
         addAction: (action) =>

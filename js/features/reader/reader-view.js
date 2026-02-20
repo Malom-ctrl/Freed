@@ -13,6 +13,16 @@ export const ReaderView = {
   _resizeObserver: null,
 
   setupListeners: function () {
+    // Register default Highlight renderer
+    Registry.registerSlot("cad:renderer", {
+      type: "highlight",
+      render: (content, data) => {
+        // data.data could contain color or other info
+        const color = data.data?.color || "#fde047"; // yellow-300 default
+        return `<mark class="cad-highlight" style="background-color: ${color}80; border-bottom: 2px solid ${color}; color: inherit; padding: 0 2px; border-radius: 2px;" data-cad-id="${data.id}">${content}</mark>`;
+      },
+    });
+
     window.closeModal = () => {
       this.closeModal();
     };
@@ -27,6 +37,17 @@ export const ReaderView = {
         this.closeModal(true); // true = skip history back
       }
     });
+
+    // Selection Toolbar Logic
+    document.addEventListener("selectionchange", () => {
+      this._handleSelectionChange();
+    });
+
+    document
+      .getElementById("btn-tool-highlight")
+      ?.addEventListener("click", () => {
+        this.createCADFromSelection("highlight", { color: "#fde047" });
+      });
 
     document
       .getElementById("btn-toggle-favorite")
@@ -183,8 +204,9 @@ export const ReaderView = {
 
       if (article.fullContent) {
         // Sanitized full content
+        const cleanContent = DOMPurify.sanitize(article.fullContent);
         contentEl.innerHTML =
-          mediaHtml + DOMPurify.sanitize(article.fullContent);
+          mediaHtml + this._renderContentWithCADs(cleanContent, article.cads);
         // Schedule restore after layout
         setTimeout(() => {
           this._applyRestoreScroll();
@@ -195,7 +217,9 @@ export const ReaderView = {
           article.content || article.description || `<p>${article.snippet}</p>`;
 
         if (article.mediaType === "youtube") {
-          contentEl.innerHTML = mediaHtml + DOMPurify.sanitize(baseContent);
+          const cleanContent = DOMPurify.sanitize(baseContent);
+          contentEl.innerHTML =
+            mediaHtml + this._renderContentWithCADs(cleanContent, article.cads);
           setTimeout(() => {
             this._applyRestoreScroll();
             this._updateProgress(scrollContainer);
@@ -204,8 +228,11 @@ export const ReaderView = {
           ReaderService.setLoadingContent(true); // Block progress updates
           const loadingHtml = `<div class="full-content-loader">Fetching full article content...</div>`;
           // Sanitized base content
+          const cleanBase = DOMPurify.sanitize(baseContent);
           contentEl.innerHTML =
-            mediaHtml + loadingHtml + DOMPurify.sanitize(baseContent);
+            mediaHtml +
+            loadingHtml +
+            this._renderContentWithCADs(cleanBase, article.cads);
 
           ReaderService.fetchFullArticle(article.link).then((fullHtml) => {
             const currentGuid = contentEl.getAttribute("data-guid");
@@ -233,7 +260,10 @@ export const ReaderView = {
               });
 
               // Sanitized full content
-              contentEl.innerHTML = mediaHtml + DOMPurify.sanitize(fullHtml);
+              const cleanFull = DOMPurify.sanitize(fullHtml);
+              contentEl.innerHTML =
+                mediaHtml +
+                this._renderContentWithCADs(cleanFull, article.cads);
               Utils.showToast("Article optimized");
             } else {
               const loader = contentEl.querySelector(".full-content-loader");
@@ -296,6 +326,201 @@ export const ReaderView = {
     );
   },
 
+  _handleSelectionChange: function () {
+    const selection = window.getSelection();
+    const toolbar = document.getElementById("selection-toolbar");
+    if (!toolbar) return;
+
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
+      toolbar.style.display = "none";
+      return;
+    }
+
+    const range = selection.getRangeAt(0);
+    const contentEl = document.getElementById("reader-content");
+
+    // Ensure selection is within reader content
+    if (!contentEl || !contentEl.contains(range.commonAncestorContainer)) {
+      toolbar.style.display = "none";
+      return;
+    }
+
+    // Show toolbar
+    const rect = range.getBoundingClientRect();
+    toolbar.style.display = "flex";
+    // Position above selection, centered
+    const toolbarWidth = toolbar.offsetWidth || 200; // approximate if hidden
+    const left = rect.left + rect.width / 2 - toolbarWidth / 2;
+    const top = rect.top - 50; // 50px above
+
+    toolbar.style.left = `${Math.max(10, Math.min(window.innerWidth - toolbarWidth - 10, left))}px`;
+    toolbar.style.top = `${Math.max(10, top + window.scrollY)}px`;
+    toolbar.style.position = "fixed";
+    toolbar.style.top = `${Math.max(10, rect.top - 40)}px`;
+  },
+
+  _cleanCADsFromHTML: function (html) {
+    const div = document.createElement("div");
+    div.innerHTML = html;
+
+    // Find all elements with data-cad-id
+    const cadElements = div.querySelectorAll("[data-cad-id]");
+    cadElements.forEach((el) => {
+      // Unwrap: replace element with its children
+      const parent = el.parentNode;
+      while (el.firstChild) {
+        parent.insertBefore(el.firstChild, el);
+      }
+      parent.removeChild(el);
+    });
+
+    return div.innerHTML;
+  },
+
+  createCADFromSelection: async function (type, dataOrGenerator) {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0 || selection.isCollapsed)
+      return;
+
+    const range = selection.getRangeAt(0);
+    const contentEl = document.getElementById("reader-content");
+    if (!contentEl) return;
+
+    // 1. Create Markers to find approximate position
+    const startMarker = document.createElement("span");
+    startMarker.id = "cad-start-marker-" + Date.now();
+    const endMarker = document.createElement("span");
+    endMarker.id = "cad-end-marker-" + Date.now();
+
+    // 2. Insert Markers
+    const endRange = range.cloneRange();
+    endRange.collapse(false);
+    endRange.insertNode(endMarker);
+
+    const startRange = range.cloneRange();
+    startRange.collapse(true);
+    startRange.insertNode(startMarker);
+
+    // 3. Get HTML with markers
+    let tempHTML = contentEl.innerHTML;
+
+    // 4. Cleanup DOM immediately
+    startMarker.remove();
+    endMarker.remove();
+    contentEl.normalize();
+
+    // 5. Find offsets of markers
+    const startTag = `<span id="${startMarker.id}"></span>`;
+    const endTag = `<span id="${endMarker.id}"></span>`;
+
+    const startIndex = tempHTML.indexOf(startTag);
+    const endIndex = tempHTML.indexOf(endTag);
+
+    if (startIndex === -1 || endIndex === -1) {
+      console.error("Could not find markers in HTML");
+      return;
+    }
+
+    // 6. Extract the selected content (with CAD tags potentially)
+    const rawSelection = tempHTML.substring(
+      startIndex + startTag.length,
+      endIndex,
+    );
+
+    // 7. Clean CAD tags from selection to get the "target" content
+    const cleanSelection = this._cleanCADsFromHTML(rawSelection);
+
+    // 8. Get the original clean article content
+    const article = await DB.getArticle(State.currentArticleGuid);
+    if (!article) return;
+
+    let cleanArticleHTML = "";
+    if (article.fullContent) {
+      cleanArticleHTML = DOMPurify.sanitize(article.fullContent);
+    } else {
+      const base = article.content || article.description || "";
+      cleanArticleHTML = DOMPurify.sanitize(base);
+    }
+
+    // 9. Search for closest occurrence
+    const indices = [];
+    let pos = 0;
+    while ((pos = cleanArticleHTML.indexOf(cleanSelection, pos)) !== -1) {
+      indices.push(pos);
+      pos += 1;
+    }
+
+    if (indices.length === 0) {
+      console.warn(
+        "Could not find selected content in original article. Selection:",
+        cleanSelection,
+      );
+      Utils.showToast("Selection mismatch - cannot create annotation");
+      return;
+    }
+
+    // Find closest index to startIndex
+    const bestIndex = indices.reduce((prev, curr) => {
+      return Math.abs(curr - startIndex) < Math.abs(prev - startIndex)
+        ? curr
+        : prev;
+    });
+
+    // 10. Generate Data
+    let data = {};
+    if (typeof dataOrGenerator === "function") {
+      try {
+        data = await dataOrGenerator(cleanSelection);
+      } catch (e) {
+        console.error("Error generating CAD data", e);
+        Utils.showToast("Failed to generate annotation data");
+        return;
+      }
+    } else {
+      data = dataOrGenerator || {};
+    }
+
+    if (!data) return; // Generator might return null to cancel
+
+    // 11. Create CAD
+    const cad = {
+      type: type,
+      position: bestIndex,
+      length: cleanSelection.length,
+      originalContent: cleanSelection,
+      data: data,
+      created: Date.now(),
+    };
+
+    // 12. Save
+    if (State.currentArticleGuid) {
+      await ReaderService.addCAD(State.currentArticleGuid, cad);
+
+      // 13. Re-render
+      const scrollTop = contentEl.parentElement.scrollTop;
+      const updatedArticle = await DB.getArticle(State.currentArticleGuid);
+
+      if (updatedArticle.fullContent) {
+        const cleanContent = DOMPurify.sanitize(updatedArticle.fullContent);
+        contentEl.innerHTML = this._renderContentWithCADs(
+          cleanContent,
+          updatedArticle.cads,
+        );
+      } else {
+        const base = updatedArticle.content || updatedArticle.description || "";
+        const cleanBase = DOMPurify.sanitize(base);
+        contentEl.innerHTML = this._renderContentWithCADs(
+          cleanBase,
+          updatedArticle.cads,
+        );
+      }
+
+      contentEl.parentElement.scrollTop = scrollTop;
+      document.getElementById("selection-toolbar").style.display = "none";
+      window.getSelection().removeAllRanges();
+    }
+  },
+
   _applyRestoreScroll: function () {
     const restoreProgress = ReaderService.getRestoreProgress();
     if (restoreProgress > 0 && this._lastScrollContainer) {
@@ -310,6 +535,88 @@ export const ReaderView = {
         ReaderService.clearRestoreProgress(); // Clear flag so we don't jump again
       }
     }
+  },
+
+  _renderContentWithCADs: function (htmlContent, cads) {
+    if (!cads || cads.length === 0) return htmlContent;
+
+    // Sort CADs by position
+    const sortedCADs = [...cads].sort((a, b) => a.position - b.position);
+
+    let result = "";
+    let lastIndex = 0;
+    const orphaned = [];
+
+    // Get renderers map
+    const renderers = Registry.getExtensions("cad:renderer");
+    const rendererMap = new Map();
+    renderers.forEach((r) => {
+      if (r.type && typeof r.render === "function") {
+        rendererMap.set(r.type, r.render);
+      }
+    });
+
+    for (const cad of sortedCADs) {
+      // Check bounds and overlap
+      if (cad.position < lastIndex) {
+        orphaned.push({ ...cad, reason: "Overlap or Out of Order" });
+        continue;
+      }
+      if (cad.position + cad.length > htmlContent.length) {
+        orphaned.push({ ...cad, reason: "Out of Bounds" });
+        continue;
+      }
+
+      // Validate content
+      const targetContent = htmlContent.substring(
+        cad.position,
+        cad.position + cad.length,
+      );
+      if (targetContent !== cad.originalContent) {
+        orphaned.push({ ...cad, reason: "Content Mismatch" });
+        continue;
+      }
+
+      // Render
+      const renderer = rendererMap.get(cad.type);
+      if (renderer) {
+        // Append text before this CAD
+        result += htmlContent.substring(lastIndex, cad.position);
+        // Append rendered CAD
+        result += renderer(targetContent, cad);
+        lastIndex = cad.position + cad.length;
+      } else {
+        orphaned.push({ ...cad, reason: `No renderer for type: ${cad.type}` });
+      }
+    }
+
+    // Append remaining text
+    result += htmlContent.substring(lastIndex);
+
+    // Append Orphans
+    if (orphaned.length > 0) {
+      result += this._renderOrphanedCADs(orphaned);
+    }
+
+    return result;
+  },
+
+  _renderOrphanedCADs: function (orphans) {
+    let html = `<div class="orphaned-cads-section" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;">
+            <h4 style="margin-top: 0; color: var(--text-muted);">Orphaned Annotations</h4>
+            <p style="font-size: 0.9rem; color: var(--text-muted);">The following annotations could not be reattached to the text:</p>
+            <ul style="list-style: none; padding: 0;">`;
+
+    orphans.forEach((cad) => {
+      html += `<li style="margin-bottom: 8px; font-size: 0.9rem; padding: 8px; background: var(--bg-main); border-radius: 4px;">
+                <strong style="text-transform: uppercase; font-size: 0.75rem; color: var(--primary);">${cad.type}</strong>:
+                <span style="font-style: italic;">"${DOMPurify.sanitize(cad.originalContent)}"</span>
+                <span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 8px;">(${cad.reason || "Unknown"})</span>
+            </li>`;
+    });
+
+    html += `</ul></div>`;
+    return html;
   },
 
   closeModal: function (skipHistoryBack) {

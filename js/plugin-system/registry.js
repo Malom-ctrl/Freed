@@ -13,6 +13,7 @@ export const Registry = {
     "navbar:action": [], // Mobile/Desktop header icons
     "filter:option": [], // Additional filter dropdown options
     "stats:feed": [], // Render function for feed stats modal. Input: feed object. Output: HTML string
+    "cad:renderer": [], // Content Attached Data renderers. { type: string, render: (content, data) => string }
   },
 
   // Logic Hooks (Pipelines and Events)
