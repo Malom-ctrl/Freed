@@ -3,7 +3,9 @@ import { Registry } from "../../plugin-system/registry.js";
 import DOMPurify from "dompurify";
 
 export const ArticleList = {
-  _articleObserver: null,
+  init: function () {},
+
+  _activeLoader: null,
 
   _initLazyLoader: function ({
     container,
@@ -11,6 +13,7 @@ export const ArticleList = {
     renderItem,
     batchSize = 20,
     root = null,
+    initialRenderCount = 0,
   }) {
     // Create Sentinel
     const sentinel = document.createElement("div");
@@ -31,8 +34,8 @@ export const ArticleList = {
     let observer = null;
 
     // Returns true if there are more items available
-    const renderBatch = () => {
-      const batch = items.slice(renderedCount, renderedCount + batchSize);
+    const renderBatch = (count = batchSize) => {
+      const batch = items.slice(renderedCount, renderedCount + count);
       if (batch.length === 0) {
         sentinel.style.display = "none";
         return false;
@@ -78,7 +81,8 @@ export const ArticleList = {
     };
 
     // Initial render
-    renderBatch();
+    const startCount = initialRenderCount > 0 ? initialRenderCount : batchSize;
+    renderBatch(startCount);
 
     // Setup Observer
     if (renderedCount < items.length) {
@@ -107,7 +111,13 @@ export const ArticleList = {
       sentinel.style.display = "none";
     }
 
-    return observer;
+    return {
+      observer,
+      getRenderedCount: () => renderedCount,
+      disconnect: () => {
+        if (observer) observer.disconnect();
+      },
+    };
   },
 
   render: function (
@@ -121,7 +131,22 @@ export const ArticleList = {
     const list = document.getElementById("article-list");
     if (!list) return;
 
-    // Cleanup previous observer
+    // State Preservation Logic
+    let savedScrollTop = 0;
+    let savedRenderedCount = 0;
+
+    // If we are scrolling, assume we want to preserve state
+    if (list.scrollTop > 0 && this._activeLoader) {
+      savedScrollTop = list.scrollTop;
+      savedRenderedCount = this._activeLoader.getRenderedCount();
+    }
+
+    // Cleanup previous loader
+    if (this._activeLoader) {
+      this._activeLoader.disconnect();
+      this._activeLoader = null;
+    }
+    // Also cleanup legacy observer if it exists (for safety)
     if (this._articleObserver) {
       this._articleObserver.disconnect();
       this._articleObserver = null;
@@ -155,11 +180,12 @@ export const ArticleList = {
     const pluginActions = Registry.getExtensions("card:action");
     const pluginIndicators = Registry.getExtensions("card:indicator");
 
-    this._articleObserver = ArticleList._initLazyLoader({
+    this._activeLoader = this._initLazyLoader({
       container: list,
       items: articles,
       batchSize: 20,
       root: list,
+      initialRenderCount: savedRenderedCount,
       renderItem: (article) => {
         const dateStr = formatRelativeTime(article.pubDate);
         const fullDateStr = formatFullDate(article.pubDate);
@@ -339,6 +365,13 @@ export const ArticleList = {
         return card;
       },
     });
+
+    // Restore scroll position if applicable
+    if (savedScrollTop > 0) {
+      requestAnimationFrame(() => {
+        list.scrollTop = savedScrollTop;
+      });
+    }
   },
 
   attachSwipeHandlers: function (card, onDiscard) {
