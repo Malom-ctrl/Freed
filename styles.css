@@ -799,6 +799,40 @@ header {
     transform: scale(1);
 }
 
+/* Read Indicator Animation */
+.read-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--primary);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition:
+        transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+        opacity 0.5s ease;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.read-indicator.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.read-indicator svg {
+    width: 28px;
+    height: 28px;
+    stroke-width: 3;
+}
+
 .modal-header {
     padding: 16px 20px;
     border-bottom: 1px solid var(--border);

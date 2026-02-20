@@ -39,6 +39,17 @@ export const ReaderView = {
       ?.addEventListener("click", () => {
         this.shareCurrentArticle();
       });
+
+    // Listen for Article Read event to trigger animation
+    Events.on(Events.ARTICLE_READ, (data) => {
+      if (data.guid === State.currentArticleGuid) {
+        const indicator = document.querySelector(".read-indicator");
+        if (indicator) {
+          indicator.classList.add("show");
+          setTimeout(() => indicator.classList.remove("show"), 2500);
+        }
+      }
+    });
   },
 
   openArticle: async function (articleInput) {
@@ -46,6 +57,14 @@ export const ReaderView = {
 
     const modal = document.getElementById("read-modal");
     if (!modal) return;
+
+    // Setup Read Indicator if missing
+    if (!modal.querySelector(".read-indicator")) {
+      const indicator = document.createElement("div");
+      indicator.className = "read-indicator";
+      indicator.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+      modal.querySelector(".modal").appendChild(indicator);
+    }
 
     let article = articleInput;
     try {
@@ -85,13 +104,7 @@ export const ReaderView = {
 
     // Debounce update to DB
     this._scrollHandler = Utils.throttle(() => {
-      if (scrollContainer) {
-        ReaderService.calculateProgress(
-          scrollContainer.scrollTop,
-          scrollContainer.scrollHeight,
-          scrollContainer.clientHeight,
-        );
-      }
+      this._updateProgress(scrollContainer);
     }, 300);
 
     scrollContainer.addEventListener("scroll", this._scrollHandler);
@@ -100,13 +113,7 @@ export const ReaderView = {
     if (this._resizeObserver) this._resizeObserver.disconnect();
     this._resizeObserver = new ResizeObserver(() => {
       this._applyRestoreScroll(); // Try restoring if pending
-      if (scrollContainer) {
-        ReaderService.calculateProgress(
-          scrollContainer.scrollTop,
-          scrollContainer.scrollHeight,
-          scrollContainer.clientHeight,
-        );
-      }
+      this._updateProgress(scrollContainer);
     });
 
     const heroEl = document.getElementById("reader-hero");
@@ -150,13 +157,7 @@ export const ReaderView = {
         // Schedule restore after layout
         setTimeout(() => {
           this._applyRestoreScroll();
-          if (scrollContainer) {
-            ReaderService.calculateProgress(
-              scrollContainer.scrollTop,
-              scrollContainer.scrollHeight,
-              scrollContainer.clientHeight,
-            );
-          }
+          this._updateProgress(scrollContainer);
         }, 100);
       } else {
         ReaderService.setLoadingContent(true); // Block progress updates
@@ -209,13 +210,7 @@ export const ReaderView = {
           // Trigger restoration and check now that content is loaded
           setTimeout(() => {
             this._applyRestoreScroll();
-            if (scrollContainer) {
-              ReaderService.calculateProgress(
-                scrollContainer.scrollTop,
-                scrollContainer.scrollHeight,
-                scrollContainer.clientHeight,
-              );
-            }
+            this._updateProgress(scrollContainer);
           }, 100);
         });
       }
@@ -227,14 +222,34 @@ export const ReaderView = {
 
     // Initial check if content is already there and not loading
     setTimeout(() => {
-      if (scrollContainer) {
-        ReaderService.calculateProgress(
-          scrollContainer.scrollTop,
-          scrollContainer.scrollHeight,
-          scrollContainer.clientHeight,
-        );
-      }
+      this._updateProgress(scrollContainer);
     }, 100);
+  },
+
+  _updateProgress: function (scrollContainer) {
+    if (!scrollContainer) return;
+
+    // Calculate dynamic threshold based on line height
+    let threshold = 150; // Default fallback
+    const contentEl = document.getElementById("reader-content");
+    if (contentEl) {
+      const style = window.getComputedStyle(contentEl);
+      const lineHeight = parseFloat(style.lineHeight);
+      if (!isNaN(lineHeight)) {
+        // Threshold = 5 lines of text
+        threshold = lineHeight * 5;
+      }
+    }
+
+    // Ensure reasonable bounds (min 50px, max 400px)
+    threshold = Math.max(50, Math.min(400, threshold));
+
+    ReaderService.calculateProgress(
+      scrollContainer.scrollTop,
+      scrollContainer.scrollHeight,
+      scrollContainer.clientHeight,
+      threshold,
+    );
   },
 
   _applyRestoreScroll: function () {

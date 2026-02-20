@@ -11,7 +11,12 @@ export const ReaderService = {
   _restoreProgress: 0,
 
   // Pure logic: Calculate progress based on numbers
-  calculateProgress: function (scrollTop, scrollHeight, clientHeight) {
+  calculateProgress: function (
+    scrollTop,
+    scrollHeight,
+    clientHeight,
+    threshold = 20,
+  ) {
     if (!State.currentArticleGuid) return 0;
 
     // Prevent premature read status if waiting for content or if content fetch failed
@@ -32,8 +37,8 @@ export const ReaderService = {
 
     let progress = scrollTop / (scrollHeight - clientHeight);
 
-    // End detection: allow 20px buffer for bottom reached
-    if (scrollTop + clientHeight >= scrollHeight - 20) {
+    // End detection: allow threshold buffer for bottom reached
+    if (scrollTop + clientHeight >= scrollHeight - threshold) {
       progress = 1;
     }
 

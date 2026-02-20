@@ -10,6 +10,7 @@ export const Events = {
   // Article Events
   ARTICLES_UPDATED: "freed:articles-updated", // New articles fetched, or list needs refresh
   ARTICLE_CHANGED: "freed:article-changed", // Read status, favorite, etc.
+  ARTICLE_READ: "freed:article-read", // Specific event for read completion
 
   // Filter/View Events
   FILTER_CHANGED: "freed:filter-changed",
