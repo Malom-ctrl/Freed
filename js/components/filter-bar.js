@@ -18,12 +18,29 @@ export const FilterBar = {
         // Default: Hide discarded
         if (a.discarded) return false;
 
-        if (filters.status === "unread" && a.read) return false;
-        if (filters.status === "read" && !a.read) return false;
+        // Unread: progress < 1 (or undefined)
+        if (
+          filters.status === "unread" &&
+          a.readingProgress &&
+          a.readingProgress >= 1
+        )
+          return false;
+
+        // Read: progress >= 1
+        if (
+          filters.status === "read" &&
+          (!a.readingProgress || a.readingProgress < 1)
+        )
+          return false;
+
         if (filters.status === "favorites" && !a.favorite) return false;
+
+        // Unfinished: Started but not finished (0 < progress < 1)
         if (
           filters.status === "unfinished" &&
-          (a.read || !a.readingProgress || a.readingProgress === 0)
+          (!a.readingProgress ||
+            a.readingProgress === 0 ||
+            a.readingProgress >= 1)
         )
           return false;
       }

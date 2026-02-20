@@ -245,8 +245,6 @@ async function saveArticles(articles) {
           if (!article.isDateFromFeed) finalArticle.pubDate = existing.pubDate;
           if (existing.fullContent && article.fullContent === undefined)
             finalArticle.fullContent = existing.fullContent;
-          if (existing.read && article.read === undefined)
-            finalArticle.read = true;
           if (existing.favorite && article.favorite === undefined)
             finalArticle.favorite = true;
           if (
@@ -283,7 +281,7 @@ async function saveArticles(articles) {
   });
 }
 
-async function updateReadingProgress(guid, progress, isRead) {
+async function updateReadingProgress(guid, progress) {
   const db = await openDB();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(["articles", "feeds"], "readwrite");
@@ -296,32 +294,23 @@ async function updateReadingProgress(guid, progress, isRead) {
         resolve();
         return;
       }
-      const previousRead = !!article.read;
+
       const previousProgress = article.readingProgress || 0;
+      const wasRead = previousProgress >= 1;
+
       let changed = false;
       if (progress !== undefined && article.readingProgress !== progress) {
         article.readingProgress = progress;
         changed = true;
       }
 
-      // If marking as read without progress, assume 100% completion
-      if (
-        isRead === true &&
-        progress === undefined &&
-        article.readingProgress < 1
-      ) {
-        article.readingProgress = 1;
-        changed = true;
-      }
-      if (isRead !== undefined && article.read !== isRead) {
-        article.read = isRead;
-        changed = true;
-      }
       if (!changed) {
         resolve();
         return;
       }
+
       articleStore.put(article);
+
       if (article.feedId) {
         const delta = {};
 
@@ -340,8 +329,9 @@ async function updateReadingProgress(guid, progress, isRead) {
         }
 
         // 2. Update Read Count
-        if (article.read !== previousRead) {
-          delta.read = article.read ? 1 : -1;
+        const isRead = currentProgress >= 1;
+        if (isRead !== wasRead) {
+          delta.read = isRead ? 1 : -1;
         }
         if (Object.keys(delta).length > 0) {
           _applyFeedStatsDelta(feedStore, article.feedId, delta);
@@ -534,12 +524,10 @@ async function performCleanup(settings) {
 
         const hasProgress =
           article.readingProgress && article.readingProgress > 0;
-        const isReadOrStarted = article.read || hasProgress;
 
-        if (!isReadOrStarted && ageInDays > settings.unreadDays)
-          cursor.delete();
-        else if (isReadOrStarted && ageInDays > settings.readDays)
-          cursor.delete();
+        // Treat "started" as having any progress > 0
+        if (!hasProgress && ageInDays > settings.unreadDays) cursor.delete();
+        else if (hasProgress && ageInDays > settings.readDays) cursor.delete();
         else if (article.fullContent && ageInDays > settings.contentDays) {
           const updated = { ...article };
           delete updated.fullContent;

@@ -26,7 +26,7 @@ export const ReaderService = {
       // Only mark as read if content exists and is not loading
       if (scrollHeight > 0 && this._currentMaxProgress < 1) {
         this._currentMaxProgress = 1;
-        DB.updateReadingProgress(State.currentArticleGuid, 1, true).then(() => {
+        DB.updateReadingProgress(State.currentArticleGuid, 1).then(() => {
           Events.emit(Events.ARTICLE_READ, { guid: State.currentArticleGuid });
           Events.emit(Events.ARTICLES_UPDATED);
         });
@@ -47,19 +47,22 @@ export const ReaderService = {
     // Monotonic check: only update if progress increased
     if (progress > this._currentMaxProgress) {
       this._currentMaxProgress = progress;
-      const isRead = progress > 0.95;
-      DB.updateReadingProgress(
-        State.currentArticleGuid,
-        progress,
-        isRead ? true : undefined,
-      ).then(() => {
-        if (isRead) {
-          Events.emit(Events.ARTICLE_READ, { guid: State.currentArticleGuid });
-        }
-        // We might not want to emit ARTICLES_UPDATED on every scroll tick,
-        // but maybe on significant progress or read completion.
-        // For now, let's stick to read completion or pause.
-      });
+      const isRead = progress >= 0.95; // Relaxed threshold for "read" status
+
+      // If "read", force progress to 1
+      const progressToSave = isRead ? 1 : progress;
+
+      DB.updateReadingProgress(State.currentArticleGuid, progressToSave).then(
+        () => {
+          if (isRead) {
+            Events.emit(Events.ARTICLE_READ, {
+              guid: State.currentArticleGuid,
+            });
+            // Force update to ensure UI reflects read state immediately
+            Events.emit(Events.ARTICLES_UPDATED);
+          }
+        },
+      );
     }
 
     return progress;
@@ -71,7 +74,11 @@ export const ReaderService = {
     this._contentFetchFailed = !!article.contentFetchFailed;
     this._restoreProgress = 0;
 
-    if (article.readingProgress > 0 && !article.read && !article.favorite) {
+    if (
+      article.readingProgress > 0 &&
+      article.readingProgress < 1 &&
+      !article.favorite
+    ) {
       this._restoreProgress = article.readingProgress;
     }
   },
