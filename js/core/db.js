@@ -531,8 +531,15 @@ async function performCleanup(settings) {
         const articleDate = new Date(article.pubDate);
         const ageInMs = now - articleDate.getTime();
         const ageInDays = ageInMs / msPerDay;
-        if (!article.read && ageInDays > settings.unreadDays) cursor.delete();
-        else if (article.read && ageInDays > settings.readDays) cursor.delete();
+
+        const hasProgress =
+          article.readingProgress && article.readingProgress > 0;
+        const isReadOrStarted = article.read || hasProgress;
+
+        if (!isReadOrStarted && ageInDays > settings.unreadDays)
+          cursor.delete();
+        else if (isReadOrStarted && ageInDays > settings.readDays)
+          cursor.delete();
         else if (article.fullContent && ageInDays > settings.contentDays) {
           const updated = { ...article };
           delete updated.fullContent;
