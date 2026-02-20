@@ -1,6 +1,6 @@
-window.Freed = window.Freed || {};
+import { Config } from "./config.js";
 
-window.Freed.Utils = {
+export const Utils = {
   ensureUrlProtocol: function (input) {
     if (!input) return "";
     const url = input.trim();
@@ -77,9 +77,8 @@ window.Freed.Utils = {
   },
 
   getRandomFromPalette: function () {
-    if (!window.Freed.Config || !window.Freed.Config.COLOR_PALETTE)
-      return "#64748b";
-    const palette = window.Freed.Config.COLOR_PALETTE;
+    if (!Config || !Config.COLOR_PALETTE) return "#64748b";
+    const palette = Config.COLOR_PALETTE;
     return palette[Math.floor(Math.random() * palette.length)];
   },
 
@@ -87,15 +86,14 @@ window.Freed.Utils = {
   // This allows consistency without storage.
   getColorForId: function (str) {
     if (!str) return "#64748b";
-    if (!window.Freed.Config || !window.Freed.Config.COLOR_PALETTE)
-      return "#64748b";
+    if (!Config || !Config.COLOR_PALETTE) return "#64748b";
 
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
 
-    const palette = window.Freed.Config.COLOR_PALETTE;
+    const palette = Config.COLOR_PALETTE;
     const index = Math.abs(hash) % palette.length;
     return palette[index];
   },

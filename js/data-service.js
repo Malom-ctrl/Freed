@@ -1,8 +1,11 @@
-window.Freed = window.Freed || {};
+import { DB } from "./db.js";
+import { Utils } from "./utils.js";
+import { Theme } from "./theme.js";
+import { Feeds } from "./feeds.js";
+import { State } from "./state.js";
 
-window.Freed.Data = {
+export const Data = {
   generateOPML: async function (options) {
-    const { DB } = window.Freed;
     const feeds = await DB.getAllFeeds();
     const allTags = await DB.getAllTags();
 
@@ -86,7 +89,6 @@ window.Freed.Data = {
   processImport: async function (xmlString, options) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlString, "text/xml");
-    const { DB, Utils, Theme, Feeds } = window.Freed;
 
     let stats = { feeds: 0, favorites: 0, settings: false };
 
@@ -118,8 +120,7 @@ window.Freed.Data = {
                 "freed_show_images",
                 json.settings.showImages,
               );
-              window.Freed.State.showArticleImages =
-                json.settings.showImages === "true";
+              State.showArticleImages = json.settings.showImages === "true";
             }
             if (json.settings.cleanup) {
               if (json.settings.cleanup.unread)

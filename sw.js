@@ -1,4 +1,4 @@
-const APP_VERSION = "1.1.0";
+const APP_VERSION = "1.2.0";
 const CACHE_NAME = `freed-v${APP_VERSION}`;
 const ASSETS = [
   "./",
@@ -22,6 +22,15 @@ const ASSETS = [
   "./js/plugin-system/registry.js",
   "./js/plugin-system/interface.js",
   "./js/plugin-system/manager.js",
+  "./js/components/ArticleList.js",
+  "./js/components/DiscoverView.js",
+  "./js/components/FeedList.js",
+  "./js/components/FilterBar.js",
+  "./js/components/Modals.js",
+  "./js/components/Navbar.js",
+  "./js/components/ReaderView.js",
+  "./js/components/SettingsModal.js",
+  "./js/components/Sidebar.js",
   "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
 ];
 

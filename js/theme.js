@@ -1,6 +1,4 @@
-window.Freed = window.Freed || {};
-
-window.Freed.Theme = {
+export const Theme = {
   fonts: {
     system:
       "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",

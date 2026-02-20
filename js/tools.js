@@ -1,6 +1,11 @@
-window.Freed = window.Freed || {};
+import { Registry } from "./plugin-system/registry.js";
+import { State } from "./state.js";
+import { DB } from "./db.js";
+import { Utils } from "./utils.js";
+import { Reader } from "./reader.js";
+import DOMPurify from "dompurify";
 
-window.Freed.Tools = {
+export const Tools = {
   setupSelectionTools: function () {
     const readerContent = document.getElementById("reader-content");
     const toolbar = document.getElementById("selection-toolbar");
@@ -45,14 +50,15 @@ window.Freed.Tools = {
       // Render Plugin Tools using reader:tool slot
       if (pluginContainer) {
         pluginContainer.innerHTML = "";
-        const tools =
-          window.Freed.Plugins.Registry.getExtensions("reader:tool");
+        const tools = Registry.getExtensions("reader:tool");
 
         if (tools.length > 0) {
           if (divider) divider.style.display = "block";
           tools.forEach((tool) => {
             const btn = document.createElement("button");
-            btn.innerHTML = `${tool.icon || ""} ${tool.label}`;
+            btn.innerHTML = DOMPurify.sanitize(
+              `${tool.icon || ""} ${tool.label}`,
+            );
             btn.onclick = (e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -106,27 +112,21 @@ window.Freed.Tools = {
     await this.saveCurrentArticleContent();
 
     // Auto-favorite logic
-    const guid = window.Freed.State.currentArticleGuid;
+    const guid = State.currentArticleGuid;
     if (guid) {
       try {
-        const article = await window.Freed.DB.getArticle(guid);
+        const article = await DB.getArticle(guid);
         if (article && !article.favorite) {
-          await window.Freed.DB.setFavorite(guid, true);
+          await DB.setFavorite(guid, true);
 
           // Update UI state in Reader
-          if (
-            window.Freed.Reader &&
-            window.Freed.Reader.updateFavoriteButtonState
-          ) {
-            window.Freed.Reader.updateFavoriteButtonState(true);
+          if (Reader && Reader.updateFavoriteButtonState) {
+            Reader.updateFavoriteButtonState(true);
           }
-          // Update List in background if app controller is available
-          if (window.Freed.App && window.Freed.App.refreshUI) {
-            window.Freed.App.refreshUI();
-          }
-          window.Freed.Utils.showToast(
-            "Article automatically added to favorites",
-          );
+          // Update List in background
+          window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
+
+          Utils.showToast("Article automatically added to favorites");
         }
       } catch (err) {
         console.error("Error updating favorite status on highlight", err);
@@ -158,12 +158,10 @@ window.Freed.Tools = {
   },
 
   saveCurrentArticleContent: async function () {
-    const guid = window.Freed.State.currentArticleGuid;
+    const guid = State.currentArticleGuid;
     if (!guid) return;
     const contentEl = document.getElementById("reader-content");
-    await window.Freed.DB.saveArticles([
-      { guid: guid, fullContent: contentEl.innerHTML },
-    ]);
+    await DB.saveArticles([{ guid: guid, fullContent: contentEl.innerHTML }]);
   },
 
   normalizeHighlights: function (container) {

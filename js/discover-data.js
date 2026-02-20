@@ -1,6 +1,4 @@
-window.Freed = window.Freed || {};
-
-window.Freed.DiscoverData = {
+export const DiscoverData = {
   feeds: [
     // --- Australia ---
     {

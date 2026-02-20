@@ -1,7 +1,5 @@
-window.Freed = window.Freed || {};
-
-window.Freed.Config = {
-  APP_VERSION: "1.1.0",
+export const Config = {
+  APP_VERSION: "1.2.0",
   DB_NAME: "freed_db",
   DB_VERSION: 3,
   COLOR_PALETTE: [

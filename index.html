@@ -21,11 +21,12 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="./styles.css" />
-        <script src="https://unpkg.com/@mozilla/readability@0.5.0/Readability.js"></script>
         <script type="importmap">
             {
                 "imports": {
-                    "@google/genai": "https://esm.run/@google/genai"
+                    "@google/genai": "https://esm.run/@google/genai",
+                    "dompurify": "https://esm.run/dompurify",
+                    "@mozilla/readability": "https://esm.run/@mozilla/readability"
                 }
             }
         </script>
@@ -1165,24 +1166,7 @@
 
         <div id="toast" class="toast"></div>
 
-        <!-- Dependencies loaded sequentially -->
-        <script src="./js/config.js"></script>
-        <script src="./js/state.js"></script>
-        <script src="./js/utils.js"></script>
-        <script src="./js/db.js"></script>
-        <script src="./js/theme.js"></script>
-        <script src="./js/ai-service.js"></script>
-        <script src="./js/rss-service.js"></script>
-        <script src="./js/data-service.js"></script>
-        <script src="./js/plugin-system/registry.js"></script>
-        <script src="./js/plugin-system/interface.js"></script>
-        <script src="./js/plugin-system/manager.js"></script>
-        <script src="./js/ui-renderer.js"></script>
-        <script src="./js/tools.js"></script>
-        <script src="./js/tags.js"></script>
-        <script src="./js/reader.js"></script>
-        <script src="./js/feeds.js"></script>
-        <script src="./js/discover-data.js"></script>
-        <script src="./js/app.js"></script>
+        <!-- Main Application Entry Point -->
+        <script type="module" src="./js/app.js"></script>
     </body>
 </html>

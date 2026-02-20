@@ -1,19 +1,21 @@
-window.Freed = window.Freed || {};
-window.Freed.Plugins = window.Freed.Plugins || {};
+import { Registry } from "./registry.js";
+import { State } from "../state.js";
+import { Utils } from "../utils.js";
+import { DB } from "../db.js";
+import { UI } from "../ui-renderer.js";
 
-window.Freed.Plugins.Interface = class {
+export class Interface {
   constructor(pluginId) {
     this.pluginId = pluginId;
-    this.registry = window.Freed.Plugins.Registry;
+    this.registry = Registry;
   }
 
   get app() {
     return {
       refresh: () => {
-        if (window.Freed.App && window.Freed.App.refreshUI)
-          window.Freed.App.refreshUI();
+        window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
       },
-      getState: () => ({ ...window.Freed.State }),
+      getState: () => ({ ...State }),
       isMobile: () => window.innerWidth <= 768,
     };
   }
@@ -85,14 +87,13 @@ window.Freed.Plugins.Interface = class {
           });
         },
       },
-      toast: (msg, action) => window.Freed.Utils.showToast(msg, action),
+      toast: (msg, action) => Utils.showToast(msg, action),
       tooltip: {
         show: (el, text) => {
-          if (window.Freed.UI.showTooltip)
-            window.Freed.UI.showTooltip(el, text);
+          if (UI.showTooltip) UI.showTooltip(el, text);
         },
         hide: () => {
-          if (window.Freed.UI.hideTooltip) window.Freed.UI.hideTooltip();
+          if (UI.hideTooltip) UI.hideTooltip();
         },
       },
       dialog: {
@@ -104,15 +105,13 @@ window.Freed.Plugins.Interface = class {
 
   get reader() {
     return {
-      getCurrentGuid: () => window.Freed.State.currentArticleGuid,
+      getCurrentGuid: () => State.currentArticleGuid,
       saveContent: async () => {
         // Save current DOM state of reader to DB
-        const guid = window.Freed.State.currentArticleGuid;
+        const guid = State.currentArticleGuid;
         const el = document.getElementById("reader-content");
         if (guid && el) {
-          await window.Freed.DB.saveArticles([
-            { guid: guid, fullContent: el.innerHTML },
-          ]);
+          await DB.saveArticles([{ guid: guid, fullContent: el.innerHTML }]);
         }
       },
     };
@@ -129,7 +128,6 @@ window.Freed.Plugins.Interface = class {
   }
 
   get data() {
-    const { DB } = window.Freed;
     return {
       getArticle: (id) => DB.getArticle(id),
       saveArticle: (article) => DB.saveArticles([article]),
@@ -141,7 +139,6 @@ window.Freed.Plugins.Interface = class {
   }
 
   get storage() {
-    const { DB } = window.Freed;
     const prefix = `plugin:${this.pluginId}:`;
     return {
       get: async (key) => DB.pluginStorageGet(prefix + key),
@@ -149,4 +146,4 @@ window.Freed.Plugins.Interface = class {
       delete: async (key) => DB.pluginStoragePut(prefix + key, undefined),
     };
   }
-};
+}

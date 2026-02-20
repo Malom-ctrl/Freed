@@ -1,13 +1,15 @@
-window.Freed = window.Freed || {};
+import { DB } from "./db.js";
+import { Utils } from "./utils.js";
+import { State } from "./state.js";
+import { Config } from "./config.js";
+import DOMPurify from "dompurify";
 
-window.Freed.Tags = {
+export const Tags = {
   currentTags: [], // Tags for the currently editing feed (Array of Objects {name, color})
   editingTag: null, // The specific tag being color-edited
   selectedColor: null, // For feed color picker
 
   setupTagInputs: function (onFilterUpdateCallback) {
-    const { DB, Utils, State } = window.Freed;
-
     // Global Autocomplete closer
     document.addEventListener("click", (e) => {
       const container = document.getElementById("global-autocomplete");
@@ -181,7 +183,9 @@ window.Freed.Tags = {
     items.forEach((item) => {
       const div = document.createElement("div");
       div.className = "autocomplete-item";
-      div.innerHTML = `<span class="tag-dot" style="background-color: ${item.color || "#ccc"}"></span> ${item.name}`;
+      div.innerHTML = DOMPurify.sanitize(
+        `<span class="tag-dot" style="background-color: ${item.color || "#ccc"}"></span> ${item.name}`,
+      );
       div.addEventListener("mousedown", (e) => {
         e.preventDefault();
         onSelect(item);
@@ -201,7 +205,6 @@ window.Freed.Tags = {
   setupTagColorPopup: function () {
     const popup = document.getElementById("tag-color-popup");
     const swatches = document.getElementById("tag-color-popup-swatches");
-    const { Config } = window.Freed;
 
     Config.COLOR_PALETTE.forEach((color) => {
       const swatch = document.createElement("div");
@@ -277,7 +280,6 @@ window.Freed.Tags = {
     if (!container) return;
     container.innerHTML = "";
     this.selectedColor = initialColor || null;
-    const { Config } = window.Freed;
 
     const noneOpt = document.createElement("div");
     noneOpt.className = `color-swatch color-none ${!initialColor ? "selected" : ""}`;

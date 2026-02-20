@@ -1,6 +1,11 @@
-window.Freed = window.Freed || {};
+import { Tags } from "./tags.js";
+import { DB } from "./db.js";
+import { Utils } from "./utils.js";
+import { Service } from "./rss-service.js";
+import { Config } from "./config.js";
+import { UI } from "./ui-renderer.js";
 
-window.Freed.Feeds = {
+export const Feeds = {
   isEditing: false,
   tempIconData: null,
   _inputDebounce: null,
@@ -36,7 +41,6 @@ window.Freed.Feeds = {
   },
 
   openAddFeedModal: function () {
-    const { Tags } = window.Freed;
     this.isEditing = false;
     this._resetTempIconState();
 
@@ -65,11 +69,10 @@ window.Freed.Feeds = {
     Tags.renderColorPicker("color-picker-container", null);
 
     this._setupUrlListener();
-    window.Freed.UI.toggleModal("feed-modal", true);
+    UI.toggleModal("feed-modal", true);
   },
 
   openEditFeedModal: async function (feed) {
-    const { Tags, DB, Utils } = window.Freed;
     this.isEditing = true;
     this._resetTempIconState();
 
@@ -120,7 +123,7 @@ window.Freed.Feeds = {
     Tags.renderColorPicker("color-picker-container", feed.color);
 
     this._setupUrlListener();
-    window.Freed.UI.toggleModal("feed-modal", true);
+    UI.toggleModal("feed-modal", true);
   },
 
   _resetTempIconState: function () {
@@ -168,8 +171,8 @@ window.Freed.Feeds = {
     if (!url) return;
     const checkbox = document.getElementById("feed-use-icon-input");
 
-    const normalized = window.Freed.Utils.ensureUrlProtocol(url);
-    const result = await window.Freed.Utils.fetchFaviconAndColor(normalized);
+    const normalized = Utils.ensureUrlProtocol(url);
+    const result = await Utils.fetchFaviconAndColor(normalized);
 
     if (result) {
       this.tempIconData = result.iconData;
@@ -186,7 +189,6 @@ window.Freed.Feeds = {
   // --- Helpers ---
 
   _getModalValues: function () {
-    const { Tags, Utils } = window.Freed;
     const useIcon = document.getElementById("feed-use-icon-input").checked;
     const rawUrl = document.getElementById("feed-url-input").value;
 
@@ -202,14 +204,12 @@ window.Freed.Feeds = {
   },
 
   _saveTags: async function (tags) {
-    const { DB } = window.Freed;
     for (const tag of tags) {
       await DB.saveTag(tag);
     }
   },
 
   _triggerAutofetch: async function (feed) {
-    const { DB, Service, Config, Utils } = window.Freed;
     const contentRetentionDays = parseInt(
       localStorage.getItem("cleanup_content_days") ||
         Config.DEFAULTS.CLEANUP_CONTENT_DAYS,
@@ -219,17 +219,13 @@ window.Freed.Feeds = {
     if (articles.length > 0) {
       Utils.showToast(`Background fetch started`);
       Service.processAutofetch(feed, articles, contentRetentionDays, () => {
-        if (window.Freed.App && window.Freed.App.refreshUI) {
-          window.Freed.App.refreshUI();
-        }
+        window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
       });
     }
   },
 
   // Core Logic extracted for re-use
   _createFeed: async function (url, title, color, tags, autofetch, iconData) {
-    const { DB, Service } = window.Freed;
-
     // Ensure tags exist in DB
     await this._saveTags(tags);
     const tagNames = tags.map((t) => t.name);
@@ -273,7 +269,6 @@ window.Freed.Feeds = {
   // --- Actions ---
 
   addFeedDirectly: async function (feedData, onSuccess) {
-    const { Utils, DB } = window.Freed;
     try {
       // Fetch Icon Data for Discover feed
       let iconData = null;
@@ -321,7 +316,6 @@ window.Freed.Feeds = {
   },
 
   addDiscoverPack: async function (pack, allDiscoverFeeds, onComplete) {
-    const { Utils, DB } = window.Freed;
     const feedsToAdd = pack.feeds
       .map((fid) => allDiscoverFeeds.find((f) => f.id === fid))
       .filter(Boolean);
@@ -351,7 +345,6 @@ window.Freed.Feeds = {
   },
 
   saveCurrentEdit: async function () {
-    const { DB, Utils } = window.Freed;
     const values = this._getModalValues();
 
     if (!values.id) return;
@@ -419,9 +412,7 @@ window.Freed.Feeds = {
             Utils.showToast(`Saved changes`);
           }
 
-          if (window.Freed.App && window.Freed.App.refreshUI) {
-            window.Freed.App.refreshUI();
-          }
+          window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
         }
       }
     } catch (e) {
@@ -430,7 +421,6 @@ window.Freed.Feeds = {
   },
 
   handleSaveFeed: async function (onSuccessCallback) {
-    const { DB, Utils } = window.Freed;
     const values = this._getModalValues();
 
     if (!values.url) return;
@@ -499,10 +489,69 @@ window.Freed.Feeds = {
   handleDeleteFeed: async function (id, onDeleteCallback) {
     if (!confirm("Are you sure you want to delete this feed?")) return;
     this.isEditing = false; // Prevent auto-save on close
-    await window.Freed.DB.deleteFeed(id);
-    await window.Freed.DB.cleanupOrphanedTags();
-    window.Freed.Utils.showToast("Feed deleted");
+    await DB.deleteFeed(id);
+    await DB.cleanupOrphanedTags();
+    Utils.showToast("Feed deleted");
     window.closeFeedModal();
     if (onDeleteCallback) onDeleteCallback(id);
+  },
+
+  syncFeeds: async function (onRefreshUI) {
+    const feeds = await DB.getAllFeeds();
+    const contentRetentionDays = parseInt(
+      localStorage.getItem("cleanup_content_days") ||
+        Config.DEFAULTS.CLEANUP_CONTENT_DAYS,
+    );
+
+    let successCount = 0;
+    let failCount = 0;
+
+    // Process sequentially to manage network load
+    for (const feed of feeds) {
+      const result = await Service.fetchAndParseFeed(feed);
+      if (result.error) {
+        failCount++;
+        console.warn(`Sync failed for ${feed.title}:`, result.error);
+        continue;
+      }
+
+      successCount++;
+      if (result.articles && result.articles.length > 0) {
+        if (result.parsingRule) {
+          feed.parsingRule = result.parsingRule;
+          feed.type = "web";
+          await DB.saveFeed(feed);
+        }
+        await DB.saveArticles(result.articles);
+
+        // Trigger Autofetch if enabled for this feed
+        Service.processAutofetch(
+          feed,
+          result.articles,
+          contentRetentionDays,
+          () => {
+            // Only refresh if we are viewing the relevant feed or all
+            if (
+              State.currentFeedId === feed.id ||
+              State.currentFeedId === "all"
+            ) {
+              if (onRefreshUI) onRefreshUI();
+              else window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
+            }
+          },
+        );
+      }
+    }
+
+    if (onRefreshUI) onRefreshUI();
+    else window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
+
+    if (failCount > 0) {
+      if (successCount === 0)
+        Utils.showToast("Feed sync failed. Check connection.");
+      else Utils.showToast(`Feeds updated. ${failCount} failed.`);
+    } else {
+      Utils.showToast("Feeds updated");
+    }
   },
 };

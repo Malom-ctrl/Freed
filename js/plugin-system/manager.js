@@ -1,14 +1,15 @@
-window.Freed = window.Freed || {};
-window.Freed.Plugins = window.Freed.Plugins || {};
+import { DB } from "../db.js";
+import { Config } from "../config.js";
+import { Utils } from "../utils.js";
+import { Interface } from "./interface.js";
 
-window.Freed.Plugins.Manager = {
+export const Manager = {
   activePlugins: new Map(),
   incompatiblePlugins: new Map(), // Stores plugins that failed compat check
 
   init: async function () {
-    const { Config, Utils } = window.Freed;
     // 1. Load existing plugins from DB
-    const plugins = await window.Freed.DB.getPlugins();
+    const plugins = await DB.getPlugins();
 
     for (const p of plugins) {
       // Compatibility Check
@@ -27,7 +28,7 @@ window.Freed.Plugins.Manager = {
         if (p.enabled) {
           // Auto-disable in DB so we don't try next time, but user can see it
           p.enabled = false;
-          await window.Freed.DB.savePlugin(p);
+          await DB.savePlugin(p);
         }
         continue;
       } else {
@@ -41,8 +42,6 @@ window.Freed.Plugins.Manager = {
   },
 
   install: async function (manifest, sourceCode, installUrl) {
-    const { Config, Utils } = window.Freed;
-
     // Pre-install Compatibility Check
     const compatRule = manifest.compatibleAppVersion || "*";
     if (!Utils.SemVer.satisfies(Config.APP_VERSION, compatRule)) {
@@ -62,7 +61,7 @@ window.Freed.Plugins.Manager = {
       enabled: true,
       installedAt: Date.now(),
     };
-    await window.Freed.DB.savePlugin(pluginData);
+    await DB.savePlugin(pluginData);
 
     // If updating, refresh activation
     if (this.activePlugins.has(manifest.id)) {
@@ -75,7 +74,6 @@ window.Freed.Plugins.Manager = {
   },
 
   installFromUrl: async function (url) {
-    const { Utils } = window.Freed;
     try {
       // 1. Fetch Manifest
       const manifestRes = await fetch(url);
@@ -110,7 +108,7 @@ window.Freed.Plugins.Manager = {
       const url = URL.createObjectURL(blob);
       const module = await import(url);
 
-      const api = new window.Freed.Plugins.Interface(pluginData.id);
+      const api = new Interface(pluginData.id);
 
       if (typeof module.activate === "function") {
         await module.activate(api);
@@ -122,7 +120,6 @@ window.Freed.Plugins.Manager = {
   },
 
   togglePlugin: async function (id, enabled) {
-    const { DB } = window.Freed;
     // Prevent enabling if incompatible
     if (enabled && this.incompatiblePlugins.get(id)) {
       throw new Error("Cannot enable incompatible plugin.");
@@ -140,11 +137,11 @@ window.Freed.Plugins.Manager = {
   },
 
   wipeData: async function (id) {
-    await window.Freed.DB.deletePluginData(id);
+    await DB.deletePluginData(id);
   },
 
   uninstall: async function (id) {
-    await window.Freed.DB.deletePlugin(id);
+    await DB.deletePlugin(id);
     await this.wipeData(id); // Also clear data
 
     if (this.activePlugins.has(id)) {
@@ -155,7 +152,6 @@ window.Freed.Plugins.Manager = {
   },
 
   autoUpdatePlugins: async function () {
-    const { Utils, Config, DB } = window.Freed;
     const plugins = await DB.getPlugins();
 
     const updatePromises = plugins.map(async (plugin) => {

@@ -1,6 +1,4 @@
-window.Freed = window.Freed || {};
-
-window.Freed.AI = {
+export const AI = {
   generateParsingRule: async function (htmlString, url) {
     const apiKey = localStorage.getItem("freed_api_key");
     if (!apiKey) {

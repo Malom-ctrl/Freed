@@ -1,6 +1,12 @@
-window.Freed = window.Freed || {};
+import { DB } from "./db.js";
+import { Service } from "./rss-service.js";
+import { Tools } from "./tools.js";
+import { Utils } from "./utils.js";
+import { State } from "./state.js";
+import { UI } from "./ui-renderer.js";
+import DOMPurify from "dompurify";
 
-window.Freed.Reader = {
+export const Reader = {
   _scrollHandler: null,
   _lastScrollContainer: null,
   _resizeObserver: null,
@@ -10,12 +16,10 @@ window.Freed.Reader = {
   _restoreProgress: 0,
 
   _checkProgress: function (scrollContainer) {
-    if (!window.Freed.State.currentArticleGuid || !scrollContainer) return;
+    if (!State.currentArticleGuid || !scrollContainer) return;
 
     // Prevent premature read status if waiting for content or if content fetch failed
     if (this._isLoadingContent || this._contentFetchFailed) return;
-
-    const { DB } = window.Freed;
 
     const scrollTop = scrollContainer.scrollTop;
     const scrollHeight = scrollContainer.scrollHeight;
@@ -25,11 +29,7 @@ window.Freed.Reader = {
       // Only mark as read if content exists and is not loading
       if (scrollHeight > 0 && this._currentMaxProgress < 1) {
         this._currentMaxProgress = 1;
-        DB.updateReadingProgress(
-          window.Freed.State.currentArticleGuid,
-          1,
-          true,
-        );
+        DB.updateReadingProgress(State.currentArticleGuid, 1, true);
       }
       return;
     }
@@ -48,7 +48,7 @@ window.Freed.Reader = {
       this._currentMaxProgress = progress;
       const isRead = progress > 0.95;
       DB.updateReadingProgress(
-        window.Freed.State.currentArticleGuid,
+        State.currentArticleGuid,
         progress,
         isRead ? true : undefined,
       );
@@ -72,7 +72,6 @@ window.Freed.Reader = {
   },
 
   openArticle: async function (articleInput, onRefreshNeeded) {
-    const { DB, Service, Tools, Utils, State, UI } = window.Freed;
     State.currentArticleGuid = articleInput.guid;
 
     const modal = document.getElementById("read-modal");
@@ -175,7 +174,8 @@ window.Freed.Reader = {
       this._resizeObserver.observe(contentEl);
 
       if (article.fullContent) {
-        contentEl.innerHTML = article.fullContent;
+        // Sanitized full content
+        contentEl.innerHTML = DOMPurify.sanitize(article.fullContent);
         // Schedule restore after layout
         setTimeout(() => {
           this._applyRestoreScroll();
@@ -186,7 +186,8 @@ window.Freed.Reader = {
         const baseContent =
           article.content || article.description || `<p>${article.snippet}</p>`;
         const loadingHtml = `<div class="full-content-loader">Fetching full article content...</div>`;
-        contentEl.innerHTML = loadingHtml + baseContent;
+        // Sanitized base content
+        contentEl.innerHTML = loadingHtml + DOMPurify.sanitize(baseContent);
 
         Service.fetchFullArticle(article.link).then((fullHtml) => {
           const currentGuid = contentEl.getAttribute("data-guid");
@@ -214,7 +215,8 @@ window.Freed.Reader = {
                 if (onRefreshNeeded) onRefreshNeeded();
               });
 
-            contentEl.innerHTML = fullHtml;
+            // Sanitized full content
+            contentEl.innerHTML = DOMPurify.sanitize(fullHtml);
             Utils.showToast("Article optimized");
           } else {
             const loader = contentEl.querySelector(".full-content-loader");
@@ -267,7 +269,6 @@ window.Freed.Reader = {
   },
 
   toggleCurrentFavorite: async function (onRefreshNeeded) {
-    const { DB, Utils, State } = window.Freed;
     if (!State.currentArticleGuid) return;
     const newState = await DB.toggleFavorite(State.currentArticleGuid);
     this.updateFavoriteButtonState(newState);
@@ -277,7 +278,6 @@ window.Freed.Reader = {
   },
 
   shareCurrentArticle: async function () {
-    const { State, DB, Utils } = window.Freed;
     if (!State.currentArticleGuid) return;
 
     const article = await DB.getArticle(State.currentArticleGuid);
@@ -328,12 +328,10 @@ window.Freed.Reader = {
 
     if (history.state && history.state.readingView) history.back();
     else {
-      window.Freed.UI.toggleModal("read-modal", false);
+      UI.toggleModal("read-modal", false);
       document.body.classList.remove("modal-open");
-      window.Freed.State.currentArticleGuid = null;
-      if (window.Freed.App && window.Freed.App.refreshUI) {
-        window.Freed.App.refreshUI();
-      }
+      State.currentArticleGuid = null;
+      window.dispatchEvent(new CustomEvent("freed:refresh-ui"));
     }
   },
 };
