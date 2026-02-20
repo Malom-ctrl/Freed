@@ -35,6 +35,8 @@ function _normalizeArticle(data) {
     content: data.content || "",
     snippet: data.snippet || "",
     image: data.image || "",
+    mediaType: data.mediaType || null, // 'audio' | 'video' | 'youtube'
+    mediaUrl: data.mediaUrl || null,
     isDateFromFeed,
     fullContent: data.fullContent,
     read: false,
@@ -147,6 +149,49 @@ function parseRSS(xml, feed) {
       if (img) image = img.src;
     }
 
+    // --- Media Detection (Podcast / YouTube) ---
+    let mediaType = null;
+    let mediaUrl = null;
+
+    // 1. Check for Enclosures (Podcasts)
+    const enclosure = item.querySelector("enclosure");
+    if (enclosure) {
+      const type = enclosure.getAttribute("type");
+      const url = enclosure.getAttribute("url");
+      if (type && url) {
+        if (type.startsWith("audio/")) {
+          mediaType = "audio";
+          mediaUrl = url;
+        } else if (type.startsWith("video/")) {
+          mediaType = "video";
+          mediaUrl = url;
+        }
+      }
+    }
+
+    // 2. Check for YouTube
+    // Try yt:videoId namespace first
+    const ytVideoId = item.getElementsByTagNameNS("*", "videoId")[0]
+      ?.textContent;
+    if (ytVideoId) {
+      mediaType = "youtube";
+      mediaUrl = ytVideoId;
+      // YouTube feeds often have the thumbnail in media:group > media:thumbnail
+      const ytThumb = item.getElementsByTagNameNS("*", "thumbnail")[0];
+      if (ytThumb && !image) {
+        image = ytThumb.getAttribute("url");
+      }
+    } else if (link) {
+      // Fallback: Check link for YouTube pattern
+      const ytMatch = link.match(
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/,
+      );
+      if (ytMatch && ytMatch[1]) {
+        mediaType = "youtube";
+        mediaUrl = ytMatch[1];
+      }
+    }
+
     const guid = item.querySelector("guid, id")?.textContent || link;
     const snippet = divToText(description).substring(0, 150) + "...";
 
@@ -160,6 +205,8 @@ function parseRSS(xml, feed) {
       content,
       snippet,
       image,
+      mediaType,
+      mediaUrl,
     });
   });
 }

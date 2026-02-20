@@ -151,68 +151,112 @@ export const ReaderView = {
       // Observe content element for size changes
       this._resizeObserver.observe(contentEl);
 
+      // --- Media Player Injection ---
+      let mediaHtml = "";
+      if (article.mediaType === "audio" && article.mediaUrl) {
+        mediaHtml = `
+                <div class="media-player-container">
+                    <audio controls style="width: 100%; margin-bottom: 16px; border-radius: 8px;">
+                        <source src="${article.mediaUrl}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>`;
+      } else if (article.mediaType === "youtube" && article.mediaUrl) {
+        mediaHtml = `
+                <div class="media-player-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-bottom: 16px; border-radius: 12px;">
+                    <iframe
+                        src="https://www.youtube.com/embed/${article.mediaUrl}"
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                </div>`;
+      } else if (article.mediaType === "video" && article.mediaUrl) {
+        mediaHtml = `
+                <div class="media-player-container">
+                    <video controls style="width: 100%; margin-bottom: 16px; border-radius: 12px;">
+                        <source src="${article.mediaUrl}">
+                        Your browser does not support the video element.
+                    </video>
+                </div>`;
+      }
+
       if (article.fullContent) {
         // Sanitized full content
-        contentEl.innerHTML = DOMPurify.sanitize(article.fullContent);
+        contentEl.innerHTML =
+          mediaHtml + DOMPurify.sanitize(article.fullContent);
         // Schedule restore after layout
         setTimeout(() => {
           this._applyRestoreScroll();
           this._updateProgress(scrollContainer);
         }, 100);
       } else {
-        ReaderService.setLoadingContent(true); // Block progress updates
         const baseContent =
           article.content || article.description || `<p>${article.snippet}</p>`;
-        const loadingHtml = `<div class="full-content-loader">Fetching full article content...</div>`;
-        // Sanitized base content
-        contentEl.innerHTML = loadingHtml + DOMPurify.sanitize(baseContent);
 
-        ReaderService.fetchFullArticle(article.link).then((fullHtml) => {
-          const currentGuid = contentEl.getAttribute("data-guid");
-          if (currentGuid !== article.guid) return;
-
-          ReaderService.setLoadingContent(false); // Unblock progress updates
-
-          if (fullHtml) {
-            const oldText = article.content || article.snippet || "";
-            const oldWc = Utils.countWords(oldText);
-            const newWc = Utils.countWords(Utils.divToText(fullHtml));
-            const diff = newWc - oldWc;
-
-            article.fullContent = fullHtml;
-            article.contentFetchFailed = false; // Reset failure flag in object
-            ReaderService.setContentFetchFailed(false); // Reset local flag
-
-            ReaderService.saveArticle(article).then(() => {
-              if (diff !== 0 && article.feedId) {
-                return ReaderService.updateFeedReadStats(article.feedId, diff);
-              }
-            });
-
-            // Sanitized full content
-            contentEl.innerHTML = DOMPurify.sanitize(fullHtml);
-            Utils.showToast("Article optimized");
-          } else {
-            const loader = contentEl.querySelector(".full-content-loader");
-            if (loader) {
-              loader.innerHTML =
-                "Unable to fetch full content.<br>Showing summary only.";
-              loader.style.color = "var(--text-muted)";
-            }
-            Utils.showToast("Could not retrieve full content");
-
-            // Mark as failed in DB
-            article.contentFetchFailed = true;
-            ReaderService.setContentFetchFailed(true); // Set local flag
-
-            ReaderService.saveArticle(article);
-          }
-          // Trigger restoration and check now that content is loaded
+        if (article.mediaType === "youtube") {
+          contentEl.innerHTML = mediaHtml + DOMPurify.sanitize(baseContent);
           setTimeout(() => {
             this._applyRestoreScroll();
             this._updateProgress(scrollContainer);
           }, 100);
-        });
+        } else {
+          ReaderService.setLoadingContent(true); // Block progress updates
+          const loadingHtml = `<div class="full-content-loader">Fetching full article content...</div>`;
+          // Sanitized base content
+          contentEl.innerHTML =
+            mediaHtml + loadingHtml + DOMPurify.sanitize(baseContent);
+
+          ReaderService.fetchFullArticle(article.link).then((fullHtml) => {
+            const currentGuid = contentEl.getAttribute("data-guid");
+            if (currentGuid !== article.guid) return;
+
+            ReaderService.setLoadingContent(false); // Unblock progress updates
+
+            if (fullHtml) {
+              const oldText = article.content || article.snippet || "";
+              const oldWc = Utils.countWords(oldText);
+              const newWc = Utils.countWords(Utils.divToText(fullHtml));
+              const diff = newWc - oldWc;
+
+              article.fullContent = fullHtml;
+              article.contentFetchFailed = false; // Reset failure flag in object
+              ReaderService.setContentFetchFailed(false); // Reset local flag
+
+              ReaderService.saveArticle(article).then(() => {
+                if (diff !== 0 && article.feedId) {
+                  return ReaderService.updateFeedReadStats(
+                    article.feedId,
+                    diff,
+                  );
+                }
+              });
+
+              // Sanitized full content
+              contentEl.innerHTML = mediaHtml + DOMPurify.sanitize(fullHtml);
+              Utils.showToast("Article optimized");
+            } else {
+              const loader = contentEl.querySelector(".full-content-loader");
+              if (loader) {
+                loader.innerHTML =
+                  "Unable to fetch full content.<br>Showing summary only.";
+                loader.style.color = "var(--text-muted)";
+              }
+              Utils.showToast("Could not retrieve full content");
+
+              // Mark as failed in DB
+              article.contentFetchFailed = true;
+              ReaderService.setContentFetchFailed(true); // Set local flag
+
+              ReaderService.saveArticle(article);
+            }
+            // Trigger restoration and check now that content is loaded
+            setTimeout(() => {
+              this._applyRestoreScroll();
+              this._updateProgress(scrollContainer);
+            }, 100);
+          });
+        }
       }
     }
 
@@ -291,6 +335,12 @@ export const ReaderView = {
       this._scrollHandler = null;
     }
     this._lastScrollContainer = null;
+
+    // Clear content to stop media playback
+    const contentEl = document.getElementById("reader-content");
+    if (contentEl) {
+      contentEl.innerHTML = "";
+    }
 
     if (!skipHistoryBack && history.state && history.state.readingView)
       history.back();
