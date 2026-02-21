@@ -1,0 +1,65 @@
+/* Header / Navbar Styles */
+header {
+    padding: 16px 24px;
+    background: var(--bg-body); /* blended */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid transparent;
+    flex-shrink: 0;
+    transition: background-color 0.2s;
+}
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-main);
+}
+
+/* Mobile Filter Button */
+.mobile-filter-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-main);
+    padding: 4px;
+}
+.mobile-filter-btn.active {
+    color: var(--primary);
+    fill: rgba(79, 70, 229, 0.1);
+}
+
+/* Mobile Header Overrides */
+@media (max-width: 768px) {
+    header {
+        display: grid;
+        grid-template-columns: 48px 1fr 48px;
+        padding: 16px;
+        align-items: center;
+        justify-content: stretch;
+    }
+    .mobile-menu-btn {
+        display: block;
+        grid-column: 1;
+    }
+    .header-title {
+        grid-column: 2;
+        text-align: center;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 1.2rem;
+    }
+    .mobile-filter-btn {
+        display: block;
+        grid-column: 3;
+        justify-self: end;
+    }
+}

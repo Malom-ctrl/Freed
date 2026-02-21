@@ -1,0 +1,151 @@
+/* Filter Bar */
+.filter-bar {
+    padding: 0 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.filter-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap; /* Changed from overflow-x: auto */
+    align-items: center;
+}
+
+.filter-select {
+    appearance: none;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 32px 0 12px;
+    height: 38px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: var(--text-main);
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s,
+        background-color 0.2s,
+        color 0.2s;
+    white-space: nowrap;
+}
+
+.filter-select:hover,
+.filter-select:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/* Filter Tag Inputs */
+.filter-tag-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 8px;
+    height: 38px; /* Match other inputs */
+    gap: 6px;
+    min-width: 150px;
+    /* max-width removed to allow growth */
+    overflow-x: auto; /* horizontal scroll if many tags */
+    position: relative;
+}
+.filter-tags-list {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+.filter-input-tag {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    height: 100%;
+    min-width: 60px;
+    box-shadow: none !important;
+    flex: 1; /* Allow input to take remaining space */
+    width: 80px;
+}
+
+/* Filter Bar Search */
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    color: var(--text-muted);
+    pointer-events: none;
+    z-index: 1;
+}
+
+#filter-search {
+    padding-left: 36px !important;
+    width: 160px;
+    height: 38px;
+    background-color: var(
+        --bg-card
+    ); /* Keep filter inputs matching select dropdowns */
+}
+
+@media (min-width: 769px) {
+    #filter-search:focus {
+        width: 240px;
+    }
+}
+
+/* Mobile Filter Logic */
+@media (max-width: 768px) {
+    .filter-bar {
+        display: none;
+        padding: 16px;
+        background: var(--bg-body);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-bar.open {
+        display: flex;
+        animation: slideDown 0.2s ease-out;
+    }
+    
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .search-wrapper,
+    #filter-search,
+    .filter-select,
+    .filter-tag-wrapper {
+        width: 100%;
+    }
+
+    #btn-clear-filters {
+        align-self: flex-end;
+        padding-right: 0;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,138 @@
+/* Autocomplete & Tags */
+.autocomplete-suggestions {
+    position: fixed; /* Changed from absolute to fixed to escape overflow containers */
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10000; /* High z-index */
+    min-width: 160px;
+    display: none;
+    /* top, left, width set by JS */
+}
+.autocomplete-suggestions.show {
+    display: block;
+}
+
+.autocomplete-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    transition: background-color 0.1s;
+}
+.autocomplete-item:hover,
+.autocomplete-item.active {
+    background-color: rgba(79, 70, 229, 0.05); /* primary tint */
+}
+
+.tag-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.tag-input-wrapper {
+    position: relative;
+}
+
+/* Tag Pills */
+.tag-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+    cursor: default;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.tags-container .tag-pill {
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tag-pill .remove-tag {
+    margin-left: 6px;
+    cursor: pointer;
+    opacity: 0.7;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+.tag-pill .remove-tag:hover {
+    opacity: 1;
+}
+
+/* Color Picker */
+.color-picker-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+.color-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition:
+        transform 0.2s,
+        border-color 0.2s;
+    flex-shrink: 0;
+}
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+.color-swatch.selected {
+    border-color: var(--text-main);
+    transform: scale(1.1);
+}
+
+.color-swatch.color-none {
+    background: transparent;
+    border: 2px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+.color-swatch.color-none::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--text-muted);
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+/* Tag Color Popup */
+.tag-color-popup {
+    position: fixed;
+    z-index: 100;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    width: 280px;
+    display: none; /* controlled by JS */
+}

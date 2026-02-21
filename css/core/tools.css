@@ -1,0 +1,72 @@
+/* Selection Toolbar */
+.selection-toolbar {
+    position: fixed;
+    z-index: 100;
+    background: #1f2937;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    gap: 4px;
+    transform: translate(-50%, -120%);
+    opacity: 0;
+    animation: fadeIn 0.2s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translate(-50%, -110%);
+    }
+}
+
+@keyframes fadeInMobile {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .selection-toolbar {
+        /* Override inline styles from JS */
+        top: auto !important;
+        bottom: 40px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        /* Ensure it's visible against content */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        animation: fadeInMobile 0.2s forwards !important;
+    }
+}
+
+.selection-toolbar button {
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.1s;
+}
+.selection-toolbar button:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.selection-toolbar .divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.2);
+}
