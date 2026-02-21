@@ -60,10 +60,23 @@ export const FilterBar = {
         const title = (a.title || "").toLowerCase();
         const snippet = (a.snippet || "").toLowerCase();
         const feed = (a.feedTitle || "").toLowerCase();
+
+        let foundInCads = false;
+        if (a.cads && Array.isArray(a.cads)) {
+          foundInCads = a.cads.some((cad) => {
+            const content = (cad.originalContent || "").toLowerCase();
+            const comment = (cad.data && cad.data.comment) || "";
+            return (
+              content.includes(term) || comment.toLowerCase().includes(term)
+            );
+          });
+        }
+
         if (
           !title.includes(term) &&
           !snippet.includes(term) &&
-          !feed.includes(term)
+          !feed.includes(term) &&
+          !foundInCads
         ) {
           return false;
         }
