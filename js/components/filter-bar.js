@@ -119,9 +119,11 @@ export const FilterBar = {
   renderTags: async function () {
     const container = document.getElementById("filter-active-tags");
     if (!container) return;
-    container.innerHTML = "";
 
     const allTags = await DB.getAllTags();
+
+    container.innerHTML = "";
+
     const tagMap = new Map(allTags.map((t) => [t.name, t.color]));
 
     State.filters.tags.forEach((tagName) => {
