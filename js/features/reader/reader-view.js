@@ -636,9 +636,17 @@ export const ReaderView = {
     if (State.currentArticleGuid) {
       await ReaderService.addCAD(State.currentArticleGuid, cad);
 
+      // Auto-favorite logic for highlights/annotations
+      if (type === "highlight" && !article.favorite) {
+        await ReaderService.toggleFavorite(State.currentArticleGuid);
+        Utils.showToast("Article automatically added to favorites");
+      }
+
       // 13. Re-render
       const scrollTop = contentEl.parentElement.scrollTop;
       const updatedArticle = await DB.getArticle(State.currentArticleGuid);
+
+      this.updateFavoriteButtonState(updatedArticle.favorite);
 
       if (updatedArticle.fullContent) {
         const cleanContent = DOMPurify.sanitize(updatedArticle.fullContent);
