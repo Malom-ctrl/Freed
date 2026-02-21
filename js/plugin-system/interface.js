@@ -62,11 +62,12 @@ export class Interface {
         createCAD: (type, dataOrGenerator) => {
           return ReaderView.createCADFromSelection(type, dataOrGenerator);
         },
-        addCADRenderer: (type, renderFn) => {
+        addCADRenderer: (type, renderFn, options = {}) => {
           self.registry.registerSlot("cad:renderer", {
             type: type,
             render: renderFn,
             pluginId: self.pluginId,
+            ...options,
           });
         },
       },

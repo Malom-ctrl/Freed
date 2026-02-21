@@ -16,14 +16,6 @@ export const Tools = {
 
     if (!readerContent || !toolbar) return;
 
-    // Re-attach listeners
-    const highlightBtn = document.getElementById("btn-tool-highlight");
-    if (highlightBtn) highlightBtn.onclick = this.handleHighlight.bind(this);
-
-    const clearHighlightBtn = document.getElementById("btn-tool-clear");
-    if (clearHighlightBtn)
-      clearHighlightBtn.onclick = this.handleClearHighlight.bind(this);
-
     const updateToolbar = () => {
       const selection = window.getSelection();
       if (
@@ -37,8 +29,8 @@ export const Tools = {
       const range = selection.getRangeAt(0);
       const rect = range.getBoundingClientRect();
 
-      // Check overlaps for "Clear" button
-      const highlights = readerContent.querySelectorAll(".highlight-outline");
+      // Check overlaps for "Clear" button using CAD highlights
+      const highlights = readerContent.querySelectorAll(".cad-highlight");
       let hasOverlap = false;
       for (const h of highlights) {
         if (range.intersectsNode(h)) {
@@ -86,120 +78,5 @@ export const Tools = {
     readerContent.addEventListener("touchend", () =>
       setTimeout(updateToolbar, 10),
     );
-  },
-
-  handleHighlight: async function (e) {
-    e.preventDefault();
-    const selection = window.getSelection();
-    if (!selection.rangeCount) return;
-    const contentEl = document.getElementById("reader-content");
-
-    contentEl.contentEditable = "true";
-    document.execCommand("hiliteColor", false, "#ffff00");
-    contentEl.contentEditable = "false";
-
-    const spans = contentEl.querySelectorAll(
-      'span[style*="background-color: rgb(255, 255, 0)"], span[style*="background-color: #ffff00"]',
-    );
-    spans.forEach((s) => {
-      s.style.backgroundColor = "";
-      s.className = "highlight-outline";
-    });
-
-    this.normalizeHighlights(contentEl);
-    window.getSelection().removeAllRanges();
-    document.getElementById("selection-toolbar").style.display = "none";
-
-    await this.saveCurrentArticleContent();
-
-    // Auto-favorite logic
-    const guid = State.currentArticleGuid;
-    if (guid) {
-      try {
-        const article = await DB.getArticle(guid);
-        if (article && !article.favorite) {
-          await DB.setFavorite(guid, true);
-
-          // Update UI state in Reader
-          if (ReaderView && ReaderView.updateFavoriteButtonState) {
-            ReaderView.updateFavoriteButtonState(true);
-          }
-          // Update List in background
-          Events.emit(Events.ARTICLES_UPDATED);
-
-          Utils.showToast("Article automatically added to favorites");
-        }
-      } catch (err) {
-        console.error("Error updating favorite status on highlight", err);
-      }
-    }
-  },
-
-  handleClearHighlight: function (e) {
-    e.preventDefault();
-    const selection = window.getSelection();
-    if (!selection.rangeCount) return;
-    const range = selection.getRangeAt(0);
-    const contentEl = document.getElementById("reader-content");
-    const highlights = contentEl.querySelectorAll(".highlight-outline");
-    let changed = false;
-    highlights.forEach((h) => {
-      if (range.intersectsNode(h)) {
-        const parent = h.parentNode;
-        while (h.firstChild) parent.insertBefore(h.firstChild, h);
-        parent.removeChild(h);
-        changed = true;
-      }
-    });
-    if (changed) {
-      window.getSelection().removeAllRanges();
-      document.getElementById("selection-toolbar").style.display = "none";
-      this.saveCurrentArticleContent();
-    }
-  },
-
-  saveCurrentArticleContent: async function () {
-    const guid = State.currentArticleGuid;
-    if (!guid) return;
-    const contentEl = document.getElementById("reader-content");
-    await DB.saveArticles([{ guid: guid, fullContent: contentEl.innerHTML }]);
-  },
-
-  normalizeHighlights: function (container) {
-    let nested = container.querySelectorAll(
-      ".highlight-outline .highlight-outline",
-    );
-    while (nested.length > 0) {
-      nested.forEach((el) => {
-        const parent = el.parentNode;
-        while (el.firstChild) parent.insertBefore(el.firstChild, el);
-        parent.removeChild(el);
-      });
-      nested = container.querySelectorAll(
-        ".highlight-outline .highlight-outline",
-      );
-    }
-    let highlights = Array.from(
-      container.querySelectorAll(".highlight-outline"),
-    );
-    let didMerge = true;
-    while (didMerge) {
-      didMerge = false;
-      highlights = Array.from(container.querySelectorAll(".highlight-outline"));
-      for (let i = 0; i < highlights.length; i++) {
-        const current = highlights[i];
-        const next = current.nextSibling;
-        if (
-          next &&
-          next.nodeType === 1 &&
-          next.classList.contains("highlight-outline")
-        ) {
-          while (next.firstChild) current.appendChild(next.firstChild);
-          next.remove();
-          didMerge = true;
-          break;
-        }
-      }
-    }
   },
 };

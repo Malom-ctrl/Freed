@@ -1079,16 +1079,6 @@ header {
     padding: 2px 0;
 }
 
-/* Outline Highlights */
-.highlight-outline {
-    background-color: transparent;
-    outline: 2px solid var(--highlight-color);
-    border-radius: 2px;
-    box-decoration-break: clone;
-    -webkit-box-decoration-break: clone;
-    padding: 0 2px;
-}
-
 /* Global Tooltip */
 .global-tooltip {
     position: fixed;
@@ -1114,6 +1104,7 @@ header {
         border-color 0.2s;
     font-family: var(--font-interface);
     line-height: 1.4;
+    white-space: pre-wrap;
 }
 
 .global-tooltip.show {

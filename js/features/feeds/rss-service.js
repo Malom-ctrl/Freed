@@ -37,12 +37,9 @@ function _normalizeArticle(data) {
     image: data.image || "",
     mediaType: data.mediaType || null, // 'audio' | 'video' | 'youtube'
     mediaUrl: data.mediaUrl || null,
-    cads: data.cads || [], // Content Attached Data
+    ...(data.cads ? { cads: data.cads } : {}), // Only include if defined
     isDateFromFeed,
     fullContent: data.fullContent,
-    read: false,
-    favorite: false,
-    discarded: false,
   };
 }
 

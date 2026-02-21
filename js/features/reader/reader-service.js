@@ -3,6 +3,8 @@ import { Service } from "../feeds/rss-service.js";
 import { Utils } from "../../core/utils.js";
 import { State } from "../../core/state.js";
 import { Events } from "../../core/events.js";
+import { Registry } from "../../plugin-system/registry.js";
+import DOMPurify from "dompurify";
 
 export const ReaderService = {
   _currentMaxProgress: 0,
@@ -128,6 +130,58 @@ export const ReaderService = {
     if (!article.cads) article.cads = [];
     // Generate ID if missing
     if (!cadData.id) cadData.id = Utils.generateId();
+
+    // Check for overlaps and merge if configured
+    const renderers = Registry.getExtensions("cad:renderer");
+    const rendererConfig = renderers.find((r) => r.type === cadData.type);
+    const shouldMerge = rendererConfig?.shouldMerge || false;
+
+    const overlapping = shouldMerge
+      ? article.cads.filter((existing) => {
+          if (existing.type !== cadData.type) return false;
+          const existingEnd = existing.position + existing.length;
+          const newEnd = cadData.position + cadData.length;
+
+          // Check intersection
+          return cadData.position < existingEnd && newEnd > existing.position;
+        })
+      : [];
+
+    if (overlapping.length > 0) {
+      // Merge logic
+      let minPos = cadData.position;
+      let maxEnd = cadData.position + cadData.length;
+
+      overlapping.forEach((c) => {
+        minPos = Math.min(minPos, c.position);
+        maxEnd = Math.max(maxEnd, c.position + c.length);
+      });
+
+      // Apply custom merge strategy for data if defined
+      if (
+        rendererConfig.mergeStrategy &&
+        typeof rendererConfig.mergeStrategy === "function"
+      ) {
+        cadData.data = rendererConfig.mergeStrategy(overlapping, cadData);
+      }
+
+      // Remove overlapping from array
+      article.cads = article.cads.filter((c) => !overlapping.includes(c));
+
+      // Update new CAD geometry
+      cadData.position = minPos;
+      cadData.length = maxEnd - minPos;
+
+      let fullText = "";
+      if (article.fullContent) {
+        fullText = Utils.divToText(article.fullContent);
+        const sourceHTML =
+          article.fullContent || article.content || article.description || "";
+        // We need the CLEAN source HTML that ReaderView uses.
+        const cleanHTML = DOMPurify.sanitize(sourceHTML);
+        cadData.originalContent = cleanHTML.substring(minPos, maxEnd);
+      }
+    }
 
     article.cads.push(cadData);
     await this.saveArticle(article);

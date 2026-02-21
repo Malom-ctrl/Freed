@@ -241,22 +241,21 @@ async function saveArticles(articles) {
         const finalArticle = existing
           ? { ...existing, ...article }
           : { ...article };
+
+        // Apply defaults for NEW articles
+        if (!existing) {
+          if (finalArticle.favorite === undefined)
+            finalArticle.favorite = false;
+          if (finalArticle.read === undefined) finalArticle.read = false;
+          if (finalArticle.discarded === undefined)
+            finalArticle.discarded = false;
+          if (finalArticle.cads === undefined) finalArticle.cads = [];
+        }
+
         if (existing) {
           if (!article.isDateFromFeed) finalArticle.pubDate = existing.pubDate;
           if (existing.fullContent && article.fullContent === undefined)
             finalArticle.fullContent = existing.fullContent;
-          if (existing.favorite && article.favorite === undefined)
-            finalArticle.favorite = true;
-          if (
-            existing.discarded !== undefined &&
-            article.discarded === undefined
-          )
-            finalArticle.discarded = existing.discarded;
-          if (
-            existing.readingProgress !== undefined &&
-            article.readingProgress === undefined
-          )
-            finalArticle.readingProgress = existing.readingProgress;
         }
         delete finalArticle.isDateFromFeed;
         articleStore.put(finalArticle);

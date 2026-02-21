@@ -19,7 +19,28 @@ export const ReaderView = {
       render: (content, data) => {
         // data.data could contain color or other info
         const color = data.data?.color || "#fde047"; // yellow-300 default
-        return `<mark class="cad-highlight" style="background-color: ${color}80; border-bottom: 2px solid ${color}; color: inherit; padding: 0 2px; border-radius: 2px;" data-cad-id="${data.id}">${content}</mark>`;
+        const comment = data.data?.comment
+          ? DOMPurify.sanitize(data.data.comment)
+          : "";
+        const safeComment = comment.replace(/"/g, "&quot;");
+        const tooltipAttr = comment ? `data-tooltip="${safeComment}"` : "";
+        const style = `background-color: ${color}80; border-bottom: 2px solid ${color}; color: inherit; padding: 0 2px; border-radius: 2px;`;
+        return `<mark class="cad-highlight" style="${style}" data-cad-id="${data.id}" ${tooltipAttr}>${content}</mark>`;
+      },
+      shouldMerge: true,
+      mergeStrategy: (overlapping, newCAD) => {
+        const newData = { ...newCAD.data };
+        let combinedComment = newData.comment || "";
+
+        overlapping.forEach((c) => {
+          if (c.data?.comment) {
+            if (combinedComment) combinedComment += "\n";
+            combinedComment += c.data.comment;
+          }
+        });
+
+        if (combinedComment) newData.comment = combinedComment;
+        return newData;
       },
     });
 
@@ -48,6 +69,40 @@ export const ReaderView = {
       ?.addEventListener("click", () => {
         this.createCADFromSelection("highlight", { color: "#fde047" });
       });
+
+    document
+      .getElementById("btn-tool-annotate")
+      ?.addEventListener("click", async () => {
+        // Check if we have a selection or if we are clicking on an existing highlight
+        const selection = window.getSelection();
+        if (selection && !selection.isCollapsed) {
+          // Capture range before modal opens (which might clear selection)
+          const range = selection.getRangeAt(0).cloneRange();
+
+          // New annotation on selection
+          const comment = await Modals.showPrompt("Enter your annotation:");
+          if (comment) {
+            this.createCADFromSelection(
+              "highlight",
+              { color: "#fde047", comment: comment },
+              range,
+            );
+          }
+        } else {
+          // Fallback for no selection (though toolbar shouldn't show)
+          const comment = await Modals.showPrompt("Enter your annotation:");
+          if (comment) {
+            this.createCADFromSelection("highlight", {
+              color: "#fde047",
+              comment: comment,
+            });
+          }
+        }
+      });
+
+    document.getElementById("btn-tool-clear")?.addEventListener("click", () => {
+      this.clearCADsInSelection();
+    });
 
     document
       .getElementById("btn-toggle-favorite")
@@ -377,12 +432,90 @@ export const ReaderView = {
     return div.innerHTML;
   },
 
-  createCADFromSelection: async function (type, dataOrGenerator) {
+  clearCADsInSelection: async function () {
     const selection = window.getSelection();
     if (!selection || selection.rangeCount === 0 || selection.isCollapsed)
       return;
 
+    const contentEl = document.getElementById("reader-content");
+    if (!contentEl) return;
+
+    // Find CADs that overlap with the selection
+    const cadIdsToRemove = new Set();
+
+    // Check if selection contains any highlight elements
     const range = selection.getRangeAt(0);
+    const fragment = range.cloneContents();
+    const div = document.createElement("div");
+    div.appendChild(fragment);
+
+    const selectedHighlights = div.querySelectorAll("[data-cad-id]");
+    selectedHighlights.forEach((el) =>
+      cadIdsToRemove.add(el.getAttribute("data-cad-id")),
+    );
+
+    // Also check if the selection is INSIDE a highlight (collapsed or not fully selecting the highlight element)
+    let parent = range.commonAncestorContainer;
+    if (parent.nodeType === Node.TEXT_NODE) parent = parent.parentNode;
+    if (parent.hasAttribute("data-cad-id")) {
+      cadIdsToRemove.add(parent.getAttribute("data-cad-id"));
+    }
+
+    // Also check if the selection starts or ends inside a highlight
+    let startParent = range.startContainer;
+    if (startParent.nodeType === Node.TEXT_NODE)
+      startParent = startParent.parentNode;
+    if (startParent.hasAttribute("data-cad-id"))
+      cadIdsToRemove.add(startParent.getAttribute("data-cad-id"));
+
+    let endParent = range.endContainer;
+    if (endParent.nodeType === Node.TEXT_NODE) endParent = endParent.parentNode;
+    if (endParent.hasAttribute("data-cad-id"))
+      cadIdsToRemove.add(endParent.getAttribute("data-cad-id"));
+
+    if (cadIdsToRemove.size > 0) {
+      const article = await DB.getArticle(State.currentArticleGuid);
+      if (article && article.cads) {
+        article.cads = article.cads.filter((c) => !cadIdsToRemove.has(c.id));
+        await ReaderService.saveArticle(article);
+
+        // Re-render
+        const scrollTop = contentEl.parentElement.scrollTop;
+        if (article.fullContent) {
+          const cleanContent = DOMPurify.sanitize(article.fullContent);
+          contentEl.innerHTML = this._renderContentWithCADs(
+            cleanContent,
+            article.cads,
+          );
+        } else {
+          const base = article.content || article.description || "";
+          const cleanBase = DOMPurify.sanitize(base);
+          contentEl.innerHTML = this._renderContentWithCADs(
+            cleanBase,
+            article.cads,
+          );
+        }
+        contentEl.parentElement.scrollTop = scrollTop;
+        document.getElementById("selection-toolbar").style.display = "none";
+        window.getSelection().removeAllRanges();
+      }
+    }
+  },
+
+  createCADFromSelection: async function (
+    type,
+    dataOrGenerator,
+    providedRange,
+  ) {
+    let range = providedRange;
+
+    if (!range) {
+      const selection = window.getSelection();
+      if (!selection || selection.rangeCount === 0 || selection.isCollapsed)
+        return;
+      range = selection.getRangeAt(0);
+    }
+
     const contentEl = document.getElementById("reader-content");
     if (!contentEl) return;
 
