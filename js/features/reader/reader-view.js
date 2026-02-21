@@ -11,6 +11,7 @@ export const ReaderView = {
   _scrollHandler: null,
   _lastScrollContainer: null,
   _resizeObserver: null,
+  _closeTimeout: null,
 
   setupListeners: function () {
     // Register default Highlight renderer
@@ -129,6 +130,12 @@ export const ReaderView = {
   },
 
   openArticle: async function (articleInput) {
+    // Cancel any pending close cleanup to prevent clearing new content
+    if (this._closeTimeout) {
+      clearTimeout(this._closeTimeout);
+      this._closeTimeout = null;
+    }
+
     State.currentArticleGuid = articleInput.guid;
 
     const modal = document.getElementById("read-modal");
@@ -776,10 +783,14 @@ export const ReaderView = {
     }
     this._lastScrollContainer = null;
 
-    // Clear content to stop media playback
+    // Clear content to stop media playback (delayed to allow animation to finish)
     const contentEl = document.getElementById("reader-content");
     if (contentEl) {
-      contentEl.innerHTML = "";
+      if (this._closeTimeout) clearTimeout(this._closeTimeout);
+      this._closeTimeout = setTimeout(() => {
+        contentEl.innerHTML = "";
+        this._closeTimeout = null;
+      }, 300);
     }
 
     if (!skipHistoryBack && history.state && history.state.readingView)
