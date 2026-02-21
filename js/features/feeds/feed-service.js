@@ -103,6 +103,12 @@ export const FeedService = {
 
   // Core Logic extracted for re-use
   _createFeed: async function (url, title, color, tags, autofetch, iconData) {
+    // Check for duplicates
+    const existingFeeds = await DB.getAllFeeds();
+    if (existingFeeds.some((f) => f.url === url)) {
+      throw new Error("Feed with this URL already exists");
+    }
+
     // Ensure tags exist in DB
     await this._saveTags(tags);
     const tagNames = tags.map((t) => t.name);
