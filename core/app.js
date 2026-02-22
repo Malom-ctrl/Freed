@@ -130,6 +130,8 @@ async function refreshUI() {
     (feed) => Modals.renderStatsModal(feed),
   );
 
+  Sidebar.renderPrimaryItems();
+  Sidebar.renderFeedItems();
   Sidebar.updateActiveState(State.currentFeedId);
 
   // 2. Render Navbar Actions (Plugin)

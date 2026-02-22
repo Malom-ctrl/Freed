@@ -53,6 +53,11 @@ export class Interface {
             ...item,
             pluginId: self.pluginId,
           }),
+        addFeedItem: (item) =>
+          self.registry.registerSlot("sidebar:feeds", {
+            ...item,
+            pluginId: self.pluginId,
+          }),
       },
       reader: {
         addTool: (tool) =>

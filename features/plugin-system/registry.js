@@ -3,6 +3,7 @@ export const Registry = {
   slots: {
     "sidebar:primary": [], // Main navigation items
     "sidebar:secondary": [], // Bottom navigation items
+    "sidebar:feeds": [], // Items below the feed list
     "reader:tool": [], // Text selection toolbar
     "reader:header": [], // Above article title
     "reader:footer": [], // Below article content
