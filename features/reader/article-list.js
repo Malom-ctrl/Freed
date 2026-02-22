@@ -152,7 +152,6 @@ export const ArticleList = {
       this._articleObserver = null;
     }
 
-    list.classList.remove("discover-view");
     list.innerHTML = "";
 
     if (articles.length === 0) {

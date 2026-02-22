@@ -141,6 +141,12 @@ async function refreshUI() {
   const mainTitleEl = document.getElementById("page-title");
   const filterBar = document.getElementById("filter-bar");
   const filterToggleBtn = document.getElementById("btn-toggle-filters");
+  const container = document.getElementById("article-list");
+
+  // Reset container classes (centralized cleanup)
+  if (container) {
+    container.className = "";
+  }
 
   if (State.currentFeedId === "discover") {
     // Discover View
@@ -163,10 +169,8 @@ async function refreshUI() {
     const view = customViews.find((v) => v.id === viewId);
 
     if (view && typeof view.render === "function") {
-      const container = document.getElementById("article-list");
       if (container) {
         container.innerHTML = "";
-        container.classList.remove("discover-view");
 
         // Update Title
         if (mainTitleEl) mainTitleEl.textContent = view.title || "Custom View";
