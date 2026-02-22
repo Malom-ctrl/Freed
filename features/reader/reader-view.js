@@ -1,4 +1,4 @@
-import { Registry } from "../../plugin-system/registry.js";
+import { Registry } from "../plugin-system/registry.js";
 import DOMPurify from "dompurify";
 import { ReaderService } from "./reader-service.js";
 import { Modals } from "../../components/modals.js";

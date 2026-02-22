@@ -1,11 +1,11 @@
 import { Registry } from "./registry.js";
-import { State } from "../core/state.js";
-import { Utils } from "../core/utils.js";
-import { DB } from "../core/db.js";
-import { Modals } from "../components/modals.js";
-import { Events } from "../core/events.js";
+import { State } from "../../core/state.js";
+import { Utils } from "../../core/utils.js";
+import { DB } from "../../core/db.js";
+import { Modals } from "../../components/modals.js";
+import { Events } from "../../core/events.js";
 
-import { ReaderView } from "../features/reader/reader-view.js";
+import { ReaderView } from "../reader/reader-view.js";
 
 export class Interface {
   constructor(pluginId) {

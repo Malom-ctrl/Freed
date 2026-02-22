@@ -5,7 +5,7 @@ import { Config } from "../../core/config.js";
 import { Utils } from "../../core/utils.js";
 import { Data } from "../../core/data-service.js";
 import { DB } from "../../core/db.js";
-import { Manager as PluginManager } from "../../plugin-system/manager.js";
+import { Manager as PluginManager } from "../plugin-system/manager.js";
 import { Events } from "../../core/events.js";
 
 export const SettingsModal = {

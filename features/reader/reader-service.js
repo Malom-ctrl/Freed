@@ -3,7 +3,7 @@ import { Service } from "../feeds/rss-service.js";
 import { Utils } from "../../core/utils.js";
 import { State } from "../../core/state.js";
 import { Events } from "../../core/events.js";
-import { Registry } from "../../plugin-system/registry.js";
+import { Registry } from "../plugin-system/registry.js";
 import DOMPurify from "dompurify";
 
 export const ReaderService = {

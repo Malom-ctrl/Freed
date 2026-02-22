@@ -1,6 +1,6 @@
-import { DB } from "../core/db.js";
-import { Config } from "../core/config.js";
-import { Utils } from "../core/utils.js";
+import { DB } from "../../core/db.js";
+import { Config } from "../../core/config.js";
+import { Utils } from "../../core/utils.js";
 import { Interface } from "./interface.js";
 
 export const Manager = {

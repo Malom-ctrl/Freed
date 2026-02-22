@@ -1,4 +1,4 @@
-import { Tags } from "../../features/tags/tags.js";
+import { Tags } from "../tags/tags.js";
 import { DB } from "../../core/db.js";
 import { Utils } from "../../core/utils.js";
 import { Service } from "./rss-service.js";

@@ -1,4 +1,4 @@
-import { Registry } from "../plugin-system/registry.js";
+import { Registry } from "../features/plugin-system/registry.js";
 import { Events } from "../core/events.js";
 import DOMPurify from "dompurify";
 

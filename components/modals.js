@@ -1,5 +1,5 @@
 import { Utils } from "../core/utils.js";
-import { Registry } from "../plugin-system/registry.js";
+import { Registry } from "../features/plugin-system/registry.js";
 import { Config } from "../core/config.js";
 import DOMPurify from "dompurify";
 

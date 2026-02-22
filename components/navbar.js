@@ -1,4 +1,4 @@
-import { Registry } from "../plugin-system/registry.js";
+import { Registry } from "../features/plugin-system/registry.js";
 import DOMPurify from "dompurify";
 
 export const Navbar = {

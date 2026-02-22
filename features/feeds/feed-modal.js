@@ -1,7 +1,7 @@
 import { Modals } from "../../components/modals.js";
 import { FeedService } from "./feed-service.js";
 import { State } from "../../core/state.js";
-import { Tags } from "../../features/tags/tags.js";
+import { Tags } from "../tags/tags.js";
 import { Utils } from "../../core/utils.js";
 import { DB } from "../../core/db.js";
 import { Events } from "../../core/events.js";

@@ -1,24 +1,24 @@
-import { DB } from "./core/db.js";
-import { Utils } from "./core/utils.js";
-import { Config } from "./core/config.js";
-import { State } from "./core/state.js";
-import { Events } from "./core/events.js";
-import { Theme } from "./features/settings/theme.js";
-import { Tools } from "./features/tools/tools.js";
-import { Tags } from "./features/tags/tags.js";
-import { FeedService } from "./features/feeds/feed-service.js";
-import { DiscoverData } from "./features/discover/discover-data.js";
-import { Manager as PluginManager } from "./plugin-system/manager.js";
-import { FilterBar } from "./components/filter-bar.js";
-import { SettingsModal } from "./features/settings/settings-modal.js";
-import { ReaderView } from "./features/reader/reader-view.js";
-import { FeedModal } from "./features/feeds/feed-modal.js";
-import { Sidebar } from "./components/sidebar.js";
-import { Modals } from "./components/modals.js";
-import { FeedList } from "./features/feeds/feed-list.js";
-import { ArticleList } from "./features/reader/article-list.js";
-import { DiscoverView } from "./features/discover/discover-view.js";
-import { Navbar } from "./components/navbar.js";
+import { DB } from "./db.js";
+import { Utils } from "./utils.js";
+import { Config } from "./config.js";
+import { State } from "./state.js";
+import { Events } from "./events.js";
+import { Theme } from "../features/settings/theme.js";
+import { Tools } from "../features/tools/tools.js";
+import { Tags } from "../features/tags/tags.js";
+import { FeedService } from "../features/feeds/feed-service.js";
+import { DiscoverData } from "../features/discover/discover-data.js";
+import { Manager as PluginManager } from "../features/plugin-system/manager.js";
+import { FilterBar } from "../components/filter-bar.js";
+import { SettingsModal } from "../features/settings/settings-modal.js";
+import { ReaderView } from "../features/reader/reader-view.js";
+import { FeedModal } from "../features/feeds/feed-modal.js";
+import { Sidebar } from "../components/sidebar.js";
+import { Modals } from "../components/modals.js";
+import { FeedList } from "../features/feeds/feed-list.js";
+import { ArticleList } from "../features/reader/article-list.js";
+import { DiscoverView } from "../features/discover/discover-view.js";
+import { Navbar } from "../components/navbar.js";
 
 // --- Initialization ---
 async function init() {

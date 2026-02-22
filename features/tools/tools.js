@@ -1,4 +1,4 @@
-import { Registry } from "../../plugin-system/registry.js";
+import { Registry } from "../plugin-system/registry.js";
 import { State } from "../../core/state.js";
 import { DB } from "../../core/db.js";
 import { Utils } from "../../core/utils.js";
