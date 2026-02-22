@@ -5,6 +5,13 @@
     background: var(--bg-card);
     padding: 0 16px;
     flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+}
+
+.settings-tabs-header::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
 }
 
 .settings-tab-btn {
@@ -17,6 +24,9 @@
     cursor: pointer;
     border-bottom: 2px solid transparent;
     transition: all 0.2s;
+    white-space: nowrap; /* Prevent text wrapping */
+    flex-shrink: 0; /* Prevent shrinking */
+    text-align: left;
 }
 
 .settings-tab-btn:hover {
@@ -54,8 +64,58 @@
     padding: 20px;
 }
 
+.settings-modal-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* Desktop Layout (Vertical Tabs) */
+@media (min-width: 769px) {
+    /* Increase modal width for settings */
+    #settings-modal .modal {
+        max-width: 800px;
+        width: 90%;
+        height: 80vh; /* Fixed height for better layout */
+    }
+
+    .settings-modal-body {
+        flex-direction: row;
+    }
+
+    .settings-tabs-header {
+        flex-direction: column;
+        width: 200px;
+        border-bottom: none;
+        border-right: 1px solid var(--border);
+        padding: 10px 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .settings-tab-btn {
+        border-bottom: none;
+        border-left: 3px solid transparent;
+        padding: 12px 20px;
+        width: 100%;
+    }
+
+    .settings-tab-btn.active {
+        border-bottom-color: transparent;
+        border-left-color: var(--primary);
+        background: var(--bg-body);
+    }
+}
+
 /* Mobile Settings Overrides */
 @media (max-width: 768px) {
+    .settings-modal-body {
+        display: flex;
+        flex-direction: column;
+    }
+
     .settings-tab-btn {
         flex: 1;
         text-align: center;

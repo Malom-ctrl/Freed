@@ -25,6 +25,7 @@ export const Config = {
   // Registry of official plugins available for one-click install
   OFFICIAL_PLUGINS: [
     "https://raw.githubusercontent.com/Malom-ctrl/Freed-Language-Learning/refs/heads/main/manifest.json",
+    "https://raw.githubusercontent.com/Malom-ctrl/Freed-Themer/refs/heads/master/manifest.json",
   ],
   DEFAULTS: {
     CLEANUP_UNREAD_DAYS: 30,

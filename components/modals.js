@@ -76,6 +76,41 @@ export const Modals = {
         container.appendChild(wrapper);
       }
     });
+
+    this.renderPluginTabs();
+  },
+
+  renderPluginTabs: function () {
+    const header = document.querySelector(".settings-tabs-header");
+    const content = document.querySelector(".settings-tab-content-container");
+    if (!header || !content) return;
+
+    const tabs = Registry.getExtensions("settings:tab");
+    tabs.forEach((tab) => {
+      const tabId = `tab-${tab.id}`;
+
+      // Check if button exists
+      if (!header.querySelector(`[data-target="${tabId}"]`)) {
+        const btn = document.createElement("button");
+        btn.className = "settings-tab-btn";
+        btn.setAttribute("data-target", tabId);
+        btn.textContent = tab.label;
+        header.appendChild(btn);
+      }
+
+      // Check if pane exists
+      if (!document.getElementById(tabId)) {
+        const pane = document.createElement("div");
+        pane.id = tabId;
+        pane.className = "settings-tab-pane";
+        content.appendChild(pane);
+
+        // Render content
+        if (typeof tab.render === "function") {
+          tab.render(pane);
+        }
+      }
+    });
   },
 
   renderPluginsList: function (

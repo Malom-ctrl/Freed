@@ -11,6 +11,7 @@ export const Registry = {
     "card:action": [], // Buttons on article cards
     "card:indicator": [], // Status icons on article cards (small icons next to date)
     "settings:section": [], // Settings content
+    "settings:tab": [], // Custom settings tabs
     "navbar:action": [], // Mobile/Desktop header icons
     "filter:option": [], // Additional filter dropdown options
     "stats:feed": [], // Render function for feed stats modal. Input: feed object. Output: HTML string

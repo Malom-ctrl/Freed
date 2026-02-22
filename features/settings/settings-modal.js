@@ -16,6 +16,7 @@ export const SettingsModal = {
     document.getElementById("btn-settings")?.addEventListener("click", () => {
       Modals.toggleModal("settings-modal", true);
       Modals.renderPluginSettings(); // Ensure plugin settings are rendered
+      Modals.renderPluginTabs(); // Ensure plugin tabs are rendered
       const keyInput = document.getElementById("settings-api-key");
       if (keyInput)
         keyInput.value = localStorage.getItem("freed_api_key") || "";
@@ -42,19 +43,23 @@ export const SettingsModal = {
         Config.DEFAULTS.CLEANUP_READ_DAYS;
     });
 
-    // Settings Tabs Switcher
-    const tabButtons = document.querySelectorAll(".settings-tab-btn");
-    const tabPanes = document.querySelectorAll(".settings-tab-pane");
+    // Settings Tabs Switcher (Event Delegation)
+    const tabsHeader = document.querySelector(".settings-tabs-header");
+    if (tabsHeader) {
+      tabsHeader.addEventListener("click", async (e) => {
+        const btn = e.target.closest(".settings-tab-btn");
+        if (!btn) return;
 
-    tabButtons.forEach((btn) => {
-      btn.addEventListener("click", async () => {
         const target = btn.getAttribute("data-target");
+        const tabButtons = document.querySelectorAll(".settings-tab-btn");
+        const tabPanes = document.querySelectorAll(".settings-tab-pane");
 
         tabButtons.forEach((b) => b.classList.remove("active"));
         tabPanes.forEach((p) => p.classList.remove("active"));
 
         btn.classList.add("active");
-        document.getElementById(target).classList.add("active");
+        const targetPane = document.getElementById(target);
+        if (targetPane) targetPane.classList.add("active");
 
         // Load Plugins List if plugin tab
         if (target === "tab-plugins") {
@@ -130,7 +135,7 @@ export const SettingsModal = {
           );
         }
       });
-    });
+    }
 
     document
       .getElementById("btn-save-settings")

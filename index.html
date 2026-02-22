@@ -760,419 +760,447 @@
                     </button>
                 </div>
 
-                <!-- Tabs Header -->
-                <div class="settings-tabs-header">
-                    <button
-                        class="settings-tab-btn active"
-                        data-target="tab-appearance"
-                    >
-                        Appearance
-                    </button>
-                    <button class="settings-tab-btn" data-target="tab-general">
-                        General
-                    </button>
-                    <button class="settings-tab-btn" data-target="tab-data">
-                        Data
-                    </button>
-                    <button class="settings-tab-btn" data-target="tab-plugins">
-                        Plugins
-                    </button>
-                </div>
+                <div class="settings-modal-body">
+                    <!-- Tabs Header -->
+                    <div class="settings-tabs-header">
+                        <button
+                            class="settings-tab-btn active"
+                            data-target="tab-appearance"
+                        >
+                            Appearance
+                        </button>
+                        <button
+                            class="settings-tab-btn"
+                            data-target="tab-general"
+                        >
+                            General
+                        </button>
+                        <button class="settings-tab-btn" data-target="tab-data">
+                            Data
+                        </button>
+                        <button
+                            class="settings-tab-btn"
+                            data-target="tab-plugins"
+                        >
+                            Plugins
+                        </button>
+                    </div>
 
-                <div class="modal-content settings-tab-content-container">
-                    <!-- Tab: Appearance -->
-                    <div id="tab-appearance" class="settings-tab-pane active">
-                        <label
-                            style="
-                                font-size: 0.85rem;
-                                font-weight: 600;
-                                color: var(--text-muted);
-                                display: block;
-                                margin-bottom: 6px;
-                            "
-                            >App Theme</label
-                        >
-                        <select
-                            id="settings-theme"
-                            style="width: 100%; margin-bottom: 16px"
-                        >
-                            <option value="system">System Default</option>
-                            <option value="light">Light</option>
-                            <option value="dark">Dark (Gray)</option>
-                            <option value="midnight">Midnight (OLED)</option>
-                            <option value="sepia">Sepia (Paper)</option>
-                            <option value="ocean">Ocean (Blue)</option>
-                            <option value="forest">Forest (Green)</option>
-                            <option value="sunset">Sunset (Warm)</option>
-                            <option value="terminal">Terminal (Hacker)</option>
-                        </select>
-
-                        <label
-                            style="
-                                font-size: 0.85rem;
-                                font-weight: 600;
-                                color: var(--text-muted);
-                                display: block;
-                                margin-bottom: 6px;
-                            "
-                            >App Font</label
-                        >
-                        <select
-                            id="settings-font"
-                            style="width: 100%; margin-bottom: 16px"
-                        >
-                            <option value="system">System UI</option>
-                            <option value="inter">Inter (Default)</option>
-                            <option value="serif">Merriweather (Serif)</option>
-                            <option value="mono">JetBrains Mono</option>
-                            <option value="helvetica">Helvetica</option>
-                            <option value="georgia">Georgia</option>
-                        </select>
-
+                    <div class="modal-content settings-tab-content-container">
+                        <!-- Tab: Appearance -->
                         <div
-                            style="
-                                display: flex;
-                                align-items: center;
-                                justify-content: space-between;
-                                margin-bottom: 16px;
-                            "
+                            id="tab-appearance"
+                            class="settings-tab-pane active"
                         >
                             <label
                                 style="
                                     font-size: 0.85rem;
                                     font-weight: 600;
                                     color: var(--text-muted);
+                                    display: block;
+                                    margin-bottom: 6px;
                                 "
-                                for="settings-show-images"
-                                >Show Featured Images</label
+                                >App Theme</label
                             >
-                            <label class="toggle-switch">
-                                <input
-                                    type="checkbox"
-                                    id="settings-show-images"
-                                />
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Tab: General -->
-                    <div id="tab-general" class="settings-tab-pane">
-                        <!-- Plugin settings will be injected here -->
-                        <div id="plugin-settings-container-general"></div>
-
-                        <div
-                            style="
-                                height: 1px;
-                                background: var(--border);
-                                margin: 0 0 24px;
-                            "
-                        ></div>
-
-                        <h4 style="margin-bottom: 10px">Gemini API Key</h4>
-                        <p
-                            style="
-                                margin-top: 0;
-                                font-size: 0.9rem;
-                                color: var(--text-muted);
-                            "
-                        >
-                            Required if using Gemini for parsing complex feeds.
-                        </p>
-                        <input
-                            type="password"
-                            id="settings-api-key"
-                            placeholder="Enter your Gemini API Key"
-                            style="width: 100%; margin-bottom: 8px"
-                        />
-                        <p style="font-size: 0.8rem; margin: 0">
-                            <a
-                                href="https://aistudio.google.com/app/apikey"
-                                target="_blank"
-                                style="color: var(--primary)"
-                                >Get an API key here</a
+                            <select
+                                id="settings-theme"
+                                style="width: 100%; margin-bottom: 16px"
                             >
-                        </p>
-                    </div>
+                                <option value="system">System Default</option>
+                                <option value="light">Light</option>
+                                <option value="dark">Dark (Gray)</option>
+                                <option value="midnight">
+                                    Midnight (OLED)
+                                </option>
+                                <option value="sepia">Sepia (Paper)</option>
+                                <option value="ocean">Ocean (Blue)</option>
+                                <option value="forest">Forest (Green)</option>
+                                <option value="sunset">Sunset (Warm)</option>
+                                <option value="terminal">
+                                    Terminal (Hacker)
+                                </option>
+                            </select>
 
-                    <!-- Tab: Data -->
-                    <div id="tab-data" class="settings-tab-pane">
-                        <h4 style="margin-top: 0; margin-bottom: 10px">
-                            Import / Export (OPML)
-                        </h4>
+                            <label
+                                style="
+                                    font-size: 0.85rem;
+                                    font-weight: 600;
+                                    color: var(--text-muted);
+                                    display: block;
+                                    margin-bottom: 6px;
+                                "
+                                >App Font</label
+                            >
+                            <select
+                                id="settings-font"
+                                style="width: 100%; margin-bottom: 16px"
+                            >
+                                <option value="system">System UI</option>
+                                <option value="inter">Inter (Default)</option>
+                                <option value="serif">
+                                    Merriweather (Serif)
+                                </option>
+                                <option value="mono">JetBrains Mono</option>
+                                <option value="helvetica">Helvetica</option>
+                                <option value="georgia">Georgia</option>
+                            </select>
 
-                        <div
-                            style="
-                                background: var(--bg-body);
-                                padding: 12px;
-                                border-radius: 8px;
-                                border: 1px solid var(--border);
-                            "
-                        >
                             <div
                                 style="
-                                    margin-bottom: 12px;
-                                    font-weight: 600;
-                                    font-size: 0.85rem;
-                                    color: var(--text-muted);
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: space-between;
+                                    margin-bottom: 16px;
                                 "
                             >
-                                Export Options
+                                <label
+                                    style="
+                                        font-size: 0.85rem;
+                                        font-weight: 600;
+                                        color: var(--text-muted);
+                                    "
+                                    for="settings-show-images"
+                                    >Show Featured Images</label
+                                >
+                                <label class="toggle-switch">
+                                    <input
+                                        type="checkbox"
+                                        id="settings-show-images"
+                                    />
+                                    <span class="slider"></span>
+                                </label>
                             </div>
-                            <label
-                                style="
-                                    display: flex;
-                                    gap: 8px;
-                                    margin-bottom: 8px;
-                                    font-size: 0.9rem;
-                                "
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="export-feeds"
-                                    checked
-                                />
-                                Feeds & Parsing Rules
-                            </label>
-                            <label
-                                style="
-                                    display: flex;
-                                    gap: 8px;
-                                    margin-bottom: 8px;
-                                    font-size: 0.9rem;
-                                "
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="export-settings"
-                                    checked
-                                />
-                                App Settings
-                            </label>
-                            <label
-                                style="
-                                    display: flex;
-                                    gap: 8px;
-                                    margin-bottom: 12px;
-                                    font-size: 0.9rem;
-                                "
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="export-favorites"
-                                    checked
-                                />
-                                Favorites & Saved Content
-                            </label>
-                            <button
-                                id="btn-export-opml"
-                                class="btn btn-primary"
-                                style="width: 100%; justify-content: center"
-                            >
-                                Download Backup (OPML)
-                            </button>
+                        </div>
+
+                        <!-- Tab: General -->
+                        <div id="tab-general" class="settings-tab-pane">
+                            <!-- Plugin settings will be injected here -->
+                            <div id="plugin-settings-container-general"></div>
 
                             <div
                                 style="
                                     height: 1px;
                                     background: var(--border);
-                                    margin: 16px 0;
+                                    margin: 0 0 24px;
                                 "
                             ></div>
 
-                            <div
+                            <h4 style="margin-bottom: 10px">Gemini API Key</h4>
+                            <p
                                 style="
-                                    margin-bottom: 12px;
-                                    font-weight: 600;
-                                    font-size: 0.85rem;
+                                    margin-top: 0;
+                                    font-size: 0.9rem;
                                     color: var(--text-muted);
                                 "
                             >
-                                Import Options
+                                Required if using Gemini for parsing complex
+                                feeds.
+                            </p>
+                            <input
+                                type="password"
+                                id="settings-api-key"
+                                placeholder="Enter your Gemini API Key"
+                                style="width: 100%; margin-bottom: 8px"
+                            />
+                            <p style="font-size: 0.8rem; margin: 0">
+                                <a
+                                    href="https://aistudio.google.com/app/apikey"
+                                    target="_blank"
+                                    style="color: var(--primary)"
+                                    >Get an API key here</a
+                                >
+                            </p>
+                        </div>
+
+                        <!-- Tab: Data -->
+                        <div id="tab-data" class="settings-tab-pane">
+                            <h4 style="margin-top: 0; margin-bottom: 10px">
+                                Import / Export (OPML)
+                            </h4>
+
+                            <div
+                                style="
+                                    background: var(--bg-body);
+                                    padding: 12px;
+                                    border-radius: 8px;
+                                    border: 1px solid var(--border);
+                                "
+                            >
+                                <div
+                                    style="
+                                        margin-bottom: 12px;
+                                        font-weight: 600;
+                                        font-size: 0.85rem;
+                                        color: var(--text-muted);
+                                    "
+                                >
+                                    Export Options
+                                </div>
+                                <label
+                                    style="
+                                        display: flex;
+                                        gap: 8px;
+                                        margin-bottom: 8px;
+                                        font-size: 0.9rem;
+                                    "
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id="export-feeds"
+                                        checked
+                                    />
+                                    Feeds & Parsing Rules
+                                </label>
+                                <label
+                                    style="
+                                        display: flex;
+                                        gap: 8px;
+                                        margin-bottom: 8px;
+                                        font-size: 0.9rem;
+                                    "
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id="export-settings"
+                                        checked
+                                    />
+                                    App Settings
+                                </label>
+                                <label
+                                    style="
+                                        display: flex;
+                                        gap: 8px;
+                                        margin-bottom: 12px;
+                                        font-size: 0.9rem;
+                                    "
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id="export-favorites"
+                                        checked
+                                    />
+                                    Favorites & Saved Content
+                                </label>
+                                <button
+                                    id="btn-export-opml"
+                                    class="btn btn-primary"
+                                    style="width: 100%; justify-content: center"
+                                >
+                                    Download Backup (OPML)
+                                </button>
+
+                                <div
+                                    style="
+                                        height: 1px;
+                                        background: var(--border);
+                                        margin: 16px 0;
+                                    "
+                                ></div>
+
+                                <div
+                                    style="
+                                        margin-bottom: 12px;
+                                        font-weight: 600;
+                                        font-size: 0.85rem;
+                                        color: var(--text-muted);
+                                    "
+                                >
+                                    Import Options
+                                </div>
+                                <label
+                                    style="
+                                        display: flex;
+                                        gap: 8px;
+                                        margin-bottom: 8px;
+                                        font-size: 0.9rem;
+                                    "
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id="import-feeds"
+                                        checked
+                                    />
+                                    Feeds & Parsing Rules
+                                </label>
+                                <label
+                                    style="
+                                        display: flex;
+                                        gap: 8px;
+                                        margin-bottom: 8px;
+                                        font-size: 0.9rem;
+                                    "
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id="import-settings"
+                                        checked
+                                    />
+                                    App Settings
+                                </label>
+                                <label
+                                    style="
+                                        display: flex;
+                                        gap: 8px;
+                                        margin-bottom: 8px;
+                                        font-size: 0.9rem;
+                                    "
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id="import-favorites"
+                                        checked
+                                    />
+                                    Favorites & Saved Content
+                                </label>
+                                <label
+                                    style="
+                                        display: flex;
+                                        gap: 8px;
+                                        margin-bottom: 12px;
+                                        font-size: 0.9rem;
+                                    "
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id="import-overwrite"
+                                    />
+                                    Overwrite existing items
+                                </label>
+                                <input
+                                    type="file"
+                                    id="file-input-import"
+                                    style="display: none"
+                                    accept=".opml,.xml"
+                                />
+                                <button
+                                    id="btn-import-opml"
+                                    class="btn btn-outline"
+                                    style="
+                                        width: 100%;
+                                        justify-content: center;
+                                        background: var(--bg-card);
+                                    "
+                                >
+                                    Import Backup (OPML)
+                                </button>
                             </div>
-                            <label
+
+                            <div
                                 style="
-                                    display: flex;
-                                    gap: 8px;
-                                    margin-bottom: 8px;
-                                    font-size: 0.9rem;
+                                    height: 1px;
+                                    background: var(--border);
+                                    margin: 24px 0;
                                 "
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="import-feeds"
-                                    checked
-                                />
-                                Feeds & Parsing Rules
-                            </label>
-                            <label
+                            ></div>
+
+                            <h4 style="margin-bottom: 10px">Data Retention</h4>
+                            <p
                                 style="
-                                    display: flex;
-                                    gap: 8px;
-                                    margin-bottom: 8px;
+                                    margin-top: 0;
                                     font-size: 0.9rem;
-                                "
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="import-settings"
-                                    checked
-                                />
-                                App Settings
-                            </label>
-                            <label
-                                style="
-                                    display: flex;
-                                    gap: 8px;
-                                    margin-bottom: 8px;
-                                    font-size: 0.9rem;
-                                "
-                            >
-                                <input
-                                    type="checkbox"
-                                    id="import-favorites"
-                                    checked
-                                />
-                                Favorites & Saved Content
-                            </label>
-                            <label
-                                style="
-                                    display: flex;
-                                    gap: 8px;
+                                    color: var(--text-muted);
                                     margin-bottom: 12px;
-                                    font-size: 0.9rem;
                                 "
                             >
-                                <input type="checkbox" id="import-overwrite" />
-                                Overwrite existing items
-                            </label>
-                            <input
-                                type="file"
-                                id="file-input-import"
-                                style="display: none"
-                                accept=".opml,.xml"
-                            />
-                            <button
-                                id="btn-import-opml"
-                                class="btn btn-outline"
+                                Favorites are never deleted. Policies run on app
+                                launch.
+                            </p>
+
+                            <label
                                 style="
-                                    width: 100%;
-                                    justify-content: center;
-                                    background: var(--bg-card);
+                                    font-size: 0.85rem;
+                                    font-weight: 600;
+                                    color: var(--text-muted);
+                                    display: block;
+                                    margin-bottom: 6px;
+                                "
+                                >Delete unread (unopened) articles older than
+                                (days)</label
+                            >
+                            <input
+                                type="number"
+                                id="settings-cleanup-unread"
+                                min="1"
+                                style="width: 100%; margin-bottom: 12px"
+                            />
+
+                            <label
+                                style="
+                                    font-size: 0.85rem;
+                                    font-weight: 600;
+                                    color: var(--text-muted);
+                                    display: block;
+                                    margin-bottom: 6px;
+                                "
+                                >Remove article body text older than
+                                (days)</label
+                            >
+                            <input
+                                type="number"
+                                id="settings-cleanup-content"
+                                min="1"
+                                style="width: 100%; margin-bottom: 12px"
+                            />
+
+                            <label
+                                style="
+                                    font-size: 0.85rem;
+                                    font-weight: 600;
+                                    color: var(--text-muted);
+                                    display: block;
+                                    margin-bottom: 16px;
+                                "
+                                >Delete read and unfinished articles older than
+                                (days)</label
+                            >
+                            <input
+                                type="number"
+                                id="settings-cleanup-read"
+                                min="1"
+                                style="width: 100%; margin-bottom: 16px"
+                            />
+                        </div>
+
+                        <!-- Tab: Plugins -->
+                        <div id="tab-plugins" class="settings-tab-pane">
+                            <h4 style="margin-top: 0; margin-bottom: 10px">
+                                Install Plugin
+                            </h4>
+                            <div
+                                style="
+                                    display: flex;
+                                    gap: 8px;
+                                    margin-bottom: 20px;
                                 "
                             >
-                                Import Backup (OPML)
-                            </button>
-                        </div>
+                                <input
+                                    type="url"
+                                    id="plugin-install-url"
+                                    placeholder="https://example.com/manifest.json"
+                                    style="flex: 1"
+                                />
+                                <button
+                                    id="btn-install-plugin"
+                                    class="btn btn-primary"
+                                >
+                                    Install
+                                </button>
+                            </div>
 
-                        <div
-                            style="
-                                height: 1px;
-                                background: var(--border);
-                                margin: 24px 0;
-                            "
-                        ></div>
+                            <div
+                                style="
+                                    height: 1px;
+                                    background: var(--border);
+                                    margin: 20px 0;
+                                "
+                            ></div>
 
-                        <h4 style="margin-bottom: 10px">Data Retention</h4>
-                        <p
-                            style="
-                                margin-top: 0;
-                                font-size: 0.9rem;
-                                color: var(--text-muted);
-                                margin-bottom: 12px;
-                            "
-                        >
-                            Favorites are never deleted. Policies run on app
-                            launch.
-                        </p>
-
-                        <label
-                            style="
-                                font-size: 0.85rem;
-                                font-weight: 600;
-                                color: var(--text-muted);
-                                display: block;
-                                margin-bottom: 6px;
-                            "
-                            >Delete unread (unopened) articles older than
-                            (days)</label
-                        >
-                        <input
-                            type="number"
-                            id="settings-cleanup-unread"
-                            min="1"
-                            style="width: 100%; margin-bottom: 12px"
-                        />
-
-                        <label
-                            style="
-                                font-size: 0.85rem;
-                                font-weight: 600;
-                                color: var(--text-muted);
-                                display: block;
-                                margin-bottom: 6px;
-                            "
-                            >Remove article body text older than (days)</label
-                        >
-                        <input
-                            type="number"
-                            id="settings-cleanup-content"
-                            min="1"
-                            style="width: 100%; margin-bottom: 12px"
-                        />
-
-                        <label
-                            style="
-                                font-size: 0.85rem;
-                                font-weight: 600;
-                                color: var(--text-muted);
-                                display: block;
-                                margin-bottom: 16px;
-                            "
-                            >Delete read and unfinished articles older than
-                            (days)</label
-                        >
-                        <input
-                            type="number"
-                            id="settings-cleanup-read"
-                            min="1"
-                            style="width: 100%; margin-bottom: 16px"
-                        />
-                    </div>
-
-                    <!-- Tab: Plugins -->
-                    <div id="tab-plugins" class="settings-tab-pane">
-                        <h4 style="margin-top: 0; margin-bottom: 10px">
-                            Install Plugin
-                        </h4>
-                        <div
-                            style="display: flex; gap: 8px; margin-bottom: 20px"
-                        >
-                            <input
-                                type="url"
-                                id="plugin-install-url"
-                                placeholder="https://example.com/manifest.json"
-                                style="flex: 1"
-                            />
-                            <button
-                                id="btn-install-plugin"
-                                class="btn btn-primary"
-                            >
-                                Install
-                            </button>
-                        </div>
-
-                        <div
-                            style="
-                                height: 1px;
-                                background: var(--border);
-                                margin: 20px 0;
-                            "
-                        ></div>
-
-                        <h4 style="margin-bottom: 10px">Installed Plugins</h4>
-                        <div id="plugins-list-container">
-                            <!-- Injected JS -->
+                            <h4 style="margin-bottom: 10px">
+                                Installed Plugins
+                            </h4>
+                            <div id="plugins-list-container">
+                                <!-- Injected JS -->
+                            </div>
                         </div>
                     </div>
                 </div>

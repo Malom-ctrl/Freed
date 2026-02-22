@@ -113,6 +113,14 @@ export class Interface {
             pluginId: self.pluginId,
           });
         },
+        addTab: (id, label, renderFn) => {
+          self.registry.registerSlot("settings:tab", {
+            id,
+            label,
+            render: renderFn,
+            pluginId: self.pluginId,
+          });
+        },
       },
       addView: (id, title, renderFn) => {
         self.registry.registerSlot("view:custom", {
