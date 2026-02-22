@@ -20,6 +20,8 @@ import { ArticleList } from "../features/reader/article-list.js";
 import { DiscoverView } from "../features/discover/discover-view.js";
 import { Navbar } from "../components/navbar.js";
 
+import { Registry } from "../features/plugin-system/registry.js";
+
 // --- Initialization ---
 async function init() {
   Theme.init();
@@ -128,6 +130,8 @@ async function refreshUI() {
     (feed) => Modals.renderStatsModal(feed),
   );
 
+  Sidebar.updateActiveState(State.currentFeedId);
+
   // 2. Render Navbar Actions (Plugin)
   Navbar.renderActions();
 
@@ -150,6 +154,30 @@ async function refreshUI() {
       (feed) => FeedService.addFeedDirectly(feed),
       (pack) => FeedService.addDiscoverPack(pack, DiscoverData.feeds),
     );
+  } else if (State.currentFeedId && State.currentFeedId.startsWith("custom:")) {
+    // Custom View (managed by plugins)
+    const viewId = State.currentFeedId.replace("custom:", "");
+    const customViews = Registry.getExtensions("view:custom");
+    const view = customViews.find((v) => v.id === viewId);
+
+    if (view && typeof view.render === "function") {
+      const container = document.getElementById("article-list");
+      if (container) {
+        container.innerHTML = "";
+        container.classList.remove("discover-view");
+
+        // Update Title
+        if (mainTitleEl) mainTitleEl.textContent = view.title || "Custom View";
+
+        // Hide Standard Filter UI
+        if (filterBar) filterBar.style.display = "none";
+        if (filterToggleBtn) filterToggleBtn.style.display = "none";
+
+        // Render
+        view.render(container);
+      }
+    }
+    return;
   } else {
     // Standard View
     if (filterBar) {

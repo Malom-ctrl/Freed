@@ -49,6 +49,7 @@ export const Sidebar = {
     items.forEach((item) => {
       const div = document.createElement("div");
       div.className = "nav-item";
+      if (item.id) div.dataset.id = `custom:${item.id}`;
       div.innerHTML = DOMPurify.sanitize(`${item.icon || ""} ${item.label}`);
       div.onclick = () => {
         if (item.onClick) item.onClick();
@@ -68,11 +69,32 @@ export const Sidebar = {
     items.forEach((item) => {
       const div = document.createElement("div");
       div.className = "nav-item";
+      if (item.id) div.dataset.id = `custom:${item.id}`;
       div.innerHTML = DOMPurify.sanitize(`${item.icon || ""} ${item.label}`);
       div.onclick = () => {
         if (item.onClick) item.onClick();
       };
       container.appendChild(div);
+    });
+  },
+
+  updateActiveState: function (currentId) {
+    // Clear all active states in plugin containers
+    const containers = [
+      document.getElementById("plugin-sidebar-container"),
+      document.getElementById("plugin-sidebar-secondary-container"),
+    ];
+
+    containers.forEach((container) => {
+      if (!container) return;
+      const items = container.querySelectorAll(".nav-item");
+      items.forEach((item) => {
+        if (item.dataset.id === currentId) {
+          item.classList.add("active");
+        } else {
+          item.classList.remove("active");
+        }
+      });
     });
   },
 };

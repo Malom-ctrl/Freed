@@ -18,8 +18,24 @@ export class Interface {
       refresh: () => {
         Events.emit(Events.REFRESH_UI);
       },
+      switchFeed: (id) => {
+        Events.emit(Events.FEED_SELECTED, { id });
+      },
       getState: () => ({ ...State }),
       isMobile: () => window.innerWidth <= 768,
+    };
+  }
+
+  get events() {
+    return {
+      on: (event, callback) => {
+        const handler = (e) => callback(e.detail);
+        window.addEventListener(event, handler);
+        return handler;
+      },
+      off: (event, handler) => {
+        window.removeEventListener(event, handler);
+      },
     };
   }
 
@@ -92,6 +108,14 @@ export class Interface {
             pluginId: self.pluginId,
           });
         },
+      },
+      addView: (id, title, renderFn) => {
+        self.registry.registerSlot("view:custom", {
+          id,
+          title,
+          render: renderFn,
+          pluginId: self.pluginId,
+        });
       },
       stats: {
         addSection: (renderFn) => {

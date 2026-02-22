@@ -14,6 +14,7 @@ export const Registry = {
     "filter:option": [], // Additional filter dropdown options
     "stats:feed": [], // Render function for feed stats modal. Input: feed object. Output: HTML string
     "cad:renderer": [], // Content Attached Data renderers. { type: string, render: (content, data) => string }
+    "view:custom": [], // Custom full-page views. { id, title, render: (container) => void }
   },
 
   // Logic Hooks (Pipelines and Events)
