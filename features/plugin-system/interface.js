@@ -147,6 +147,10 @@ export class Interface {
           if (Modals.hideTooltip) Modals.hideTooltip();
         },
       },
+      popover: {
+        show: (rect, content) => Modals.showPopover(rect, content),
+        hide: () => Modals.hidePopover(),
+      },
       dialog: {
         alert: (msg) => alert(msg),
         confirm: (msg) => confirm(msg),

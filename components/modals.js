@@ -417,6 +417,54 @@ export const Modals = {
     });
   },
 
+  showPopover: function (rect, contentHTML) {
+    let popover = document.getElementById("global-popover");
+    if (!popover) {
+      popover = document.createElement("div");
+      popover.id = "global-popover";
+      popover.className = "global-popover";
+      popover.innerHTML = `
+        <button class="close-popover" aria-label="Close">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <div class="global-popover-content"></div>
+      `;
+      document.body.appendChild(popover);
+
+      popover.querySelector(".close-popover").onclick = () => {
+        this.hidePopover();
+      };
+    }
+
+    const contentEl = popover.querySelector(".global-popover-content");
+    contentEl.innerHTML = contentHTML;
+
+    popover.classList.add("show");
+
+    // Position logic
+    const popoverHeight = popover.offsetHeight || 100;
+    const popoverWidth = popover.offsetWidth || 300;
+
+    let top = rect.top - popoverHeight - 10;
+    let left = rect.left + rect.width / 2 - popoverWidth / 2;
+
+    // Flip if too close to top
+    if (top < 10) {
+      top = rect.bottom + 10;
+    }
+
+    // Keep within horizontal bounds
+    left = Math.max(10, Math.min(window.innerWidth - popoverWidth - 10, left));
+
+    popover.style.top = `${top}px`;
+    popover.style.left = `${left}px`;
+  },
+
+  hidePopover: function () {
+    const popover = document.getElementById("global-popover");
+    if (popover) popover.classList.remove("show");
+  },
+
   showPrompt: function (message, defaultValue = "") {
     return new Promise((resolve) => {
       // Create modal elements

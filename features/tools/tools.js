@@ -45,18 +45,31 @@ export const Tools = {
         pluginContainer.innerHTML = "";
         const tools = Registry.getExtensions("reader:tool");
 
-        if (tools.length > 0) {
+        const text = selection.toString().trim();
+        const visibleTools = tools.filter((tool) => {
+          if (typeof tool.shouldShow === "function") {
+            return tool.shouldShow(text, range);
+          }
+          return true;
+        });
+
+        if (visibleTools.length > 0) {
           if (divider) divider.style.display = "block";
-          tools.forEach((tool) => {
+          visibleTools.forEach((tool) => {
             const btn = document.createElement("button");
+            btn.className = "tool-btn"; // Ensure class for styling
             btn.innerHTML = DOMPurify.sanitize(
-              `${tool.icon || ""} ${tool.label}`,
+              `${tool.icon || ""} ${tool.label || ""}`,
             );
-            btn.onclick = (e) => {
+            btn.onclick = async (e) => {
               e.preventDefault();
               e.stopPropagation();
-              const text = selection.toString().trim();
-              if (tool.onClick) tool.onClick(text, range);
+              if (tool.onClick) {
+                await tool.onClick(text, range);
+                // Close toolbar after action
+                toolbar.style.display = "none";
+                window.getSelection().removeAllRanges();
+              }
             };
             pluginContainer.appendChild(btn);
           });
