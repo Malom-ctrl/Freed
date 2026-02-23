@@ -58,15 +58,20 @@ export const Modals = {
     const appearanceContainer = document.getElementById(
       "plugin-settings-container-appearance",
     );
+    const dataContainer = document.getElementById(
+      "plugin-settings-container-data",
+    );
 
     if (generalContainer) generalContainer.innerHTML = "";
     if (appearanceContainer) appearanceContainer.innerHTML = "";
+    if (dataContainer) dataContainer.innerHTML = "";
 
     const settings = Registry.getExtensions("settings:section");
     settings.forEach((item) => {
       let container = null;
       if (item.tab === "tab-general") container = generalContainer;
       if (item.tab === "tab-appearance") container = appearanceContainer;
+      if (item.tab === "tab-data") container = dataContainer;
 
       if (container && typeof item.render === "function") {
         const wrapper = document.createElement("div");
