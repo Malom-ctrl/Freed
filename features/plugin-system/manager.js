@@ -160,30 +160,32 @@ export const Manager = {
         const remoteManifest = await res.json();
 
         // Check Version
-        if (Utils.SemVer.compare(remoteManifest.version, plugin.version) > 0) {
-          // Check Compatibility
-          const compatRule = remoteManifest.compatibleAppVersion || "*";
-          if (Utils.SemVer.satisfies(Config.APP_VERSION, compatRule)) {
-            // Fetch Code
-            const mainScriptUrl = new URL(remoteManifest.main, plugin.url).href;
-            const scriptRes = await fetch(mainScriptUrl);
-            if (scriptRes.ok) {
-              const code = await scriptRes.text();
+        if (Utils.SemVer.compare(remoteManifest.version, plugin.version) <= 0)
+          return false;
 
-              // Update DB
-              const newPluginData = {
-                ...plugin,
-                name: remoteManifest.name,
-                version: remoteManifest.version,
-                description: remoteManifest.description,
-                compatibleAppVersion: remoteManifest.compatibleAppVersion,
-                code: code,
-              };
-              await DB.savePlugin(newPluginData);
-              return true;
-            }
-          }
-        }
+        // Check Compatibility
+        const compatRule = remoteManifest.compatibleAppVersion || "*";
+        if (!Utils.SemVer.satisfies(Config.APP_VERSION, compatRule))
+          return false;
+
+        // Fetch Code
+        const mainScriptUrl = new URL(remoteManifest.main, plugin.url).href;
+        const scriptRes = await fetch(mainScriptUrl);
+        if (!scriptRes.ok) return false;
+
+        const code = await scriptRes.text();
+
+        // Update DB
+        const newPluginData = {
+          ...plugin,
+          name: remoteManifest.name,
+          version: remoteManifest.version,
+          description: remoteManifest.description,
+          compatibleAppVersion: remoteManifest.compatibleAppVersion,
+          code: code,
+        };
+        await DB.savePlugin(newPluginData);
+        return true;
       } catch (e) {
         console.warn("Auto-update failed for", plugin.name, e);
       }

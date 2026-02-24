@@ -480,33 +480,33 @@ export const ReaderView = {
     if (endParent.hasAttribute("data-cad-id"))
       cadIdsToRemove.add(endParent.getAttribute("data-cad-id"));
 
-    if (cadIdsToRemove.size > 0) {
-      const article = await DB.getArticle(State.currentArticleGuid);
-      if (article && article.cads) {
-        article.cads = article.cads.filter((c) => !cadIdsToRemove.has(c.id));
-        await ReaderService.saveArticle(article);
+    if (cadIdsToRemove.size === 0) return;
 
-        // Re-render
-        const scrollTop = contentEl.parentElement.scrollTop;
-        if (article.fullContent) {
-          const cleanContent = DOMPurify.sanitize(article.fullContent);
-          contentEl.innerHTML = this._renderContentWithCADs(
-            cleanContent,
-            article.cads,
-          );
-        } else {
-          const base = article.content || article.description || "";
-          const cleanBase = DOMPurify.sanitize(base);
-          contentEl.innerHTML = this._renderContentWithCADs(
-            cleanBase,
-            article.cads,
-          );
-        }
-        contentEl.parentElement.scrollTop = scrollTop;
-        document.getElementById("selection-toolbar").style.display = "none";
-        window.getSelection().removeAllRanges();
-      }
+    const article = await DB.getArticle(State.currentArticleGuid);
+    if (!article || !article.cads) return;
+
+    article.cads = article.cads.filter((c) => !cadIdsToRemove.has(c.id));
+    await ReaderService.saveArticle(article);
+
+    // Re-render
+    const scrollTop = contentEl.parentElement.scrollTop;
+    if (article.fullContent) {
+      const cleanContent = DOMPurify.sanitize(article.fullContent);
+      contentEl.innerHTML = this._renderContentWithCADs(
+        cleanContent,
+        article.cads,
+      );
+    } else {
+      const base = article.content || article.description || "";
+      const cleanBase = DOMPurify.sanitize(base);
+      contentEl.innerHTML = this._renderContentWithCADs(
+        cleanBase,
+        article.cads,
+      );
     }
+    contentEl.parentElement.scrollTop = scrollTop;
+    document.getElementById("selection-toolbar").style.display = "none";
+    window.getSelection().removeAllRanges();
   },
 
   createCADFromSelection: async function (
@@ -633,40 +633,40 @@ export const ReaderView = {
     };
 
     // 12. Save
-    if (State.currentArticleGuid) {
-      await ReaderService.addCAD(State.currentArticleGuid, cad);
+    if (!State.currentArticleGuid) return;
 
-      // Auto-favorite logic for highlights/annotations
-      if (type === "highlight" && !article.favorite) {
-        await ReaderService.toggleFavorite(State.currentArticleGuid);
-        Utils.showToast("Article automatically added to favorites");
-      }
+    await ReaderService.addCAD(State.currentArticleGuid, cad);
 
-      // 13. Re-render
-      const scrollTop = contentEl.parentElement.scrollTop;
-      const updatedArticle = await DB.getArticle(State.currentArticleGuid);
-
-      this.updateFavoriteButtonState(updatedArticle.favorite);
-
-      if (updatedArticle.fullContent) {
-        const cleanContent = DOMPurify.sanitize(updatedArticle.fullContent);
-        contentEl.innerHTML = this._renderContentWithCADs(
-          cleanContent,
-          updatedArticle.cads,
-        );
-      } else {
-        const base = updatedArticle.content || updatedArticle.description || "";
-        const cleanBase = DOMPurify.sanitize(base);
-        contentEl.innerHTML = this._renderContentWithCADs(
-          cleanBase,
-          updatedArticle.cads,
-        );
-      }
-
-      contentEl.parentElement.scrollTop = scrollTop;
-      document.getElementById("selection-toolbar").style.display = "none";
-      window.getSelection().removeAllRanges();
+    // Auto-favorite logic for highlights/annotations
+    if (type === "highlight" && !article.favorite) {
+      await ReaderService.toggleFavorite(State.currentArticleGuid);
+      Utils.showToast("Article automatically added to favorites");
     }
+
+    // 13. Re-render
+    const scrollTop = contentEl.parentElement.scrollTop;
+    const updatedArticle = await DB.getArticle(State.currentArticleGuid);
+
+    this.updateFavoriteButtonState(updatedArticle.favorite);
+
+    if (updatedArticle.fullContent) {
+      const cleanContent = DOMPurify.sanitize(updatedArticle.fullContent);
+      contentEl.innerHTML = this._renderContentWithCADs(
+        cleanContent,
+        updatedArticle.cads,
+      );
+    } else {
+      const base = updatedArticle.content || updatedArticle.description || "";
+      const cleanBase = DOMPurify.sanitize(base);
+      contentEl.innerHTML = this._renderContentWithCADs(
+        cleanBase,
+        updatedArticle.cads,
+      );
+    }
+
+    contentEl.parentElement.scrollTop = scrollTop;
+    document.getElementById("selection-toolbar").style.display = "none";
+    window.getSelection().removeAllRanges();
   },
 
   _applyRestoreScroll: function () {

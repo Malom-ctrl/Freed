@@ -32,19 +32,19 @@ export const Registry = {
   },
 
   registerSlot: function (type, item) {
-    if (this.slots[type]) {
-      this.slots[type].push(item);
-    } else {
+    if (!this.slots[type]) {
       console.warn(`[Plugin Registry] Unknown slot type: ${type}`);
+      return;
     }
+    this.slots[type].push(item);
   },
 
   registerHook: function (event, callback) {
-    if (this.hooks[event]) {
-      this.hooks[event].push(callback);
-    } else {
+    if (!this.hooks[event]) {
       console.warn(`[Plugin Registry] Unknown hook event: ${event}`);
+      return;
     }
+    this.hooks[event].push(callback);
   },
 
   getExtensions: function (type) {

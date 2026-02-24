@@ -126,28 +126,29 @@ export const Tags = {
       );
 
       filterInput.addEventListener("keydown", async (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          const val = filterInput.value.trim();
-          if (!val) return;
+        if (e.key !== "Enter") return;
 
-          document
-            .getElementById("global-autocomplete")
-            .classList.remove("show");
+        e.preventDefault();
+        const val = filterInput.value.trim();
+        if (!val) return;
 
-          const existing = await DB.getTag(val);
+        document.getElementById("global-autocomplete").classList.remove("show");
 
-          if (existing && !State.filters.tags.includes(existing.name)) {
-            State.filters.tags.push(existing.name);
-            State.saveFilters();
-            if (onFilterUpdateCallback) onFilterUpdateCallback();
-            filterInput.value = "";
-            triggerSearch(filterInput, "filter");
-          } else if (!existing) {
-            Utils.showToast(`Tag "${val}" not found`);
-            filterInput.value = "";
-          }
+        const existing = await DB.getTag(val);
+
+        if (!existing) {
+          Utils.showToast(`Tag "${val}" not found`);
+          filterInput.value = "";
+          return;
         }
+
+        if (State.filters.tags.includes(existing.name)) return;
+
+        State.filters.tags.push(existing.name);
+        State.saveFilters();
+        if (onFilterUpdateCallback) onFilterUpdateCallback();
+        filterInput.value = "";
+        triggerSearch(filterInput, "filter");
       });
 
       filterInput.addEventListener("blur", () => {

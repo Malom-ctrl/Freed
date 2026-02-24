@@ -71,11 +71,11 @@ export const ArticleList = {
         let rootBottom = window.innerHeight;
         if (root) rootBottom = root.getBoundingClientRect().bottom;
 
-        if (sentinelRect.top <= rootBottom + 1000) {
-          const hasMore = renderBatch();
-          if (hasMore) {
-            fillScreen(); // Keep filling if we haven't pushed sentinel out yet
-          }
+        if (sentinelRect.top > rootBottom + 1000) return;
+
+        const hasMore = renderBatch();
+        if (hasMore) {
+          fillScreen(); // Keep filling if we haven't pushed sentinel out yet
         }
       });
     };
@@ -85,31 +85,36 @@ export const ArticleList = {
     renderBatch(startCount);
 
     // Setup Observer
-    if (renderedCount < items.length) {
-      observer = new IntersectionObserver(
-        (entries) => {
-          // If sentinel enters the viewport (or close to it)
-          if (entries.some((e) => e.isIntersecting)) {
-            const hasMore = renderBatch();
-            if (hasMore) {
-              // Ensure we filled enough space
-              fillScreen();
-            }
-          }
-        },
-        {
-          root: root,
-          threshold: 0,
-          rootMargin: "0px 0px 1000px 0px", // Load 1000px ahead of scroll
-        },
-      );
-      observer.observe(sentinel);
-
-      // Trigger initial manual fill to handle empty/wide screens
-      fillScreen();
-    } else {
+    if (renderedCount >= items.length) {
       sentinel.style.display = "none";
+      return {
+        observer: null,
+        getRenderedCount: () => renderedCount,
+        disconnect: () => {},
+      };
     }
+
+    observer = new IntersectionObserver(
+      (entries) => {
+        // If sentinel enters the viewport (or close to it)
+        if (!entries.some((e) => e.isIntersecting)) return;
+
+        const hasMore = renderBatch();
+        if (hasMore) {
+          // Ensure we filled enough space
+          fillScreen();
+        }
+      },
+      {
+        root: root,
+        threshold: 0,
+        rootMargin: "0px 0px 1000px 0px", // Load 1000px ahead of scroll
+      },
+    );
+    observer.observe(sentinel);
+
+    // Trigger initial manual fill to handle empty/wide screens
+    fillScreen();
 
     return {
       observer,

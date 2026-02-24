@@ -62,78 +62,73 @@ export const SettingsModal = {
         if (targetPane) targetPane.classList.add("active");
 
         // Load Plugins List if plugin tab
-        if (target === "tab-plugins") {
-          const installed = await DB.getPlugins();
+        if (target !== "tab-plugins") return;
 
-          // Fetch Official Plugins
-          const official = [];
-          if (Config.OFFICIAL_PLUGINS) {
-            for (const url of Config.OFFICIAL_PLUGINS) {
-              try {
-                const res = await fetch(url);
-                if (res.ok) {
-                  const manifest = await res.json();
-                  official.push({ ...manifest, url });
-                }
-              } catch (e) {
-                console.warn(
-                  "Failed to fetch official plugin manifest:",
-                  url,
-                  e,
-                );
-              }
+        const installed = await DB.getPlugins();
+
+        // Fetch Official Plugins
+        const official = [];
+        if (Config.OFFICIAL_PLUGINS) {
+          for (const url of Config.OFFICIAL_PLUGINS) {
+            try {
+              const res = await fetch(url);
+              if (!res.ok) continue;
+              const manifest = await res.json();
+              official.push({ ...manifest, url });
+            } catch (e) {
+              console.warn("Failed to fetch official plugin manifest:", url, e);
             }
           }
-
-          Modals.renderPluginsList(
-            installed,
-            official,
-            {
-              onToggle: async (id, enabled) => {
-                await PluginManager.togglePlugin(id, enabled);
-                if (
-                  confirm(
-                    "App reload required to change plugin state. Reload now?",
-                  )
-                ) {
-                  window.location.reload();
-                }
-              },
-              onWipe: async (id) => {
-                await PluginManager.wipeData(id);
-                Utils.showToast("Plugin data cleared");
-              },
-              onUninstall: async (id) => {
-                if (
-                  confirm(
-                    "Are you sure you want to uninstall this plugin? The app will reload to apply changes.",
-                  )
-                ) {
-                  await PluginManager.uninstall(id);
-                  window.location.reload();
-                }
-              },
-              onInstall: async (url) => {
-                try {
-                  await PluginManager.installFromUrl(url);
-                  Utils.showToast("Plugin installed successfully");
-                  // Refresh the view
-                  btn.click();
-                  if (
-                    confirm(
-                      "App reload required to activate new plugin. Reload now?",
-                    )
-                  ) {
-                    window.location.reload();
-                  }
-                } catch (e) {
-                  Utils.showToast("Installation failed: " + e.message);
-                }
-              },
-            },
-            PluginManager.incompatiblePlugins,
-          );
         }
+
+        Modals.renderPluginsList(
+          installed,
+          official,
+          {
+            onToggle: async (id, enabled) => {
+              await PluginManager.togglePlugin(id, enabled);
+              if (
+                confirm(
+                  "App reload required to change plugin state. Reload now?",
+                )
+              ) {
+                window.location.reload();
+              }
+            },
+            onWipe: async (id) => {
+              await PluginManager.wipeData(id);
+              Utils.showToast("Plugin data cleared");
+            },
+            onUninstall: async (id) => {
+              if (
+                confirm(
+                  "Are you sure you want to uninstall this plugin? The app will reload to apply changes.",
+                )
+              ) {
+                await PluginManager.uninstall(id);
+                window.location.reload();
+              }
+            },
+            onInstall: async (url) => {
+              try {
+                await PluginManager.installFromUrl(url);
+                Utils.showToast("Plugin installed successfully");
+                // Refresh the view
+                btn.click();
+                if (
+                  confirm(
+                    "App reload required to activate new plugin. Reload now?",
+                  )
+                ) {
+                  window.location.reload();
+                }
+              } catch (e) {
+                Utils.showToast("Installation failed: " + e.message);
+              }
+            },
+          },
+          PluginManager.incompatiblePlugins,
+        );
       });
     }
 
