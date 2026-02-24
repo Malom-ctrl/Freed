@@ -9,11 +9,15 @@ export const DiscoverView = {
     container.classList.add("discover-view");
     container.innerHTML = "";
 
-    const isFeedAdded = (url) => existingFeeds.some((f) => f.url === url);
+    const existingIds = new Set(existingFeeds.map((f) => f.id));
+    const isFeedAdded = (url) => existingIds.has(url);
+
+    const dataFeedsMap = new Map(data.feeds.map((f) => [f.id, f]));
+
     const isPackAdded = (pack) => {
       const packUrls = pack.feeds
         .map((fid) => {
-          const f = data.feeds.find((df) => df.id === fid);
+          const f = dataFeedsMap.get(fid);
           return f ? f.url : null;
         })
         .filter(Boolean);
@@ -86,7 +90,7 @@ export const DiscoverView = {
               return true;
             }
             const feedsInPack = p.feeds
-              .map((fid) => data.feeds.find((f) => f.id === fid))
+              .map((fid) => dataFeedsMap.get(fid))
               .filter(Boolean);
             return feedsInPack.some(
               (f) =>
@@ -110,7 +114,7 @@ export const DiscoverView = {
           const alreadyAdded = isPackAdded(pack);
 
           const packFeeds = pack.feeds
-            .map((fid) => data.feeds.find((f) => f.id === fid))
+            .map((fid) => dataFeedsMap.get(fid))
             .filter(Boolean);
           const feedNames = packFeeds.map((f) => f.title);
 

@@ -18,6 +18,7 @@ import { Modals } from "../components/modals.js";
 import { FeedList } from "../features/feeds/feed-list.js";
 import { ArticleList } from "../features/reader/article-list.js";
 import { DiscoverView } from "../features/discover/discover-view.js";
+import { DiscoverService } from "../features/discover/discover-service.js";
 import { Navbar } from "../components/navbar.js";
 
 import { Registry } from "../features/plugin-system/registry.js";
@@ -75,8 +76,8 @@ async function init() {
   );
 
   // Initial Routing Logic
-  const allFeeds = await DB.getAllFeeds();
-  if (allFeeds.length === 0) {
+  const feedCount = await DB.getFeedCount();
+  if (feedCount === 0) {
     State.currentFeedId = "discover";
   }
 
@@ -84,7 +85,7 @@ async function init() {
   await refreshUI();
 
   // Background Network Sync
-  if (allFeeds.length > 0) {
+  if (feedCount > 0) {
     FeedService.syncFeeds(); // No callback needed, it emits events
   }
 }
@@ -109,8 +110,19 @@ function registerSW() {
 async function refreshUI() {
   // Use FeedService to get display-ready feeds (with colors)
   const feedsWithEffectiveColor = await FeedService.getFeedsForDisplay();
-  const allTags = await DB.getAllTags();
-  const tagMap = new Map(allTags.map((t) => [t.name, t]));
+
+  // Collect unique tag names
+  const uniqueTagNames = new Set();
+  feedsWithEffectiveColor.forEach((f) => {
+    if (f.tags) f.tags.forEach((t) => uniqueTagNames.add(t));
+  });
+
+  // Fetch only needed tags
+  const tagMap = new Map();
+  for (const tagName of uniqueTagNames) {
+    const tag = await DB.getTag(tagName);
+    if (tag) tagMap.set(tagName, tag);
+  }
 
   // Create map for metadata (using resolved feeds)
   const feedMap = {};
@@ -160,7 +172,7 @@ async function refreshUI() {
       DiscoverData,
       feedsWithEffectiveColor,
       (feed) => FeedService.addFeedDirectly(feed),
-      (pack) => FeedService.addDiscoverPack(pack, DiscoverData.feeds),
+      (pack) => DiscoverService.addDiscoverPack(pack, DiscoverData.feeds),
     );
   } else if (State.currentFeedId && State.currentFeedId.startsWith("custom:")) {
     // Custom View (managed by plugins)
@@ -209,9 +221,7 @@ async function refreshUI() {
       if (State.currentFeedId === "all")
         mainTitleEl.textContent = "All Articles";
       else {
-        const f = feedsWithEffectiveColor.find(
-          (x) => x.id === State.currentFeedId,
-        );
+        const f = feedMap[State.currentFeedId];
         if (f) mainTitleEl.textContent = f.title;
       }
     }

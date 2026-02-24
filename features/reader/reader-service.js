@@ -166,7 +166,8 @@ export const ReaderService = {
       }
 
       // Remove overlapping from array
-      article.cads = article.cads.filter((c) => !overlapping.includes(c));
+      const overlappingSet = new Set(overlapping);
+      article.cads = article.cads.filter((c) => !overlappingSet.has(c));
 
       // Update new CAD geometry
       cadData.position = minPos;

@@ -185,6 +185,8 @@ export class Interface {
   get data() {
     return {
       getArticle: (id) => DB.getArticle(id),
+      getFeed: (id) => DB.getFeed(id),
+      getTag: (name) => DB.getTag(name),
       saveArticle: (article) => DB.saveArticles([article]),
       getAllFeeds: () => DB.getAllFeeds(),
       stats: {

@@ -143,17 +143,16 @@ export const FeedModal = {
     const actionBtns = document.getElementById("feed-modal-action-buttons");
     if (actionBtns) actionBtns.style.display = "none";
 
-    const allTags = await DB.getAllTags();
-    const tagMap = new Map(allTags.map((t) => [t.name, t]));
-
-    Tags.currentTags = (feed.tags || []).map((tagName) => {
-      return (
-        tagMap.get(tagName) || {
+    Tags.currentTags = [];
+    for (const tagName of feed.tags || []) {
+      const existingTag = await DB.getTag(tagName);
+      Tags.currentTags.push(
+        existingTag || {
           name: tagName,
           color: Utils.getRandomFromPalette(),
-        }
+        },
       );
-    });
+    }
 
     Tags.renderTagEditor();
     Tags.renderColorPicker("color-picker-container", feed.color);

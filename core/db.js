@@ -16,7 +16,14 @@ function openDB() {
       const tx = e.target.transaction;
 
       if (!db.objectStoreNames.contains("feeds")) {
-        db.createObjectStore("feeds", { keyPath: "id" });
+        const feedStore = db.createObjectStore("feeds", { keyPath: "id" });
+        feedStore.createIndex("url", "url", { unique: true });
+      } else {
+        // Migration for v4: Add url index if missing
+        const feedStore = tx.objectStore("feeds");
+        if (!feedStore.indexNames.contains("url")) {
+          feedStore.createIndex("url", "url", { unique: true });
+        }
       }
       if (!db.objectStoreNames.contains("articles")) {
         const articleStore = db.createObjectStore("articles", {
@@ -110,6 +117,39 @@ function _applyFeedStatsDelta(feedStore, feedId, delta) {
       if (changed) feedStore.put(feed);
     }
   };
+}
+
+async function getFeed(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("feeds", "readonly");
+    const store = tx.objectStore("feeds");
+    const request = store.get(id);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function getTag(name) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("tags", "readonly");
+    const store = tx.objectStore("tags");
+    const request = store.get(name);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function getFeedCount() {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("feeds", "readonly");
+    const store = tx.objectStore("feeds");
+    const request = store.count();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
 }
 
 async function getAllFeeds() {
@@ -543,6 +583,17 @@ async function performCleanup(settings) {
 
 // --- Plugin Storage Methods ---
 
+async function getPlugin(id) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction("plugins", "readonly");
+    const store = tx.objectStore("plugins");
+    const req = store.get(id);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
 async function getPlugins() {
   const db = await openDB();
   return new Promise((resolve, reject) => {
@@ -627,6 +678,9 @@ async function pluginStorageGet(key) {
 
 export const DB = {
   openDB,
+  getFeed,
+  getFeedCount,
+  getTag,
   getAllFeeds,
   getAllTags,
   saveFeed,
@@ -644,6 +698,7 @@ export const DB = {
   updateFeedStat,
   updateFeedReadStats,
   performCleanup,
+  getPlugin,
   getPlugins,
   savePlugin,
   deletePlugin,

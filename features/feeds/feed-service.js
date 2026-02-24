@@ -14,7 +14,7 @@ export const FeedService = {
   // Factory method for creating a consistent Feed object
   createFeedObject: function (data) {
     return {
-      id: data.id || Date.now().toString() + Math.floor(Math.random() * 1000),
+      id: data.url, // ID is always the URL
       url: data.url,
       title: data.title || "New Feed",
       description: data.description || "",
@@ -104,8 +104,8 @@ export const FeedService = {
   // Core Logic extracted for re-use
   _createFeed: async function (url, title, color, tags, autofetch, iconData) {
     // Check for duplicates
-    const existingFeeds = await DB.getAllFeeds();
-    if (existingFeeds.some((f) => f.url === url)) {
+    const existingFeed = await DB.getFeed(url);
+    if (existingFeed) {
       throw new Error("Feed with this URL already exists");
     }
 
@@ -160,18 +160,14 @@ export const FeedService = {
         iconData = iconResult.iconData;
       }
 
-      const tagsWithColors = feedData.tags.map((tName) => ({
-        name: tName,
-        color: Utils.getRandomFromPalette(),
-      }));
-
-      // For existing tags in DB, we prefer their existing color
-      const existingTags = await DB.getAllTags();
-      const tagMap = new Map(existingTags.map((t) => [t.name, t.color]));
-
-      tagsWithColors.forEach((t) => {
-        if (tagMap.has(t.name)) t.color = tagMap.get(t.name);
-      });
+      const tagsWithColors = [];
+      for (const tName of feedData.tags) {
+        const existingTag = await DB.getTag(tName);
+        tagsWithColors.push({
+          name: tName,
+          color: existingTag ? existingTag.color : Utils.getRandomFromPalette(),
+        });
+      }
 
       // Accent color from discover pack is treated as manual color preference
       const manualColor = feedData.accentColor || null;
@@ -202,54 +198,21 @@ export const FeedService = {
     }
   },
 
-  addDiscoverPack: async function (pack, allDiscoverFeeds, onComplete) {
-    const feedsToAdd = pack.feeds
-      .map((fid) => allDiscoverFeeds.find((f) => f.id === fid))
-      .filter(Boolean);
-
-    if (feedsToAdd.length === 0) return;
-
-    Utils.showToast(`Adding ${feedsToAdd.length} feeds...`);
-
-    const existingFeeds = await DB.getAllFeeds();
-    const existingUrls = new Set(existingFeeds.map((f) => f.url));
-
-    let addedCount = 0;
-    for (const feedData of feedsToAdd) {
-      if (existingUrls.has(feedData.url)) continue;
-
-      await this.addFeedDirectly(feedData);
-      addedCount++;
-    }
-
-    if (addedCount > 0) {
-      Utils.showToast(`Pack added (${addedCount} new feeds)`);
-      Events.emit(Events.FEEDS_UPDATED);
-      Events.emit(Events.ARTICLES_UPDATED);
-    } else {
-      Utils.showToast(`All feeds in pack already exist`);
-    }
-
-    if (onComplete) onComplete();
-  },
-
   updateFeed: async function (values) {
     if (!values.id) return;
 
     try {
       // Check for tag color changes
-      const allTags = await DB.getAllTags();
-      const dbTagMap = new Map(allTags.map((t) => [t.name, t.color]));
       let tagsColorChanged = false;
       for (const t of values.tags) {
-        if (dbTagMap.get(t.name) !== t.color) {
+        const existingTag = await DB.getTag(t.name);
+        if (existingTag && existingTag.color !== t.color) {
           tagsColorChanged = true;
           break;
         }
       }
 
-      const feeds = await DB.getAllFeeds();
-      const feed = feeds.find((f) => f.id === values.id);
+      const feed = await DB.getFeed(values.id);
 
       if (feed) {
         const tagNames = values.tags.map((t) => t.name);

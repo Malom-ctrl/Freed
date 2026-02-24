@@ -35,7 +35,7 @@ export const Manager = {
         this.incompatiblePlugins.set(p.id, false);
       }
 
-      if (p.enabled) {
+      if (p.enabled && !this.activePlugins.has(p.id)) {
         await this.loadAndActivate(p);
       }
     }
@@ -125,8 +125,7 @@ export const Manager = {
       throw new Error("Cannot enable incompatible plugin.");
     }
 
-    const plugins = await DB.getPlugins();
-    const plugin = plugins.find((p) => p.id === id);
+    const plugin = await DB.getPlugin(id);
     if (plugin) {
       plugin.enabled = enabled;
       await DB.savePlugin(plugin);

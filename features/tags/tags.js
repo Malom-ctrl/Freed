@@ -28,16 +28,16 @@ export const Tags = {
       let matches = [];
 
       if (type === "feed") {
+        const currentTagNames = new Set(this.currentTags.map((ct) => ct.name));
         matches = allTags.filter(
           (t) =>
-            t.name.toLowerCase().includes(val) &&
-            !this.currentTags.find((ct) => ct.name === t.name),
+            t.name.toLowerCase().includes(val) && !currentTagNames.has(t.name),
         );
       } else if (type === "filter") {
+        const filterTagsSet = new Set(State.filters.tags);
         matches = allTags.filter(
           (t) =>
-            t.name.toLowerCase().includes(val) &&
-            !State.filters.tags.includes(t.name),
+            t.name.toLowerCase().includes(val) && !filterTagsSet.has(t.name),
         );
       }
 
@@ -89,10 +89,7 @@ export const Tags = {
             return;
           }
 
-          const allTags = await DB.getAllTags();
-          const existing = allTags.find(
-            (t) => t.name.toLowerCase() === val.toLowerCase(),
-          );
+          const existing = await DB.getTag(val);
 
           const newTag = {
             name: existing ? existing.name : val,
@@ -138,10 +135,7 @@ export const Tags = {
             .getElementById("global-autocomplete")
             .classList.remove("show");
 
-          const allTags = await DB.getAllTags();
-          const existing = allTags.find(
-            (t) => t.name.toLowerCase() === val.toLowerCase(),
-          );
+          const existing = await DB.getTag(val);
 
           if (existing && !State.filters.tags.includes(existing.name)) {
             State.filters.tags.push(existing.name);

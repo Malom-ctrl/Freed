@@ -120,16 +120,14 @@ export const FilterBar = {
     const container = document.getElementById("filter-active-tags");
     if (!container) return;
 
-    const allTags = await DB.getAllTags();
-
     container.innerHTML = "";
 
-    const tagMap = new Map(allTags.map((t) => [t.name, t.color]));
+    for (const tagName of State.filters.tags) {
+      const tag = await DB.getTag(tagName);
+      const color = tag ? tag.color : "var(--primary)";
 
-    State.filters.tags.forEach((tagName) => {
       const pill = document.createElement("span");
       pill.className = "tag-pill";
-      const color = tagMap.get(tagName) || "var(--primary)";
       pill.style.backgroundColor = color;
       pill.style.color = "#fff";
 
@@ -150,7 +148,7 @@ export const FilterBar = {
 
       pill.appendChild(removeSpan);
       container.appendChild(pill);
-    });
+    }
   },
 
   setupListeners: function () {
