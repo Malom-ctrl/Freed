@@ -138,60 +138,14 @@ export const CADManager = {
     const contentEl = document.getElementById("reader-content");
     if (!contentEl) return;
 
-    // 1. Create Markers to find approximate position
-    const startMarker = document.createElement("span");
-    startMarker.id = "cad-start-marker-" + Date.now();
-    const endMarker = document.createElement("span");
-    endMarker.id = "cad-end-marker-" + Date.now();
+    // Calculate text offset in the current DOM
+    const rangeBefore = document.createRange();
+    rangeBefore.setStart(contentEl, 0);
+    rangeBefore.setEnd(range.startContainer, range.startOffset);
+    const textOffset = rangeBefore.toString().length;
+    const selectionText = range.toString();
 
-    // 2. Insert Markers
-    const endRange = range.cloneRange();
-    endRange.collapse(false);
-    endRange.insertNode(endMarker);
-
-    const startRange = range.cloneRange();
-    startRange.collapse(true);
-    startRange.insertNode(startMarker);
-
-    // 3. Get HTML with markers
-    const tempDiv = document.createElement("div");
-    Array.from(contentEl.childNodes).forEach((node) =>
-      tempDiv.appendChild(node.cloneNode(true)),
-    );
-
-    const serializer = new XMLSerializer();
-    let tempHTML = "";
-    tempDiv.childNodes.forEach((node) => {
-      tempHTML += serializer.serializeToString(node);
-    });
-
-    // 4. Cleanup DOM immediately
-    startMarker.remove();
-    endMarker.remove();
-    contentEl.normalize();
-
-    // 5. Find offsets of markers
-    const startTag = `<span id="${startMarker.id}"></span>`;
-    const endTag = `<span id="${endMarker.id}"></span>`;
-
-    const startIndex = tempHTML.indexOf(startTag);
-    const endIndex = tempHTML.indexOf(endTag);
-
-    if (startIndex === -1 || endIndex === -1) {
-      console.error("Could not find markers in HTML");
-      return;
-    }
-
-    // 6. Extract the selected content (with CAD tags potentially)
-    const rawSelection = tempHTML.substring(
-      startIndex + startTag.length,
-      endIndex,
-    );
-
-    // 7. Clean CAD tags from selection to get the "target" content
-    const cleanSelection = this._cleanCADsFromHTML(rawSelection);
-
-    // 8. Get the original clean article content
+    // Get clean article HTML and Text
     const article = await DB.getArticle(State.currentArticleGuid);
     if (!article) return;
 
@@ -203,35 +157,105 @@ export const CADManager = {
       cleanArticleHTML = DOMPurify.sanitize(base);
     }
 
-    // 9. Search for closest occurrence
+    // Create a temp div to extract pure text from clean HTML (browser behavior)
+    const textDiv = document.createElement("div");
+    textDiv.innerHTML = cleanArticleHTML;
+    const cleanText = textDiv.textContent || "";
+
+    // Find the closest occurrence of selectionText in cleanText
     const indices = [];
     let pos = 0;
-    while ((pos = cleanArticleHTML.indexOf(cleanSelection, pos)) !== -1) {
+    while ((pos = cleanText.indexOf(selectionText, pos)) !== -1) {
       indices.push(pos);
       pos += 1;
     }
 
     if (indices.length === 0) {
-      console.warn(
-        "Could not find selected content in original article. Selection:",
-        cleanSelection,
-      );
+      console.warn("Could not find selected text in original article.");
       Utils.showToast("Selection mismatch - cannot create annotation");
       return;
     }
 
-    // Find closest index to startIndex
-    const bestIndex = indices.reduce((prev, curr) => {
-      return Math.abs(curr - startIndex) < Math.abs(prev - startIndex)
+    // Find closest index to textOffset
+    const bestTextIndex = indices.reduce((prev, curr) => {
+      return Math.abs(curr - textOffset) < Math.abs(prev - textOffset)
         ? curr
         : prev;
     });
+
+    // Map Text Index back to HTML Index
+    const getHtmlIndexFromTextIndex = (html, targetTextIndex) => {
+      let textCount = 0;
+      let i = 0;
+      let inTag = false;
+
+      while (i < html.length && textCount < targetTextIndex) {
+        if (html[i] === "<") {
+          inTag = true;
+        } else if (html[i] === ">") {
+          inTag = false;
+        } else if (!inTag) {
+          if (html[i] === "&") {
+            const end = html.indexOf(";", i);
+            if (end !== -1 && end - i < 10) {
+              textCount++; // Entity is 1 char
+              i = end; // Loop will increment
+            } else {
+              textCount++;
+            }
+          } else {
+            textCount++;
+          }
+        }
+        i++;
+      }
+      return i;
+    };
+
+    const htmlStart = getHtmlIndexFromTextIndex(
+      cleanArticleHTML,
+      bestTextIndex,
+    );
+
+    // Helper to skip tags from a given index to find the start of text
+    const skipTags = (html, index) => {
+      let i = index;
+      let inTag = false;
+      // If we start inside a tag (unlikely given getHtmlIndex logic, but possible if index points to '<')
+      if (html[i] === "<") inTag = true;
+
+      while (i < html.length) {
+        if (html[i] === "<") {
+          inTag = true;
+        } else if (html[i] === ">") {
+          inTag = false;
+        } else if (!inTag) {
+          return i;
+        }
+        i++;
+      }
+      return i;
+    };
+
+    // Adjust start to skip any tags (like </p><p>) that might be at the boundary
+    const adjustedHtmlStart = skipTags(cleanArticleHTML, htmlStart);
+
+    // For end index, we add the length.
+    const htmlEnd = getHtmlIndexFromTextIndex(
+      cleanArticleHTML,
+      bestTextIndex + selectionText.length,
+    );
 
     // 10. Generate Data
     let data = {};
     if (typeof dataOrGenerator === "function") {
       try {
-        data = await dataOrGenerator(cleanSelection);
+        // We pass the HTML content of the selection from the clean HTML
+        const cleanSelectionHTML = cleanArticleHTML.substring(
+          adjustedHtmlStart,
+          htmlEnd,
+        );
+        data = await dataOrGenerator(cleanSelectionHTML);
       } catch (e) {
         console.error("Error generating CAD data", e);
         Utils.showToast("Failed to generate annotation data");
@@ -246,9 +270,9 @@ export const CADManager = {
     // 11. Create CAD
     const cad = {
       type: type,
-      position: bestIndex,
-      length: cleanSelection.length,
-      originalContent: cleanSelection,
+      position: adjustedHtmlStart,
+      length: htmlEnd - adjustedHtmlStart,
+      originalContent: cleanArticleHTML.substring(adjustedHtmlStart, htmlEnd),
       data: data,
       created: Date.now(),
     };
