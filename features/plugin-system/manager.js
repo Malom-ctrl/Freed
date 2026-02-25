@@ -41,7 +41,7 @@ export const Manager = {
     }
   },
 
-  install: async function (manifest, sourceCode, installUrl) {
+  install: async function (manifest, fetchedFiles, installUrl) {
     // Pre-install Compatibility Check
     const compatRule = manifest.compatibleAppVersion || "*";
     if (!Utils.SemVer.satisfies(Config.APP_VERSION, compatRule)) {
@@ -56,7 +56,7 @@ export const Manager = {
       version: manifest.version,
       description: manifest.description,
       compatibleAppVersion: manifest.compatibleAppVersion,
-      code: sourceCode,
+      files: fetchedFiles,
       url: installUrl, // Save source URL for updates
       enabled: true,
       installedAt: Date.now(),
@@ -73,6 +73,58 @@ export const Manager = {
     console.log(`Plugin ${manifest.name} installed.`);
   },
 
+  _fetchPluginFiles: async function (manifest, baseUrl) {
+    const filesToFetch = manifest.files || [];
+    // Fallback for older manifests
+    if (filesToFetch.length === 0 && manifest.main) {
+      filesToFetch.push(manifest.main);
+      if (manifest.style) filesToFetch.push(manifest.style);
+    }
+
+    if (filesToFetch.length === 0) {
+      throw new Error("Invalid manifest: No files specified.");
+    }
+
+    const fetchedFiles = [];
+    for (const file of filesToFetch) {
+      if (!file.endsWith(".js") && !file.endsWith(".css")) {
+        throw new Error(
+          `Invalid file type: ${file}. Only .js and .css are allowed.`,
+        );
+      }
+
+      const fileUrl = new URL(file, baseUrl).href;
+      const fileRes = await fetch(fileUrl);
+      if (!fileRes.ok) throw new Error(`Failed to fetch file: ${file}`);
+
+      const content = await fileRes.text();
+      const trimmed = content.trim();
+
+      if (trimmed.length === 0) {
+        throw new Error(`File is empty: ${file}`);
+      }
+
+      // Basic validation to prevent HTML error pages from being loaded as code
+      const lowerTrimmed = trimmed.toLowerCase();
+      if (
+        lowerTrimmed.startsWith("<!doctype html>") ||
+        lowerTrimmed.startsWith("<html")
+      ) {
+        throw new Error(
+          `File appears to be an HTML page, expected code: ${file}`,
+        );
+      }
+
+      fetchedFiles.push({
+        name: file,
+        content: content,
+        type: file.endsWith(".css") ? "css" : "js",
+      });
+    }
+
+    return fetchedFiles;
+  },
+
   installFromUrl: async function (url) {
     try {
       // 1. Fetch Manifest
@@ -80,21 +132,14 @@ export const Manager = {
       if (!manifestRes.ok) throw new Error("Failed to fetch manifest");
       const manifest = await manifestRes.json();
 
-      if (!manifest.id || !manifest.name || !manifest.main) {
-        throw new Error("Invalid manifest: Missing id, name, or main.");
+      if (!manifest.id || !manifest.name) {
+        throw new Error("Invalid manifest: Missing id or name.");
       }
 
-      // 2. Resolve Main Script URL
-      // If 'main' is relative, resolve it against the manifest URL
-      const mainScriptUrl = new URL(manifest.main, url).href;
-
-      // 3. Fetch Script
-      const scriptRes = await fetch(mainScriptUrl);
-      if (!scriptRes.ok) throw new Error("Failed to fetch main script");
-      const code = await scriptRes.text();
+      const fetchedFiles = await this._fetchPluginFiles(manifest, url);
 
       // 4. Install
-      await this.install(manifest, code, url);
+      await this.install(manifest, fetchedFiles, url);
       return true;
     } catch (e) {
       console.error("Install from URL failed:", e);
@@ -104,15 +149,41 @@ export const Manager = {
 
   loadAndActivate: async function (pluginData) {
     try {
-      const blob = new Blob([pluginData.code], { type: "text/javascript" });
-      const url = URL.createObjectURL(blob);
-      const module = await import(url);
-
       const api = new Interface(pluginData.id);
 
-      if (typeof module.activate === "function") {
+      const files = pluginData.files || [];
+
+      let moduleUrl = null;
+      let module = null;
+
+      for (const file of files) {
+        if (file.type === "css") {
+          const styleId = `plugin-style-${pluginData.id}-${file.name.replace(/[^a-zA-Z0-9]/g, "-")}`;
+          let styleEl = document.getElementById(styleId);
+          if (!styleEl) {
+            styleEl = document.createElement("style");
+            styleEl.id = styleId;
+            document.head.appendChild(styleEl);
+          }
+          styleEl.textContent = file.content;
+        } else if (file.type === "js") {
+          const blob = new Blob([file.content], { type: "text/javascript" });
+          const url = URL.createObjectURL(blob);
+          const loadedModule = await import(url);
+
+          if (typeof loadedModule.activate === "function") {
+            module = loadedModule;
+            moduleUrl = url;
+          }
+        }
+      }
+
+      if (module && typeof module.activate === "function") {
         await module.activate(api);
-        this.activePlugins.set(pluginData.id, { module, url });
+        this.activePlugins.set(pluginData.id, { module, url: moduleUrl });
+      } else {
+        // If no activate function was found, just mark it active
+        this.activePlugins.set(pluginData.id, { url: moduleUrl });
       }
     } catch (e) {
       console.error(`Failed to activate plugin ${pluginData.id}`, e);
@@ -168,12 +239,11 @@ export const Manager = {
         if (!Utils.SemVer.satisfies(Config.APP_VERSION, compatRule))
           return false;
 
-        // Fetch Code
-        const mainScriptUrl = new URL(remoteManifest.main, plugin.url).href;
-        const scriptRes = await fetch(mainScriptUrl);
-        if (!scriptRes.ok) return false;
-
-        const code = await scriptRes.text();
+        // Fetch Files
+        const fetchedFiles = await this._fetchPluginFiles(
+          remoteManifest,
+          plugin.url,
+        );
 
         // Update DB
         const newPluginData = {
@@ -182,8 +252,11 @@ export const Manager = {
           version: remoteManifest.version,
           description: remoteManifest.description,
           compatibleAppVersion: remoteManifest.compatibleAppVersion,
-          code: code,
+          files: fetchedFiles,
         };
+        delete newPluginData.code;
+        delete newPluginData.style;
+
         await DB.savePlugin(newPluginData);
         return true;
       } catch (e) {
