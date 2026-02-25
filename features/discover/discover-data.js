@@ -7,7 +7,6 @@ export const DiscoverData = {
       url: "https://www.dailytelegraph.com.au/news/breaking-news/rss",
       description: "We're for Sydney",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_smh",
@@ -15,7 +14,6 @@ export const DiscoverData = {
       url: "https://www.smh.com.au/rss/feed.xml",
       description: "Top Headlines",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_heraldsun",
@@ -23,7 +21,6 @@ export const DiscoverData = {
       url: "https://www.heraldsun.com.au/news/breaking-news/rss",
       description: "Breaking News from Melbourne",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_abc",
@@ -31,7 +28,6 @@ export const DiscoverData = {
       url: "https://www.abc.net.au/news/feed/1948/rss.xml",
       description: "Australian Broadcasting Corporation",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_theage",
@@ -39,7 +35,6 @@ export const DiscoverData = {
       url: "https://www.theage.com.au/rss/feed.xml",
       description: "Top News",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_couriermail",
@@ -47,7 +42,6 @@ export const DiscoverData = {
       url: "https://www.couriermail.com.au/rss",
       description: "Brisbane and Queensland",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_perthnow",
@@ -55,7 +49,6 @@ export const DiscoverData = {
       url: "https://www.perthnow.com.au/news/feed",
       description: "PerthNow news",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_canberratimes",
@@ -63,7 +56,6 @@ export const DiscoverData = {
       url: "https://www.canberratimes.com.au/rss.xml",
       description: "Canberra news",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_brisbanetimes",
@@ -71,7 +63,6 @@ export const DiscoverData = {
       url: "https://www.brisbanetimes.com.au/rss/feed.xml",
       description: "Brisbane News",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_independent",
@@ -79,7 +70,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/IndependentAustralia",
       description: "Independent Australia News",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_businessnews",
@@ -87,7 +77,6 @@ export const DiscoverData = {
       url: "https://www.businessnews.com.au/rssfeed/latest.rss",
       description: "Latest news headlines",
       tags: ["News", "Australia", "Business"],
-      accentColor: "#000080",
     },
     {
       id: "au_indaily",
@@ -95,7 +84,6 @@ export const DiscoverData = {
       url: "https://indaily.com.au/feed/",
       description: "Adelaide News",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_mercury",
@@ -103,7 +91,6 @@ export const DiscoverData = {
       url: "https://www.themercury.com.au/rss",
       description: "Hobart and Tasmania",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_crikey",
@@ -111,7 +98,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/com/rCTl",
       description: "Politics, media, business",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
     {
       id: "au_kusa",
@@ -119,7 +105,6 @@ export const DiscoverData = {
       url: "https://rssfeeds.9news.com/kusa/home&x=1",
       description: "KUSA Rss Feed",
       tags: ["News", "USA"],
-      accentColor: "#000080",
     }, // Note: KUSA is actually US/Denver based on URL
     {
       id: "au_michaelwest",
@@ -127,7 +112,6 @@ export const DiscoverData = {
       url: "https://www.michaelwest.com.au/feed/",
       description: "Investigative Journalism",
       tags: ["News", "Australia"],
-      accentColor: "#000080",
     },
 
     // --- Bangladesh ---
@@ -137,7 +121,6 @@ export const DiscoverData = {
       url: "https://www.thedailystar.net/frontpage/rss.xml",
       description: "Headlines",
       tags: ["News", "Bangladesh"],
-      accentColor: "#006a4e",
     },
     {
       id: "bd_bd24live",
@@ -145,7 +128,6 @@ export const DiscoverData = {
       url: "https://www.bd24live.com/feed",
       description: "Bangla Online News Portal",
       tags: ["News", "Bangladesh"],
-      accentColor: "#006a4e",
     },
     {
       id: "bd_bdnews24",
@@ -153,7 +135,6 @@ export const DiscoverData = {
       url: "https://bdnews24.com/?widgetName=rssfeed&widgetId=1150&getXmlFeed=true",
       description: "RSS feed",
       tags: ["News", "Bangladesh"],
-      accentColor: "#006a4e",
     },
     {
       id: "bd_banglanews",
@@ -161,7 +142,6 @@ export const DiscoverData = {
       url: "https://www.banglanews24.com/rss/rss.xml",
       description: "banglanews24.com",
       tags: ["News", "Bangladesh", "Bengali"],
-      accentColor: "#006a4e",
     },
     {
       id: "bd_jugantor",
@@ -169,7 +149,6 @@ export const DiscoverData = {
       url: "https://www.jugantor.com/feed/rss.xml",
       description: "Latest topics",
       tags: ["News", "Bangladesh", "Bengali"],
-      accentColor: "#006a4e",
     },
     {
       id: "bd_jagonews",
@@ -177,7 +156,6 @@ export const DiscoverData = {
       url: "https://www.jagonews24.com/rss/rss.xml",
       description: "Latest Jago News",
       tags: ["News", "Bangladesh", "Bengali"],
-      accentColor: "#006a4e",
     },
     {
       id: "bd_kalerkantho",
@@ -185,7 +163,6 @@ export const DiscoverData = {
       url: "https://www.kalerkantho.com/rss.xml",
       description: "RSS Feed",
       tags: ["News", "Bangladesh", "Bengali"],
-      accentColor: "#006a4e",
     },
     {
       id: "bd_prothomalo",
@@ -193,7 +170,6 @@ export const DiscoverData = {
       url: "https://www.prothomalo.com/feed/",
       description: "Latest news",
       tags: ["News", "Bangladesh", "Bengali"],
-      accentColor: "#006a4e",
     },
 
     // --- Brazil ---
@@ -203,7 +179,6 @@ export const DiscoverData = {
       url: "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml",
       description: "Em cima da hora",
       tags: ["News", "Brazil", "Portuguese"],
-      accentColor: "#009c3b",
     },
     {
       id: "br_ebc",
@@ -211,7 +186,6 @@ export const DiscoverData = {
       url: "https://www.ebc.com.br/rss/feed.xml",
       description: "RSS",
       tags: ["News", "Brazil", "Portuguese"],
-      accentColor: "#009c3b",
     },
     {
       id: "br_r7",
@@ -219,7 +193,6 @@ export const DiscoverData = {
       url: "https://noticias.r7.com/feed.xml",
       description: "Noticias",
       tags: ["News", "Brazil", "Portuguese"],
-      accentColor: "#009c3b",
     },
     {
       id: "br_uol",
@@ -227,7 +200,6 @@ export const DiscoverData = {
       url: "https://rss.home.uol.com.br/index.xml",
       description: "Home UOL",
       tags: ["News", "Brazil", "Portuguese"],
-      accentColor: "#009c3b",
     },
     {
       id: "br_riotimes",
@@ -235,7 +207,6 @@ export const DiscoverData = {
       url: "https://riotimesonline.com/feed/",
       description: "News in Rio de Janeiro",
       tags: ["News", "Brazil", "English"],
-      accentColor: "#009c3b",
     },
     {
       id: "br_brasilwire",
@@ -243,7 +214,6 @@ export const DiscoverData = {
       url: "https://www.brasilwire.com/feed/",
       description: "News",
       tags: ["News", "Brazil", "English"],
-      accentColor: "#009c3b",
     },
     {
       id: "br_jornaldebrasilia",
@@ -251,7 +221,6 @@ export const DiscoverData = {
       url: "https://jornaldebrasilia.com.br/feed/",
       description: "Informação e Opinião",
       tags: ["News", "Brazil", "Portuguese"],
-      accentColor: "#009c3b",
     },
 
     // --- Canada ---
@@ -261,7 +230,6 @@ export const DiscoverData = {
       url: "https://www.cbc.ca/cmlink/rss-topstories",
       description: "Top Stories",
       tags: ["News", "Canada"],
-      accentColor: "#FF0000",
     },
     {
       id: "ca_ctv",
@@ -269,7 +237,6 @@ export const DiscoverData = {
       url: "https://www.ctvnews.ca/rss/ctvnews-ca-top-stories-public-rss-1.822009",
       description: "Latest news",
       tags: ["News", "Canada"],
-      accentColor: "#FF0000",
     },
     {
       id: "ca_global",
@@ -277,7 +244,6 @@ export const DiscoverData = {
       url: "https://globalnews.ca/feed/",
       description: "Global News",
       tags: ["News", "Canada"],
-      accentColor: "#FF0000",
     },
     {
       id: "ca_financialpost",
@@ -285,7 +251,6 @@ export const DiscoverData = {
       url: "https://business.financialpost.com/feed/",
       description: "Business News",
       tags: ["News", "Canada", "Business"],
-      accentColor: "#FF0000",
     },
     {
       id: "ca_nationalpost",
@@ -293,7 +258,6 @@ export const DiscoverData = {
       url: "https://nationalpost.com/feed/",
       description: "Canadian News",
       tags: ["News", "Canada"],
-      accentColor: "#FF0000",
     },
     {
       id: "ca_ottawacitizen",
@@ -301,7 +265,6 @@ export const DiscoverData = {
       url: "https://ottawacitizen.com/feed/",
       description: "Ottawa Latest News",
       tags: ["News", "Canada"],
-      accentColor: "#FF0000",
     },
     {
       id: "ca_theprovince",
@@ -309,7 +272,6 @@ export const DiscoverData = {
       url: "https://theprovince.com/feed/",
       description: "Vancouver News",
       tags: ["News", "Canada"],
-      accentColor: "#FF0000",
     },
     {
       id: "ca_lapresse",
@@ -317,7 +279,6 @@ export const DiscoverData = {
       url: "https://www.lapresse.ca/actualites/rss",
       description: "Actualités",
       tags: ["News", "Canada", "French"],
-      accentColor: "#FF0000",
     },
     {
       id: "ca_torontostar",
@@ -325,7 +286,6 @@ export const DiscoverData = {
       url: "https://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.topstories.rss",
       description: "Top Stories",
       tags: ["News", "Canada"],
-      accentColor: "#FF0000",
     },
     {
       id: "ca_torontosun",
@@ -333,7 +293,6 @@ export const DiscoverData = {
       url: "https://torontosun.com/category/news/feed",
       description: "Toronto Sun",
       tags: ["News", "Canada"],
-      accentColor: "#FF0000",
     },
 
     // --- France ---
@@ -343,7 +302,6 @@ export const DiscoverData = {
       url: "https://www.france24.com/en/rss",
       description: "International news",
       tags: ["News", "France"],
-      accentColor: "#0055A4",
     },
     {
       id: "fr_mediapart",
@@ -351,7 +309,6 @@ export const DiscoverData = {
       url: "https://www.mediapart.fr/articles/feed",
       description: "Independent Journalism",
       tags: ["News", "France", "French"],
-      accentColor: "#0055A4",
     },
     {
       id: "fr_parisstar",
@@ -359,7 +316,6 @@ export const DiscoverData = {
       url: "https://www.parisstaronline.com/feed",
       description: "Paris Star",
       tags: ["News", "France"],
-      accentColor: "#0055A4",
     },
     {
       id: "fr_lemonde",
@@ -367,7 +323,6 @@ export const DiscoverData = {
       url: "https://www.lemonde.fr/rss/une.xml",
       description: "Actualités et Infos",
       tags: ["News", "France", "French"],
-      accentColor: "#0055A4",
     },
     {
       id: "fr_obs",
@@ -375,7 +330,6 @@ export const DiscoverData = {
       url: "https://www.nouvelobs.com/a-la-une/rss.xml",
       description: "Actualité politique",
       tags: ["News", "France", "French"],
-      accentColor: "#0055A4",
     },
     {
       id: "fr_franceinfo",
@@ -383,7 +337,6 @@ export const DiscoverData = {
       url: "https://www.francetvinfo.fr/titres.rss",
       description: "Les Titres",
       tags: ["News", "France", "French"],
-      accentColor: "#0055A4",
     },
     {
       id: "fr_huffpost",
@@ -391,7 +344,6 @@ export const DiscoverData = {
       url: "https://www.huffingtonpost.fr/feeds/index.xml",
       description: "HuffPost",
       tags: ["News", "France", "French"],
-      accentColor: "#0055A4",
     },
     {
       id: "fr_ladepeche",
@@ -399,7 +351,6 @@ export const DiscoverData = {
       url: "https://www.ladepeche.fr/rss.xml",
       description: "Occitanie",
       tags: ["News", "France", "French"],
-      accentColor: "#0055A4",
     },
     {
       id: "fr_diplomatie",
@@ -407,7 +358,6 @@ export const DiscoverData = {
       url: "https://www.diplomatie.gouv.fr/spip.php?page=backend-fd&lang=en",
       description: "Foreign Affairs",
       tags: ["News", "France", "Politics"],
-      accentColor: "#0055A4",
     },
     {
       id: "fr_lessentiel",
@@ -415,7 +365,6 @@ export const DiscoverData = {
       url: "https://www.sudouest.fr/essentiel/rss.xml",
       description: "Sud Ouest",
       tags: ["News", "France", "French"],
-      accentColor: "#0055A4",
     },
     {
       id: "fr_ouestfrance",
@@ -423,7 +372,6 @@ export const DiscoverData = {
       url: "https://www.ouest-france.fr/rss-en-continu.xml",
       description: "Dernières minutes",
       tags: ["News", "France", "French"],
-      accentColor: "#0055A4",
     },
 
     // --- Germany ---
@@ -433,7 +381,6 @@ export const DiscoverData = {
       url: "https://newsfeed.zeit.de/index",
       description: "Nachrichten",
       tags: ["News", "Germany", "German"],
-      accentColor: "#DD0000",
     },
     {
       id: "de_focus",
@@ -441,7 +388,6 @@ export const DiscoverData = {
       url: "https://rss.focus.de/fol/XML/rss_folnews.xml",
       description: "Aktuelle Nachrichten",
       tags: ["News", "Germany", "German"],
-      accentColor: "#DD0000",
     },
     {
       id: "de_faz",
@@ -449,7 +395,6 @@ export const DiscoverData = {
       url: "https://www.faz.net/rss/aktuell/",
       description: "Aktuell",
       tags: ["News", "Germany", "German"],
-      accentColor: "#DD0000",
     },
     {
       id: "de_tagesschau",
@@ -457,7 +402,6 @@ export const DiscoverData = {
       url: "https://www.tagesschau.de/xml/rss2",
       description: "Nachrichten der ARD",
       tags: ["News", "Germany", "German"],
-      accentColor: "#DD0000",
     },
     {
       id: "de_dw",
@@ -465,7 +409,6 @@ export const DiscoverData = {
       url: "https://rss.dw.com/rdf/rss-en-all",
       description: "News from Germany",
       tags: ["News", "Germany"],
-      accentColor: "#DD0000",
     },
 
     // --- Hong Kong ---
@@ -475,7 +418,6 @@ export const DiscoverData = {
       url: "https://www.hongkongfp.com/feed/",
       description: "Independent",
       tags: ["News", "Hong Kong"],
-      accentColor: "#DE2910",
     },
     {
       id: "hk_standard",
@@ -483,7 +425,6 @@ export const DiscoverData = {
       url: "https://www.thestandard.com.hk/newsfeed/latest/news.xml",
       description: "Latest headlines",
       tags: ["News", "Hong Kong"],
-      accentColor: "#DE2910",
     },
     {
       id: "hk_headline",
@@ -491,7 +432,6 @@ export const DiscoverData = {
       url: "https://hd.stheadline.com/rss/news/daily/",
       description: "Headline Daily",
       tags: ["News", "Hong Kong", "Chinese"],
-      accentColor: "#DE2910",
     },
     {
       id: "hk_hket",
@@ -499,7 +439,6 @@ export const DiscoverData = {
       url: "https://www.hket.com/rss/hongkong",
       description: "HKET",
       tags: ["News", "Hong Kong", "Chinese", "Business"],
-      accentColor: "#DE2910",
     },
     {
       id: "hk_hongkongnews",
@@ -507,7 +446,6 @@ export const DiscoverData = {
       url: "https://feeds.hongkongnews.net/rss/b82693edf38ebff8",
       description: "Latest RSS headlines",
       tags: ["News", "Hong Kong"],
-      accentColor: "#DE2910",
     },
 
     // --- India ---
@@ -517,7 +455,6 @@ export const DiscoverData = {
       url: "https://feeds.bbci.co.uk/news/world/asia/india/rss.xml",
       description: "BBC India",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_guardian",
@@ -525,7 +462,6 @@ export const DiscoverData = {
       url: "https://www.theguardian.com/world/india/rss",
       description: "Guardian India",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_sebi",
@@ -533,7 +469,6 @@ export const DiscoverData = {
       url: "https://www.sebi.gov.in/sebirss.xml",
       description: "SEBI Feed",
       tags: ["News", "India", "Finance"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_toi",
@@ -541,7 +476,6 @@ export const DiscoverData = {
       url: "https://timesofindia.indiatimes.com/rssfeedstopstories.cms",
       description: "Breaking news",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_thehindu",
@@ -549,7 +483,6 @@ export const DiscoverData = {
       url: "https://www.thehindu.com/feeder/default.rss",
       description: "National Newspaper",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_ndtv",
@@ -557,7 +490,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/ndtvnews-top-stories",
       description: "Top Stories",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_indiatoday",
@@ -565,7 +497,6 @@ export const DiscoverData = {
       url: "https://www.indiatoday.in/rss/home",
       description: "Latest Stories",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_indianexpress",
@@ -573,7 +504,6 @@ export const DiscoverData = {
       url: "https://indianexpress.com/print/front-page/feed/",
       description: "Front Page",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_news18",
@@ -581,7 +511,6 @@ export const DiscoverData = {
       url: "https://www.news18.com/rss/world.xml",
       description: "World Section",
       tags: ["News", "India", "World"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_dna",
@@ -589,7 +518,6 @@ export const DiscoverData = {
       url: "https://www.dnaindia.com/feeds/india.xml",
       description: "DNA India",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_firstpost",
@@ -597,7 +525,6 @@ export const DiscoverData = {
       url: "https://www.firstpost.com/rss/india.xml",
       description: "Latest News",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_businessstandard",
@@ -605,7 +532,6 @@ export const DiscoverData = {
       url: "https://www.business-standard.com/rss/home_page_top_stories.rss",
       description: "Business News",
       tags: ["News", "India", "Business"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_outlook",
@@ -613,7 +539,6 @@ export const DiscoverData = {
       url: "https://www.outlookindia.com/rss/main/magazine",
       description: "Magazine",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_freepress",
@@ -621,7 +546,6 @@ export const DiscoverData = {
       url: "https://www.freepressjournal.in/stories.rss",
       description: "Breaking Headlines",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_deccanchronicle",
@@ -629,7 +553,6 @@ export const DiscoverData = {
       url: "https://www.deccanchronicle.com/rss_feed/",
       description: "Latest news",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_moneycontrol",
@@ -637,7 +560,6 @@ export const DiscoverData = {
       url: "https://www.moneycontrol.com/rss/latestnews.xml",
       description: "Latest News",
       tags: ["News", "India", "Finance"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_economictimes",
@@ -645,7 +567,6 @@ export const DiscoverData = {
       url: "https://economictimes.indiatimes.com/rssfeedsdefault.cms",
       description: "Business",
       tags: ["News", "India", "Business"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_oneindia",
@@ -653,7 +574,6 @@ export const DiscoverData = {
       url: "https://www.oneindia.com/rss/news-fb.xml",
       description: "Latest Headlines",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_scroll",
@@ -661,7 +581,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/ScrollinArticles.rss",
       description: "Digital daily",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_financialexpress",
@@ -669,7 +588,6 @@ export const DiscoverData = {
       url: "https://www.financialexpress.com/feed/",
       description: "Business News",
       tags: ["News", "India", "Business"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_businessline",
@@ -677,7 +595,6 @@ export const DiscoverData = {
       url: "https://www.thehindubusinessline.com/feeder/default.rss",
       description: "Default RSS",
       tags: ["News", "India", "Business"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_techgenyz",
@@ -685,7 +602,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/techgenyz",
       description: "Tech News",
       tags: ["News", "India", "Tech"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_gujaratsamachar",
@@ -693,7 +609,6 @@ export const DiscoverData = {
       url: "https://www.gujaratsamachar.com/rss/top-stories",
       description: "Top Stories",
       tags: ["News", "India", "Gujarati"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_maharashtratimes",
@@ -701,7 +616,6 @@ export const DiscoverData = {
       url: "https://maharashtratimes.com/rssfeedsdefault.cms",
       description: "Marathi News",
       tags: ["News", "India", "Marathi"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_loksatta",
@@ -709,7 +623,6 @@ export const DiscoverData = {
       url: "https://www.loksatta.com/desh-videsh/feed/",
       description: "Marathi News",
       tags: ["News", "India", "Marathi"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_news18lokmat",
@@ -717,7 +630,6 @@ export const DiscoverData = {
       url: "https://lokmat.news18.com/rss/program.xml",
       description: "Program News",
       tags: ["News", "India", "Marathi"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_opindia",
@@ -725,7 +637,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/opindia",
       description: "Opinion",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_theprint",
@@ -733,7 +644,6 @@ export const DiscoverData = {
       url: "https://theprint.in/feed/",
       description: "Digital Platform",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_swarajya",
@@ -741,7 +651,6 @@ export const DiscoverData = {
       url: "https://prod-qt-images.s3.amazonaws.com/production/swarajya/feed.xml",
       description: "Swarajya",
       tags: ["News", "India"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_amarujala",
@@ -749,7 +658,6 @@ export const DiscoverData = {
       url: "https://www.amarujala.com/rss/breaking-news.xml",
       description: "Hindi News",
       tags: ["News", "India", "Hindi"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_navbharat",
@@ -757,7 +665,6 @@ export const DiscoverData = {
       url: "https://navbharattimes.indiatimes.com/rssfeedsdefault.cms",
       description: "Hindi News",
       tags: ["News", "India", "Hindi"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_patrika",
@@ -765,7 +672,6 @@ export const DiscoverData = {
       url: "https://api.patrika.com/rss/india-news",
       description: "Hindi News",
       tags: ["News", "India", "Hindi"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_jansatta",
@@ -773,7 +679,6 @@ export const DiscoverData = {
       url: "https://www.jansatta.com/feed/",
       description: "Hindi News",
       tags: ["News", "India", "Hindi"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_livehindustan",
@@ -781,7 +686,6 @@ export const DiscoverData = {
       url: "https://feed.livehindustan.com/rss/3127",
       description: "Hindi News",
       tags: ["News", "India", "Hindi"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_dainikbhaskar",
@@ -789,7 +693,6 @@ export const DiscoverData = {
       url: "https://www.bhaskar.com/rss-feed/1061/",
       description: "Hindi News",
       tags: ["News", "India", "Hindi"],
-      accentColor: "#FF9933",
     },
     {
       id: "in_divyabhaskar",
@@ -797,7 +700,6 @@ export const DiscoverData = {
       url: "https://www.divyabhaskar.co.in/rss-feed/1037/",
       description: "Gujarati News",
       tags: ["News", "India", "Gujarati"],
-      accentColor: "#FF9933",
     },
 
     // --- Indonesia ---
@@ -807,7 +709,6 @@ export const DiscoverData = {
       url: "https://www.republika.co.id/rss/",
       description: "Republika Online",
       tags: ["News", "Indonesia", "Indonesian"],
-      accentColor: "#FF0000",
     },
     {
       id: "id_tribun",
@@ -815,7 +716,6 @@ export const DiscoverData = {
       url: "https://www.tribunnews.com/rss",
       description: "Berita Terkini",
       tags: ["News", "Indonesia", "Indonesian"],
-      accentColor: "#FF0000",
     },
     {
       id: "id_merdeka",
@@ -823,7 +723,6 @@ export const DiscoverData = {
       url: "https://www.merdeka.com/feed/",
       description: "RSS 2.0",
       tags: ["News", "Indonesia", "Indonesian"],
-      accentColor: "#FF0000",
     },
     {
       id: "id_suara",
@@ -831,7 +730,6 @@ export const DiscoverData = {
       url: "https://www.suara.com/rss",
       description: "Kabar Berita Terkini",
       tags: ["News", "Indonesia", "Indonesian"],
-      accentColor: "#FF0000",
     },
 
     // --- Ireland ---
@@ -841,7 +739,6 @@ export const DiscoverData = {
       url: "https://www.thejournal.ie/feed/",
       description: "Internet Newspaper",
       tags: ["News", "Ireland"],
-      accentColor: "#169b62",
     },
     {
       id: "ie_breakingnews",
@@ -849,7 +746,6 @@ export const DiscoverData = {
       url: "https://feeds.breakingnews.ie/bntopstories",
       description: "Breaking news",
       tags: ["News", "Ireland"],
-      accentColor: "#169b62",
     },
     {
       id: "ie_the42",
@@ -857,7 +753,6 @@ export const DiscoverData = {
       url: "https://www.the42.ie/feed/",
       description: "The42",
       tags: ["News", "Ireland"],
-      accentColor: "#169b62",
     },
     {
       id: "ie_irishexaminer",
@@ -865,7 +760,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/ietopstories",
       description: "Top Stories",
       tags: ["News", "Ireland"],
-      accentColor: "#169b62",
     },
     {
       id: "ie_irishcentral",
@@ -873,7 +767,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/IrishCentral",
       description: "Top Stories",
       tags: ["News", "Ireland"],
-      accentColor: "#169b62",
     },
     {
       id: "ie_irishmirror",
@@ -881,7 +774,6 @@ export const DiscoverData = {
       url: "https://www.irishmirror.ie/?service=rss",
       description: "Home",
       tags: ["News", "Ireland"],
-      accentColor: "#169b62",
     },
 
     // --- Italy ---
@@ -891,7 +783,6 @@ export const DiscoverData = {
       url: "https://www.ansa.it/sito/ansait_rss.xml",
       description: "Agenzia Nazionale",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
     {
       id: "it_thelocal",
@@ -899,7 +790,6 @@ export const DiscoverData = {
       url: "https://feeds.thelocal.com/rss/it",
       description: "News in English",
       tags: ["News", "Italy", "English"],
-      accentColor: "#009246",
     },
     {
       id: "it_diariodelweb",
@@ -907,7 +797,6 @@ export const DiscoverData = {
       url: "https://www.diariodelweb.it/rss/home/",
       description: "RSS",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
     {
       id: "it_fanpage",
@@ -915,7 +804,6 @@ export const DiscoverData = {
       url: "https://www.fanpage.it/feed/",
       description: "Indipendente",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
     {
       id: "it_libero",
@@ -923,7 +811,6 @@ export const DiscoverData = {
       url: "https://www.liberoquotidiano.it/rss.xml",
       description: "Contents",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
     {
       id: "it_ilmattino",
@@ -931,7 +818,6 @@ export const DiscoverData = {
       url: "https://www.ilmattino.it/?sez=XML&args&p=search&args[box]=Home&limit=20&layout=rss",
       description: "Web",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
     {
       id: "it_adnkronos",
@@ -939,7 +825,6 @@ export const DiscoverData = {
       url: "https://rss.adnkronos.com/RSS_PrimaPagina.xml",
       description: "Ultimora",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
     {
       id: "it_milannews",
@@ -947,7 +832,6 @@ export const DiscoverData = {
       url: "https://www.milannews.it/rss/",
       description: "Milan News",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
     {
       id: "it_internazionale",
@@ -955,7 +839,6 @@ export const DiscoverData = {
       url: "https://www.internazionale.it/sitemaps/rss.xml",
       description: "Internazionale",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
     {
       id: "it_panorama",
@@ -963,7 +846,6 @@ export const DiscoverData = {
       url: "https://www.panorama.it/feeds/feed.rss",
       description: "Panorama",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
     {
       id: "it_guardian",
@@ -971,7 +853,6 @@ export const DiscoverData = {
       url: "https://www.theguardian.com/world/italy/rss",
       description: "Guardian Italy",
       tags: ["News", "Italy", "English"],
-      accentColor: "#009246",
     },
     {
       id: "it_repubblica",
@@ -979,7 +860,6 @@ export const DiscoverData = {
       url: "https://www.repubblica.it/rss/homepage/rss2.0.xml",
       description: "Homepage",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
     {
       id: "it_ilpost",
@@ -987,7 +867,6 @@ export const DiscoverData = {
       url: "https://www.ilpost.it/feed/",
       description: "Il Post",
       tags: ["News", "Italy", "Italian"],
-      accentColor: "#009246",
     },
 
     // --- Japan ---
@@ -997,7 +876,6 @@ export const DiscoverData = {
       url: "https://www.japantimes.co.jp/feed/topstories/",
       description: "Latest articles",
       tags: ["News", "Japan"],
-      accentColor: "#BC002D",
     },
     {
       id: "jp_japantoday",
@@ -1005,7 +883,6 @@ export const DiscoverData = {
       url: "https://japantoday.com/feed",
       description: "News and Discussion",
       tags: ["News", "Japan"],
-      accentColor: "#BC002D",
     },
     {
       id: "jp_newsonjapan",
@@ -1013,7 +890,6 @@ export const DiscoverData = {
       url: "https://www.newsonjapan.com/rss/top.xml",
       description: "Latest news",
       tags: ["News", "Japan"],
-      accentColor: "#BC002D",
     },
     {
       id: "jp_kyodo",
@@ -1021,7 +897,6 @@ export const DiscoverData = {
       url: "https://english.kyodonews.net/rss/all.xml",
       description: "Kyodo News+",
       tags: ["News", "Japan"],
-      accentColor: "#BC002D",
     },
     {
       id: "jp_bridge",
@@ -1029,7 +904,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/SdJapan",
       description: "Technology & Startups",
       tags: ["News", "Japan", "Tech"],
-      accentColor: "#BC002D",
     },
     {
       id: "jp_nyt",
@@ -1037,7 +911,6 @@ export const DiscoverData = {
       url: "https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/topic/destination/japan/rss.xml",
       description: "New York Times Japan",
       tags: ["News", "Japan"],
-      accentColor: "#BC002D",
     },
     {
       id: "jp_livedoor",
@@ -1045,7 +918,6 @@ export const DiscoverData = {
       url: "https://news.livedoor.com/topics/rss/top.xml",
       description: "News Topics",
       tags: ["News", "Japan", "Japanese"],
-      accentColor: "#BC002D",
     },
     {
       id: "jp_asahi",
@@ -1053,7 +925,6 @@ export const DiscoverData = {
       url: "https://rss.asahi.com/rss/asahi/newsheadlines.rdf",
       description: "News Headlines",
       tags: ["News", "Japan", "Japanese"],
-      accentColor: "#BC002D",
     },
 
     // --- Mexico ---
@@ -1063,7 +934,6 @@ export const DiscoverData = {
       url: "https://www.theguardian.com/world/mexico/rss",
       description: "Guardian Mexico",
       tags: ["News", "Mexico", "English"],
-      accentColor: "#006847",
     },
     {
       id: "mx_excelsior",
@@ -1071,7 +941,6 @@ export const DiscoverData = {
       url: "https://www.excelsior.com.mx/rss.xml",
       description: "RSS",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_reforma",
@@ -1079,7 +948,6 @@ export const DiscoverData = {
       url: "https://www.reforma.com/rss/portada.xml",
       description: "Portada",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_vanguardia",
@@ -1087,7 +955,6 @@ export const DiscoverData = {
       url: "https://vanguardia.com.mx/rss.xml",
       description: "Lo último",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_elsiglo",
@@ -1095,7 +962,6 @@ export const DiscoverData = {
       url: "https://www.elsiglodetorreon.com.mx/index.xml",
       description: "Portada",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_elfinanciero",
@@ -1103,7 +969,6 @@ export const DiscoverData = {
       url: "https://www.elfinanciero.com.mx/arc/outboundfeeds/rss/?outputType=xml",
       description: "News Feed",
       tags: ["News", "Mexico", "Spanish", "Business"],
-      accentColor: "#006847",
     },
     {
       id: "mx_elnorte",
@@ -1111,7 +976,6 @@ export const DiscoverData = {
       url: "https://www.elnorte.com/rss/portada.xml",
       description: "Portada",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_elinformador",
@@ -1119,7 +983,6 @@ export const DiscoverData = {
       url: "https://www.informador.mx/rss/ultimas-noticias.xml",
       description: "Jalisco",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_24horas",
@@ -1127,7 +990,6 @@ export const DiscoverData = {
       url: "https://www.24-horas.mx/feed/",
       description: "Diario Sin Límites",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_quequi",
@@ -1135,7 +997,6 @@ export const DiscoverData = {
       url: "https://quequi.com.mx/feed/",
       description: "Quintana Roo",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_debate",
@@ -1143,7 +1004,6 @@ export const DiscoverData = {
       url: "https://www.debate.com.mx/rss/feed.xml",
       description: "Últimas Noticias",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_dailynews",
@@ -1151,7 +1011,6 @@ export const DiscoverData = {
       url: "https://mexiconewsdaily.com/feed/",
       description: "Mexico News Daily",
       tags: ["News", "Mexico", "English"],
-      accentColor: "#006847",
     },
     {
       id: "mx_eldiario",
@@ -1159,7 +1018,6 @@ export const DiscoverData = {
       url: "https://diario.mx/jrz/media/sitemaps/rss.xml",
       description: "Ciudad Juárez",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_8columnas",
@@ -1167,7 +1025,6 @@ export const DiscoverData = {
       url: "https://8columnas.com.mx/feed/",
       description: "Periodismo",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
     {
       id: "mx_eluniversal",
@@ -1175,7 +1032,6 @@ export const DiscoverData = {
       url: "https://www.eluniversal.com.mx/seccion/1671/rss.xml",
       description: "El Gran Diario",
       tags: ["News", "Mexico", "Spanish"],
-      accentColor: "#006847",
     },
 
     // --- Myanmar ---
@@ -1185,7 +1041,6 @@ export const DiscoverData = {
       url: "https://myanmargazette.net/feed",
       description: "News Media",
       tags: ["News", "Myanmar"],
-      accentColor: "#FECB00",
     },
     {
       id: "mm_dvb",
@@ -1193,7 +1048,6 @@ export const DiscoverData = {
       url: "https://www.dvb.no/feed",
       description: "Democratic Voice of Burma",
       tags: ["News", "Myanmar"],
-      accentColor: "#FECB00",
     },
     {
       id: "mm_thithtoolwin",
@@ -1201,7 +1055,6 @@ export const DiscoverData = {
       url: "https://www.thithtoolwin.com/feeds/posts/default",
       description: "Daily News",
       tags: ["News", "Myanmar"],
-      accentColor: "#FECB00",
     },
 
     // --- Nigeria ---
@@ -1211,7 +1064,6 @@ export const DiscoverData = {
       url: "https://saharareporters.com/feeds/latest/feed",
       description: "All Content",
       tags: ["News", "Nigeria"],
-      accentColor: "#008751",
     },
     {
       id: "ng_bulletin",
@@ -1219,7 +1071,6 @@ export const DiscoverData = {
       url: "https://www.nigerianbulletin.com/forums/-/index.rss",
       description: "News Links",
       tags: ["News", "Nigeria"],
-      accentColor: "#008751",
     },
     {
       id: "ng_eye",
@@ -1227,7 +1078,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/Nigerianeye",
       description: "Latest Nigeria News",
       tags: ["News", "Nigeria"],
-      accentColor: "#008751",
     },
     {
       id: "ng_legit",
@@ -1235,7 +1085,6 @@ export const DiscoverData = {
       url: "https://www.legit.ng/rss/all.rss",
       description: "News in Nigeria Today",
       tags: ["News", "Nigeria"],
-      accentColor: "#008751",
     },
     {
       id: "ng_thenation",
@@ -1243,7 +1092,6 @@ export const DiscoverData = {
       url: "https://thenationonlineng.net/feed/",
       description: "Latest Nigeria News",
       tags: ["News", "Nigeria"],
-      accentColor: "#008751",
     },
     {
       id: "ng_dailypost",
@@ -1251,7 +1099,6 @@ export const DiscoverData = {
       url: "https://dailypost.ng/feed",
       description: "Daily Post",
       tags: ["News", "Nigeria"],
-      accentColor: "#008751",
     },
     {
       id: "ng_premiumtimes",
@@ -1259,7 +1106,6 @@ export const DiscoverData = {
       url: "https://www.premiumtimesng.com/feed",
       description: "Breaking news",
       tags: ["News", "Nigeria"],
-      accentColor: "#008751",
     },
     {
       id: "ng_informationng",
@@ -1267,7 +1113,6 @@ export const DiscoverData = {
       url: "https://www.informationng.com/feed",
       description: "Information Portal",
       tags: ["News", "Nigeria"],
-      accentColor: "#008751",
     },
     {
       id: "ng_guardian",
@@ -1275,7 +1120,6 @@ export const DiscoverData = {
       url: "https://guardian.ng/feed/",
       description: "Nigeria and World News",
       tags: ["News", "Nigeria"],
-      accentColor: "#008751",
     },
     {
       id: "ng_tribune",
@@ -1283,7 +1127,6 @@ export const DiscoverData = {
       url: "https://tribuneonlineng.com/feed/",
       description: "Breaking News",
       tags: ["News", "Nigeria"],
-      accentColor: "#008751",
     },
 
     // --- Pakistan ---
@@ -1293,7 +1136,6 @@ export const DiscoverData = {
       url: "https://tribune.com.pk/feed/home",
       description: "Latest happenings",
       tags: ["News", "Pakistan"],
-      accentColor: "#115740",
     },
     {
       id: "pk_nation",
@@ -1301,7 +1143,6 @@ export const DiscoverData = {
       url: "https://nation.com.pk/rss/top-stories",
       description: "Top Stories",
       tags: ["News", "Pakistan"],
-      accentColor: "#115740",
     },
     {
       id: "pk_jang",
@@ -1309,7 +1150,6 @@ export const DiscoverData = {
       url: "https://jang.com.pk/rss/1/1",
       description: "Urdu News",
       tags: ["News", "Pakistan", "Urdu"],
-      accentColor: "#115740",
     },
     {
       id: "pk_thenews",
@@ -1317,7 +1157,6 @@ export const DiscoverData = {
       url: "https://www.thenews.com.pk/rss/1/1",
       description: "English Language Newspaper",
       tags: ["News", "Pakistan"],
-      accentColor: "#115740",
     },
     {
       id: "pk_newsnblogs",
@@ -1325,7 +1164,6 @@ export const DiscoverData = {
       url: "https://newsnblogs.com/feed/",
       description: "Latest News",
       tags: ["News", "Pakistan"],
-      accentColor: "#115740",
     },
     {
       id: "pk_urdupoint",
@@ -1333,7 +1171,6 @@ export const DiscoverData = {
       url: "https://www.urdupoint.com/rss/urdupoint.rss",
       description: "All Urdu News",
       tags: ["News", "Pakistan", "Urdu"],
-      accentColor: "#115740",
     },
     {
       id: "pk_express",
@@ -1341,7 +1178,6 @@ export const DiscoverData = {
       url: "https://www.express.pk/feed/",
       description: "Latest Breaking News",
       tags: ["News", "Pakistan", "Urdu"],
-      accentColor: "#115740",
     },
 
     // --- Philippines ---
@@ -1351,7 +1187,6 @@ export const DiscoverData = {
       url: "https://www.inquirer.net/fullfeed",
       description: "Philippine News",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_pia",
@@ -1359,7 +1194,6 @@ export const DiscoverData = {
       url: "https://pia.gov.ph/news/feed.rss",
       description: "Latest News",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_interaksyon",
@@ -1367,7 +1201,6 @@ export const DiscoverData = {
       url: "https://www.interaksyon.com/feed/",
       description: "News features",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_manilatimes",
@@ -1375,7 +1208,6 @@ export const DiscoverData = {
       url: "https://www.manilatimes.net/rssfeed/",
       description: "News & Opinion",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_philstar",
@@ -1383,7 +1215,6 @@ export const DiscoverData = {
       url: "https://www.philstar.com/rss/headlines",
       description: "RSS Headlines",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_businessworld",
@@ -1391,7 +1222,6 @@ export const DiscoverData = {
       url: "https://www.bworldonline.com/feed/",
       description: "Business News",
       tags: ["News", "Philippines", "Business"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_sunstar",
@@ -1399,7 +1229,6 @@ export const DiscoverData = {
       url: "https://www.sunstar.com.ph/rssFeed/selected",
       description: "SunStar",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_philnews",
@@ -1407,7 +1236,6 @@ export const DiscoverData = {
       url: "https://www.philnews.xyz/feeds/posts/default?alt=rss",
       description: "Voice Against Biased Media",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_manilastandard",
@@ -1415,7 +1243,6 @@ export const DiscoverData = {
       url: "https://manilastandard.net/feed/all",
       description: "Defining The News",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_gma",
@@ -1423,7 +1250,6 @@ export const DiscoverData = {
       url: "https://data.gmanews.tv/gno/rss/news/feed.xml",
       description: "GMA News Online",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_currentph",
@@ -1431,7 +1257,6 @@ export const DiscoverData = {
       url: "https://currentph.com/feed/",
       description: "Latest Stories",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_topgear",
@@ -1439,7 +1264,6 @@ export const DiscoverData = {
       url: "https://www.topgear.com.ph/feed/rss1",
       description: "Auto News",
       tags: ["News", "Philippines", "Cars"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_eagle",
@@ -1447,7 +1271,6 @@ export const DiscoverData = {
       url: "https://www.eaglenews.ph/feed/",
       description: "Breaking News",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_unbox",
@@ -1455,7 +1278,6 @@ export const DiscoverData = {
       url: "https://www.unbox.ph/feed/",
       description: "Tech News",
       tags: ["News", "Philippines", "Tech"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_tempo",
@@ -1463,7 +1285,6 @@ export const DiscoverData = {
       url: "https://tempo.com.ph/feed/",
       description: "News in a Flash",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_abante",
@@ -1471,7 +1292,6 @@ export const DiscoverData = {
       url: "https://tonite.abante.com.ph/feed/",
       description: "Mabilis sa Balita",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_businessmirror",
@@ -1479,7 +1299,6 @@ export const DiscoverData = {
       url: "https://businessmirror.com.ph/feed/",
       description: "Business",
       tags: ["News", "Philippines", "Business"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_pna",
@@ -1487,7 +1306,6 @@ export const DiscoverData = {
       url: "https://www.pna.gov.ph/latest.rss",
       description: "Latest News",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_techpinas",
@@ -1495,7 +1313,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/Techpinas",
       description: "Tech Tips and Reviews",
       tags: ["News", "Philippines", "Tech"],
-      accentColor: "#0038A8",
     },
     {
       id: "ph_bicol",
@@ -1503,7 +1320,6 @@ export const DiscoverData = {
       url: "https://www.bicolstandard.com/feeds/posts/default?alt=rss",
       description: "Bicol News",
       tags: ["News", "Philippines"],
-      accentColor: "#0038A8",
     },
 
     // --- Poland ---
@@ -1513,7 +1329,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/wPolitycepl",
       description: "Najnowsze",
       tags: ["News", "Poland", "Polish"],
-      accentColor: "#DC143C",
     },
     {
       id: "pl_newsweek",
@@ -1521,7 +1336,6 @@ export const DiscoverData = {
       url: "https://www.newsweek.pl/rss.xml",
       description: "Wiadomości",
       tags: ["News", "Poland", "Polish"],
-      accentColor: "#DC143C",
     },
     {
       id: "pl_dziennik",
@@ -1529,7 +1343,6 @@ export const DiscoverData = {
       url: "https://rss.dziennik.pl/Dziennik-PL/",
       description: "Dziennik",
       tags: ["News", "Poland", "Polish"],
-      accentColor: "#DC143C",
     },
     {
       id: "pl_wirtualnemedia",
@@ -1537,7 +1350,6 @@ export const DiscoverData = {
       url: "https://www.wirtualnemedia.pl/rss/wirtualnemedia_rss.xml",
       description: "Newsy",
       tags: ["News", "Poland", "Polish"],
-      accentColor: "#DC143C",
     },
     {
       id: "pl_gazetaprawna",
@@ -1545,7 +1357,6 @@ export const DiscoverData = {
       url: "https://rss.gazetaprawna.pl/GazetaPrawna",
       description: "Biznes, podatki, prawo",
       tags: ["News", "Poland", "Polish", "Business"],
-      accentColor: "#DC143C",
     },
     {
       id: "pl_rp",
@@ -1553,7 +1364,6 @@ export const DiscoverData = {
       url: "https://www.rp.pl/rss/1019",
       description: "Rzeczpospolita",
       tags: ["News", "Poland", "Polish"],
-      accentColor: "#DC143C",
     },
     {
       id: "pl_pap",
@@ -1561,7 +1371,6 @@ export const DiscoverData = {
       url: "https://www.pap.pl/rss.xml",
       description: "Polska Agencja Prasowa",
       tags: ["News", "Poland", "Polish"],
-      accentColor: "#DC143C",
     },
     {
       id: "pl_rmf24",
@@ -1569,7 +1378,6 @@ export const DiscoverData = {
       url: "https://www.rmf24.pl/feed",
       description: "Fakty RMF FM",
       tags: ["News", "Poland", "Polish"],
-      accentColor: "#DC143C",
     },
 
     // --- South Africa ---
@@ -1579,7 +1387,6 @@ export const DiscoverData = {
       url: "https://www.sowetanlive.co.za/rss/?publication=sowetan-live",
       description: "SowetanLIVE RSS",
       tags: ["News", "South Africa"],
-      accentColor: "#007749",
     },
     {
       id: "za_techcentral",
@@ -1587,7 +1394,6 @@ export const DiscoverData = {
       url: "https://techcentral.co.za/feed",
       description: "Technology journalism",
       tags: ["News", "South Africa", "Tech"],
-      accentColor: "#007749",
     },
     {
       id: "za_news24",
@@ -1595,7 +1401,6 @@ export const DiscoverData = {
       url: "https://feeds.news24.com/articles/news24/TopStories/rss",
       description: "Top Stories",
       tags: ["News", "South Africa"],
-      accentColor: "#007749",
     },
     {
       id: "za_ewn",
@@ -1603,7 +1408,6 @@ export const DiscoverData = {
       url: "https://ewn.co.za/RSS%20Feeds/Latest%20News",
       description: "Latest News",
       tags: ["News", "South Africa"],
-      accentColor: "#007749",
     },
     {
       id: "za_citizen",
@@ -1611,7 +1415,6 @@ export const DiscoverData = {
       url: "https://citizen.co.za/feed/",
       description: "More News Your Way",
       tags: ["News", "South Africa"],
-      accentColor: "#007749",
     },
     {
       id: "za_maverick",
@@ -1619,7 +1422,6 @@ export const DiscoverData = {
       url: "https://www.dailymaverick.co.za/dmrss/",
       description: "Defend Truth",
       tags: ["News", "South Africa"],
-      accentColor: "#007749",
     },
     {
       id: "za_moneyweb",
@@ -1627,7 +1429,6 @@ export const DiscoverData = {
       url: "https://www.moneyweb.co.za/feed/",
       description: "Business News",
       tags: ["News", "South Africa", "Business"],
-      accentColor: "#007749",
     },
     {
       id: "za_iol",
@@ -1635,7 +1436,6 @@ export const DiscoverData = {
       url: "https://rss.iol.io/iol/news",
       description: "Independent Media",
       tags: ["News", "South Africa"],
-      accentColor: "#007749",
     },
     {
       id: "za_timeslive",
@@ -1643,7 +1443,6 @@ export const DiscoverData = {
       url: "https://www.timeslive.co.za/rss/",
       description: "TimesLIVE RSS",
       tags: ["News", "South Africa"],
-      accentColor: "#007749",
     },
     {
       id: "za_thesouthafrican",
@@ -1651,7 +1450,6 @@ export const DiscoverData = {
       url: "https://www.thesouthafrican.com/feed/",
       description: "South Africa News",
       tags: ["News", "South Africa"],
-      accentColor: "#007749",
     },
     {
       id: "za_axios",
@@ -1659,7 +1457,6 @@ export const DiscoverData = {
       url: "https://api.axios.com/feed/",
       description: "Axios",
       tags: ["News", "USA"],
-      accentColor: "#007749",
     }, // Categorized in source
 
     // --- Spain ---
@@ -1669,7 +1466,6 @@ export const DiscoverData = {
       url: "https://feeds.thelocal.com/rss/es",
       description: "News in English",
       tags: ["News", "Spain", "English"],
-      accentColor: "#AA151B",
     },
     {
       id: "es_elpais",
@@ -1677,7 +1473,6 @@ export const DiscoverData = {
       url: "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
       description: "El periódico global",
       tags: ["News", "Spain", "Spanish"],
-      accentColor: "#AA151B",
     },
     {
       id: "es_elconfidencial",
@@ -1685,7 +1480,6 @@ export const DiscoverData = {
       url: "https://rss.elconfidencial.com/espana/",
       description: "España",
       tags: ["News", "Spain", "Spanish"],
-      accentColor: "#AA151B",
     },
     {
       id: "es_eldiario",
@@ -1693,7 +1487,6 @@ export const DiscoverData = {
       url: "https://www.eldiario.es/rss/",
       description: "Periodismo",
       tags: ["News", "Spain", "Spanish"],
-      accentColor: "#AA151B",
     },
     {
       id: "es_expansion",
@@ -1701,7 +1494,6 @@ export const DiscoverData = {
       url: "https://e00-expansion.uecdn.es/rss/portada.xml",
       description: "Portada",
       tags: ["News", "Spain", "Spanish", "Business"],
-      accentColor: "#AA151B",
     },
     {
       id: "es_elperiodico",
@@ -1709,7 +1501,6 @@ export const DiscoverData = {
       url: "https://www.elperiodico.com/es/rss/rss_portada.xml",
       description: "Portada",
       tags: ["News", "Spain", "Spanish"],
-      accentColor: "#AA151B",
     },
     {
       id: "es_huffpost",
@@ -1717,7 +1508,6 @@ export const DiscoverData = {
       url: "https://www.huffingtonpost.es/feeds/index.xml",
       description: "HuffPost.es",
       tags: ["News", "Spain", "Spanish"],
-      accentColor: "#AA151B",
     },
     {
       id: "es_euroweekly",
@@ -1725,7 +1515,6 @@ export const DiscoverData = {
       url: "https://www.euroweeklynews.com/feed/",
       description: "Spain News",
       tags: ["News", "Spain", "English"],
-      accentColor: "#AA151B",
     },
     {
       id: "es_efe",
@@ -1733,7 +1522,6 @@ export const DiscoverData = {
       url: "https://www.efe.com/efe/english/4/rss",
       description: "Breaking news",
       tags: ["News", "Spain", "English"],
-      accentColor: "#AA151B",
     },
 
     // --- United Kingdom ---
@@ -1743,7 +1531,6 @@ export const DiscoverData = {
       url: "https://feeds.bbci.co.uk/news/rss.xml",
       description: "Home",
       tags: ["News", "UK"],
-      accentColor: "#012169",
     },
     {
       id: "uk_guardian",
@@ -1751,7 +1538,6 @@ export const DiscoverData = {
       url: "https://www.theguardian.com/world/rss",
       description: "World News",
       tags: ["News", "UK", "World"],
-      accentColor: "#012169",
     },
     {
       id: "uk_mail",
@@ -1759,7 +1545,6 @@ export const DiscoverData = {
       url: "https://www.dailymail.co.uk/home/index.rss",
       description: "Home",
       tags: ["News", "UK"],
-      accentColor: "#012169",
     },
     {
       id: "uk_independent",
@@ -1767,7 +1552,6 @@ export const DiscoverData = {
       url: "https://www.independent.co.uk/news/uk/rss",
       description: "Latest News",
       tags: ["News", "UK"],
-      accentColor: "#012169",
     },
     {
       id: "uk_express",
@@ -1775,7 +1559,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/daily-express-news-showbiz",
       description: "News Feed",
       tags: ["News", "UK"],
-      accentColor: "#012169",
     },
 
     // --- United States ---
@@ -1785,7 +1568,6 @@ export const DiscoverData = {
       url: "https://www.huffpost.com/section/world-news/feed",
       description: "World News",
       tags: ["News", "USA"],
-      accentColor: "#3C3B6E",
     },
     {
       id: "us_nyt",
@@ -1793,7 +1575,6 @@ export const DiscoverData = {
       url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
       description: "Top Stories",
       tags: ["News", "USA"],
-      accentColor: "#3C3B6E",
     },
     {
       id: "us_fox",
@@ -1801,7 +1582,6 @@ export const DiscoverData = {
       url: "https://feeds.foxnews.com/foxnews/latest",
       description: "Breaking news",
       tags: ["News", "USA"],
-      accentColor: "#3C3B6E",
     },
     {
       id: "us_wapo",
@@ -1809,7 +1589,6 @@ export const DiscoverData = {
       url: "https://feeds.washingtonpost.com/rss/world",
       description: "World",
       tags: ["News", "USA", "World"],
-      accentColor: "#3C3B6E",
     },
     {
       id: "us_wsj",
@@ -1817,7 +1596,6 @@ export const DiscoverData = {
       url: "https://feeds.a.dj.com/rss/RSSWorldNews.xml",
       description: "World News",
       tags: ["News", "USA", "Business"],
-      accentColor: "#3C3B6E",
     },
     {
       id: "us_latimes",
@@ -1825,7 +1603,6 @@ export const DiscoverData = {
       url: "https://www.latimes.com/world-nation/rss2.0.xml",
       description: "World & Nation",
       tags: ["News", "USA"],
-      accentColor: "#3C3B6E",
     },
     {
       id: "us_cnn",
@@ -1833,7 +1610,6 @@ export const DiscoverData = {
       url: "https://rss.cnn.com/rss/edition.rss",
       description: "Top Stories",
       tags: ["News", "USA"],
-      accentColor: "#3C3B6E",
     },
     {
       id: "us_yahoo",
@@ -1841,7 +1617,6 @@ export const DiscoverData = {
       url: "https://news.yahoo.com/rss/mostviewed",
       description: "Latest News",
       tags: ["News", "USA"],
-      accentColor: "#3C3B6E",
     },
     {
       id: "us_cnbc",
@@ -1849,7 +1624,6 @@ export const DiscoverData = {
       url: "https://www.cnbc.com/id/100003114/device/rss/rss.html",
       description: "US Top News",
       tags: ["News", "USA", "Business"],
-      accentColor: "#3C3B6E",
     },
     {
       id: "us_politico",
@@ -1857,7 +1631,6 @@ export const DiscoverData = {
       url: "https://rss.politico.com/playbook.xml",
       description: "Playbook",
       tags: ["News", "USA", "Politics"],
-      accentColor: "#3C3B6E",
     },
 
     // --- Android Dev ---
@@ -1867,7 +1640,6 @@ export const DiscoverData = {
       url: "https://buffer.com/resources/android/rss/",
       description: "Buffer Resources",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_android_yt",
@@ -1875,7 +1647,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=androiddevelopers",
       description: "YouTube",
       tags: ["Dev", "Android", "Video"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_android_medium",
@@ -1883,7 +1654,6 @@ export const DiscoverData = {
       url: "https://medium.com/feed/androiddevelopers",
       description: "Medium",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_android_backstage",
@@ -1891,7 +1661,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/blogspot/androiddevelopersbackstage",
       description: "Podcast",
       tags: ["Dev", "Android", "Podcast"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_android_blog",
@@ -1899,7 +1668,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/blogspot/hsDu",
       description: "Official Blog",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_android_weekly",
@@ -1907,7 +1675,6 @@ export const DiscoverData = {
       url: "https://us2.campaign-archive.com/feed?u=887caf4f48db76fd91e20a06d&id=4eb677ad19",
       description: "Archive Feed",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_instagram_android",
@@ -1915,7 +1682,6 @@ export const DiscoverData = {
       url: "https://instagram-engineering.com/feed/tagged/android",
       description: "Android Tag",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_mindorks",
@@ -1923,7 +1689,6 @@ export const DiscoverData = {
       url: "https://medium.com/feed/mindorks/tagged/android",
       description: "Android Tag",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_airbnb_android",
@@ -1931,7 +1696,6 @@ export const DiscoverData = {
       url: "https://medium.com/feed/airbnb-engineering/tagged/android",
       description: "Android Tag",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_danlew",
@@ -1939,7 +1703,6 @@ export const DiscoverData = {
       url: "https://blog.danlew.net/rss/",
       description: "Dan Lew Codes",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_reddit",
@@ -1947,7 +1710,6 @@ export const DiscoverData = {
       url: "https://reddit.com/r/androiddev.rss",
       description: "r/androiddev",
       tags: ["Dev", "Android", "Reddit"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_fragmented",
@@ -1955,7 +1717,6 @@ export const DiscoverData = {
       url: "https://feeds.simplecast.com/LpAGSLnY",
       description: "Software Podcast",
       tags: ["Dev", "Android", "Podcast"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_handstandsam",
@@ -1963,7 +1724,6 @@ export const DiscoverData = {
       url: "https://handstandsam.com/feed/",
       description: "Android & Web",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_jakewharton",
@@ -1971,7 +1731,6 @@ export const DiscoverData = {
       url: "https://jakewharton.com/atom.xml",
       description: "Jake Wharton",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_jetbrains",
@@ -1979,7 +1738,6 @@ export const DiscoverData = {
       url: "https://blog.jetbrains.com/blog/feed",
       description: "JetBrains News",
       tags: ["Dev", "Tools"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_joebirch",
@@ -1987,7 +1745,6 @@ export const DiscoverData = {
       url: "https://joebirch.co/feed",
       description: "Joe Birch",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_kotlin_yt",
@@ -1995,7 +1752,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?playlist_id=PLQ176FUIyIUa6SChjajjVc-LMzxWiz6dy",
       description: "Kotlin YouTube",
       tags: ["Dev", "Kotlin", "Video"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_ktacademy",
@@ -2003,7 +1759,6 @@ export const DiscoverData = {
       url: "https://blog.kotlin-academy.com/feed",
       description: "Medium",
       tags: ["Dev", "Kotlin"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_okkotlin",
@@ -2011,7 +1766,6 @@ export const DiscoverData = {
       url: "https://okkotlin.com/rss.xml",
       description: "Kotlin Blog",
       tags: ["Dev", "Kotlin"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_proandroid",
@@ -2019,7 +1773,6 @@ export const DiscoverData = {
       url: "https://proandroiddev.com/feed",
       description: "Medium",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_publicobject",
@@ -2027,7 +1780,6 @@ export const DiscoverData = {
       url: "https://publicobject.com/rss/",
       description: "Jesse Wilson",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_saket",
@@ -2035,7 +1787,6 @@ export const DiscoverData = {
       url: "https://saket.me/feed/",
       description: "Saket Narayan",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_stylingandroid",
@@ -2043,7 +1794,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/StylingAndroid",
       description: "UI/UX",
       tags: ["Dev", "Android", "UI"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_talkingkotlin",
@@ -2051,7 +1801,6 @@ export const DiscoverData = {
       url: "https://feeds.soundcloud.com/users/soundcloud:users:280353173/sounds.rss",
       description: "Podcast",
       tags: ["Dev", "Kotlin", "Podcast"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_androidarsenal",
@@ -2059,7 +1808,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/Android_Arsenal",
       description: "Libraries",
       tags: ["Dev", "Android", "Tools"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_zacsweers",
@@ -2067,7 +1815,6 @@ export const DiscoverData = {
       url: "https://www.zacsweers.dev/rss/",
       description: "Zac Sweers",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_zarah",
@@ -2075,7 +1822,6 @@ export const DiscoverData = {
       url: "https://zarah.dev/feed.xml",
       description: "Android Love Affair",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_chrynan",
@@ -2083,7 +1829,6 @@ export const DiscoverData = {
       url: "https://chrynan.codes/rss/",
       description: "Software Dev",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_droidcon_nyc",
@@ -2091,7 +1836,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCSLXy31j2Z0sdDeeAX5JpPw",
       description: "YouTube",
       tags: ["Dev", "Android", "Video"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_droidcon_sf",
@@ -2099,7 +1843,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCKubKoe1CBw_-n_GXetEQbg",
       description: "YouTube",
       tags: ["Dev", "Android", "Video"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_goobar",
@@ -2107,7 +1850,6 @@ export const DiscoverData = {
       url: "https://goobar.io/feed",
       description: "dream / learn / create",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "dev_zsmb",
@@ -2115,7 +1857,6 @@ export const DiscoverData = {
       url: "https://zsmb.co/index.xml",
       description: "zsmb.co",
       tags: ["Dev", "Android"],
-      accentColor: "#3DDC84",
     },
 
     // --- Android Consumer ---
@@ -2125,7 +1866,6 @@ export const DiscoverData = {
       url: "https://feeds.twit.tv/aaa.xml",
       description: "Audio Podcast",
       tags: ["Tech", "Android", "Podcast"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_google",
@@ -2133,7 +1873,6 @@ export const DiscoverData = {
       url: "https://blog.google/products/android/rss",
       description: "Google Blog",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_reddit",
@@ -2141,7 +1880,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/android/.rss",
       description: "Reddit",
       tags: ["Tech", "Android", "Reddit"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_auth",
@@ -2149,7 +1887,6 @@ export const DiscoverData = {
       url: "https://www.androidauthority.com/feed",
       description: "News",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_auth_yt",
@@ -2157,7 +1894,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=AndroidAuthority",
       description: "YouTube",
       tags: ["Tech", "Android", "Video"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_auth_pod",
@@ -2165,7 +1901,6 @@ export const DiscoverData = {
       url: "https://androidauthority.libsyn.com/rss",
       description: "Podcast",
       tags: ["Tech", "Android", "Podcast"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_central",
@@ -2173,7 +1908,6 @@ export const DiscoverData = {
       url: "https://feeds.androidcentral.com/androidcentral",
       description: "News",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_central_pod",
@@ -2181,7 +1915,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/AndroidCentralPodcast",
       description: "Podcast",
       tags: ["Tech", "Android", "Podcast"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_community",
@@ -2189,7 +1922,6 @@ export const DiscoverData = {
       url: "https://androidcommunity.com/feed/",
       description: "News",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_police",
@@ -2197,7 +1929,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/AndroidPolice",
       description: "News",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_guys",
@@ -2205,7 +1936,6 @@ export const DiscoverData = {
       url: "https://www.androidguys.com/feed",
       description: "News",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_cult",
@@ -2213,7 +1943,6 @@ export const DiscoverData = {
       url: "https://www.cultofandroid.com/feed",
       description: "News",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_cyanogen",
@@ -2221,7 +1950,6 @@ export const DiscoverData = {
       url: "https://www.cyanogenmods.org/feed",
       description: "Mods",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_droidlife",
@@ -2229,7 +1957,6 @@ export const DiscoverData = {
       url: "https://www.droid-life.com/feed",
       description: "News",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_gsmarena",
@@ -2237,7 +1964,6 @@ export const DiscoverData = {
       url: "https://www.gsmarena.com/rss-news-reviews.php3",
       description: "Latest Articles",
       tags: ["Tech", "Mobile"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_phandroid",
@@ -2245,7 +1971,6 @@ export const DiscoverData = {
       url: "https://feeds2.feedburner.com/AndroidPhoneFans",
       description: "News",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_talkandroid",
@@ -2253,7 +1978,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/AndroidNewsGoogleAndroidForums",
       description: "News",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
     {
       id: "and_xda",
@@ -2261,7 +1985,6 @@ export const DiscoverData = {
       url: "https://data.xda-developers.com/portal-feed",
       description: "Portal Feed",
       tags: ["Tech", "Android"],
-      accentColor: "#3DDC84",
     },
 
     // --- Apple ---
@@ -2271,7 +1994,6 @@ export const DiscoverData = {
       url: "https://9to5mac.com/feed",
       description: "Apple News",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_yt",
@@ -2279,7 +2001,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=Apple",
       description: "YouTube",
       tags: ["Tech", "Apple", "Video"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_newsroom",
@@ -2287,7 +2008,6 @@ export const DiscoverData = {
       url: "https://www.apple.com/newsroom/rss-feed.rss",
       description: "Press Releases",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_insider",
@@ -2295,7 +2015,6 @@ export const DiscoverData = {
       url: "https://appleinsider.com/rss/news/",
       description: "News",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_cult",
@@ -2303,7 +2022,6 @@ export const DiscoverData = {
       url: "https://www.cultofmac.com/feed",
       description: "News",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_daringfireball",
@@ -2311,7 +2029,6 @@ export const DiscoverData = {
       url: "https://daringfireball.net/feeds/main",
       description: "John Gruber",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_macrumors_yt",
@@ -2319,7 +2036,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=macrumors",
       description: "YouTube",
       tags: ["Tech", "Apple", "Video"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_macrumors",
@@ -2327,7 +2043,6 @@ export const DiscoverData = {
       url: "https://feeds.macrumors.com/MacRumors-Mac",
       description: "News",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_macstories",
@@ -2335,7 +2050,6 @@ export const DiscoverData = {
       url: "https://www.macstories.net/feed",
       description: "News",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_macworld",
@@ -2343,7 +2057,6 @@ export const DiscoverData = {
       url: "https://www.macworld.com/index.rss",
       description: "News",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_marco",
@@ -2351,7 +2064,6 @@ export const DiscoverData = {
       url: "https://marco.org/rss",
       description: "Marco Arment",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_osxdaily",
@@ -2359,7 +2071,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/osxdaily",
       description: "News",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_theloop",
@@ -2367,7 +2078,6 @@ export const DiscoverData = {
       url: "https://www.loopinsight.com/feed",
       description: "News",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_reddit",
@@ -2375,7 +2085,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/apple/.rss",
       description: "Reddit",
       tags: ["Tech", "Apple", "Reddit"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_imore",
@@ -2383,7 +2092,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/TheiPhoneBlog",
       description: "News",
       tags: ["Tech", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "apple_reddit_iphone",
@@ -2391,7 +2099,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/iphone/.rss",
       description: "Reddit",
       tags: ["Tech", "Apple", "Reddit"],
-      accentColor: "#A2AAAD",
     },
 
     // --- Architecture ---
@@ -2401,7 +2108,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/archidose",
       description: "Books",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_daily",
@@ -2409,7 +2115,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/Archdaily",
       description: "Broadcasting Architecture",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_archinect",
@@ -2417,7 +2122,6 @@ export const DiscoverData = {
       url: "https://archinect.com/feed/1/news",
       description: "News",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_digest",
@@ -2425,7 +2129,6 @@ export const DiscoverData = {
       url: "https://www.architecturaldigest.com/feed/rss",
       description: "News",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_digest_yt",
@@ -2433,7 +2136,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=ArchitecturalDigest",
       description: "YouTube",
       tags: ["Design", "Architecture", "Video"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_reddit",
@@ -2441,7 +2143,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/architecture/.rss",
       description: "Reddit",
       tags: ["Design", "Architecture", "Reddit"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_dezeen",
@@ -2449,7 +2150,6 @@ export const DiscoverData = {
       url: "https://www.dezeen.com/architecture/feed/",
       description: "Dezeen",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_contemporist",
@@ -2457,7 +2157,6 @@ export const DiscoverData = {
       url: "https://www.contemporist.com/feed/",
       description: "Design",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_inhabitat",
@@ -2465,7 +2164,6 @@ export const DiscoverData = {
       url: "https://inhabitat.com/architecture/feed/",
       description: "Green Design",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_designmilk",
@@ -2473,7 +2171,6 @@ export const DiscoverData = {
       url: "https://design-milk.com/category/architecture/feed/",
       description: "Design Milk",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_architizer",
@@ -2481,7 +2178,6 @@ export const DiscoverData = {
       url: "https://architizer.wpengine.com/feed/",
       description: "Journal",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_livingbig",
@@ -2489,7 +2185,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=livingbigtinyhouse",
       description: "YouTube",
       tags: ["Design", "Architecture", "Video"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_paper",
@@ -2497,7 +2192,6 @@ export const DiscoverData = {
       url: "https://archpaper.com/feed",
       description: "News",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
     {
       id: "arch_designboom",
@@ -2505,7 +2199,6 @@ export const DiscoverData = {
       url: "https://www.designboom.com/architecture/feed/",
       description: "Designboom",
       tags: ["Design", "Architecture"],
-      accentColor: "#FFD700",
     },
 
     // --- Beauty ---
@@ -2515,7 +2208,6 @@ export const DiscoverData = {
       url: "https://www.elle.com/rss/beauty.xml/",
       description: "Elle",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_fashionista",
@@ -2523,7 +2215,6 @@ export const DiscoverData = {
       url: "https://fashionista.com/.rss/excerpt/beauty",
       description: "Fashionista",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_indian",
@@ -2531,7 +2222,6 @@ export const DiscoverData = {
       url: "https://www.fashionlady.in/category/beauty-tips/feed",
       description: "Beauty Tips",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_brains",
@@ -2539,7 +2229,6 @@ export const DiscoverData = {
       url: "https://thebeautybrains.com/blog/feed/",
       description: "Science",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_dore",
@@ -2547,7 +2236,6 @@ export const DiscoverData = {
       url: "https://www.wearedore.com/feed",
       description: "Doré",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_headtotoe",
@@ -2555,7 +2243,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/frmheadtotoe",
       description: "Jen",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_intothegloss",
@@ -2563,7 +2250,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/intothegloss/oqoU",
       description: "Tips",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_popsugar",
@@ -2571,7 +2257,6 @@ export const DiscoverData = {
       url: "https://www.popsugar.com/beauty/feed",
       description: "PopSugar",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_refinery29",
@@ -2579,7 +2264,6 @@ export const DiscoverData = {
       url: "https://www.refinery29.com/beauty/rss.xml",
       description: "Refinery29",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_yesstyle",
@@ -2587,7 +2271,6 @@ export const DiscoverData = {
       url: "https://www.yesstyle.com/blog/category/the-beauty-blog/feed/",
       description: "Asian Fashion",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_lookbook",
@@ -2595,7 +2278,6 @@ export const DiscoverData = {
       url: "https://thebeautylookbook.com/feed",
       description: "Reviews",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
     {
       id: "beauty_makeupandbeauty",
@@ -2603,7 +2285,6 @@ export const DiscoverData = {
       url: "https://www.makeupandbeautyblog.com/feed/",
       description: "Makeup Reviews",
       tags: ["Lifestyle", "Beauty"],
-      accentColor: "#E91E63",
     },
 
     // --- Books ---
@@ -2613,7 +2294,6 @@ export const DiscoverData = {
       url: "https://ayearofreadingtheworld.com/feed/",
       description: "Blog",
       tags: ["Books"],
-      accentColor: "#8B4513",
     },
     {
       id: "books_aestas",
@@ -2621,7 +2301,6 @@ export const DiscoverData = {
       url: "https://aestasbookblog.com/feed/",
       description: "Romance",
       tags: ["Books"],
-      accentColor: "#8B4513",
     },
     {
       id: "books_riot",
@@ -2629,7 +2308,6 @@ export const DiscoverData = {
       url: "https://bookriot.com/feed/",
       description: "Reviews",
       tags: ["Books"],
-      accentColor: "#8B4513",
     },
     {
       id: "books_kirkus",
@@ -2637,7 +2315,6 @@ export const DiscoverData = {
       url: "https://www.kirkusreviews.com/feeds/rss/",
       description: "Reviews",
       tags: ["Books"],
-      accentColor: "#8B4513",
     },
     {
       id: "books_newinbooks",
@@ -2645,7 +2322,6 @@ export const DiscoverData = {
       url: "https://www.newinbooks.com/feed/",
       description: "New Releases",
       tags: ["Books"],
-      accentColor: "#8B4513",
     },
     {
       id: "books_reddit",
@@ -2653,7 +2329,6 @@ export const DiscoverData = {
       url: "https://reddit.com/r/books/.rss",
       description: "Reddit",
       tags: ["Books", "Reddit"],
-      accentColor: "#8B4513",
     },
     {
       id: "books_wokeread",
@@ -2661,7 +2336,6 @@ export const DiscoverData = {
       url: "https://wokeread.home.blog/feed/",
       description: "Blog",
       tags: ["Books"],
-      accentColor: "#8B4513",
     },
 
     // --- Business & Economy ---
@@ -2671,7 +2345,6 @@ export const DiscoverData = {
       url: "https://www.investing.com/rss/news.rss",
       description: "News",
       tags: ["Business", "Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_bloomberg",
@@ -2679,7 +2352,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=Bloomberg",
       description: "YouTube",
       tags: ["Business", "Video"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_seekingalpha",
@@ -2687,7 +2359,6 @@ export const DiscoverData = {
       url: "https://seekingalpha.com/market_currents.xml",
       description: "Breaking News",
       tags: ["Business", "Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_insider_yt",
@@ -2695,7 +2366,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=businessinsider",
       description: "YouTube",
       tags: ["Business", "Video"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_ducttape",
@@ -2703,7 +2373,6 @@ export const DiscoverData = {
       url: "https://ducttape.libsyn.com/rss",
       description: "Marketing",
       tags: ["Business", "Marketing"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_economictimes",
@@ -2711,7 +2380,6 @@ export const DiscoverData = {
       url: "https://economictimes.indiatimes.com/rssfeedsdefault.cms",
       description: "India Business",
       tags: ["Business", "India"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_forbes",
@@ -2719,7 +2387,6 @@ export const DiscoverData = {
       url: "https://www.forbes.com/business/feed/",
       description: "Forbes",
       tags: ["Business"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_fortune",
@@ -2727,7 +2394,6 @@ export const DiscoverData = {
       url: "https://fortune.com/feed",
       description: "Fortune 500",
       tags: ["Business"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_hbr",
@@ -2735,7 +2401,6 @@ export const DiscoverData = {
       url: "https://feeds.harvardbusiness.org/harvardbusiness/ideacast",
       description: "Harvard Business Review",
       tags: ["Business", "Podcast"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_standard",
@@ -2743,7 +2408,6 @@ export const DiscoverData = {
       url: "https://www.business-standard.com/rss/home_page_top_stories.rss",
       description: "India",
       tags: ["Business", "India"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_howibuiltthis",
@@ -2751,7 +2415,6 @@ export const DiscoverData = {
       url: "https://feeds.npr.org/510313/podcast.xml",
       description: "NPR Podcast",
       tags: ["Business", "Podcast"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_mixergy",
@@ -2759,7 +2422,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/Mixergy-main-podcast",
       description: "Startup Stories",
       tags: ["Business", "Startups"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_timferriss",
@@ -2767,7 +2429,6 @@ export const DiscoverData = {
       url: "https://tim.blog/feed/",
       description: "Tim Ferriss",
       tags: ["Business", "Lifestyle"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_growthshow",
@@ -2775,7 +2436,6 @@ export const DiscoverData = {
       url: "https://thegrowthshow.hubspot.libsynpro.com/",
       description: "HubSpot",
       tags: ["Business", "Podcast"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_cnbc",
@@ -2783,7 +2443,6 @@ export const DiscoverData = {
       url: "https://www.cnbc.com/id/100003114/device/rss/rss.html",
       description: "US Top News",
       tags: ["Business", "USA"],
-      accentColor: "#85BB65",
     },
     {
       id: "biz_yahoo",
@@ -2791,7 +2450,6 @@ export const DiscoverData = {
       url: "https://finance.yahoo.com/news/rssindex",
       description: "Yahoo",
       tags: ["Business", "Finance"],
-      accentColor: "#85BB65",
     },
 
     // --- Cars ---
@@ -2801,7 +2459,6 @@ export const DiscoverData = {
       url: "https://www.autoblog.com/rss.xml",
       description: "Autoblog",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_autocar_bikes",
@@ -2809,7 +2466,6 @@ export const DiscoverData = {
       url: "https://www.autocarindia.com/RSS/rss.ashx?type=all_bikes",
       description: "Bikes",
       tags: ["Auto", "Cars", "India"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_autocar_cars",
@@ -2817,7 +2473,6 @@ export const DiscoverData = {
       url: "https://www.autocarindia.com/RSS/rss.ashx?type=all_cars",
       description: "Cars",
       tags: ["Auto", "Cars", "India"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_autocar_news",
@@ -2825,7 +2480,6 @@ export const DiscoverData = {
       url: "https://www.autocarindia.com/RSS/rss.ashx?type=News",
       description: "News",
       tags: ["Auto", "Cars", "India"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_autocar_uk",
@@ -2833,7 +2487,6 @@ export const DiscoverData = {
       url: "https://www.autocar.co.uk/rss",
       description: "UK",
       tags: ["Auto", "Cars", "UK"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_bmwblog",
@@ -2841,7 +2494,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/BmwBlog",
       description: "BMW",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_bikeexif",
@@ -2849,7 +2501,6 @@ export const DiscoverData = {
       url: "https://www.bikeexif.com/feed",
       description: "Motorcycles",
       tags: ["Auto", "Motorcycles"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_bodydesign",
@@ -2857,7 +2508,6 @@ export const DiscoverData = {
       url: "https://www.carbodydesign.com/feed/",
       description: "Design",
       tags: ["Auto", "Design"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_carscoops",
@@ -2865,7 +2515,6 @@ export const DiscoverData = {
       url: "https://www.carscoops.com/feed/",
       description: "Scoops",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_f1_reddit",
@@ -2873,7 +2522,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/formula1/.rss",
       description: "Reddit",
       tags: ["Auto", "F1", "Reddit"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_jalopnik",
@@ -2881,7 +2529,6 @@ export const DiscoverData = {
       url: "https://jalopnik.com/rss",
       description: "Jalopnik",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_caranddriver",
@@ -2889,7 +2536,6 @@ export const DiscoverData = {
       url: "https://www.caranddriver.com/rss/all.xml/",
       description: "Car and Driver",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_petrolicious",
@@ -2897,7 +2543,6 @@ export const DiscoverData = {
       url: "https://petrolicious.com/feed",
       description: "Classic Cars",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_autonews",
@@ -2905,7 +2550,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/autonews/AutomakerNews",
       description: "Automaker News",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_autonews_editors",
@@ -2913,7 +2557,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/autonews/EditorsPicks",
       description: "Editors Picks",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_speedhunters",
@@ -2921,7 +2564,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/speedhunters",
       description: "Car Culture",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_ttac",
@@ -2929,7 +2571,6 @@ export const DiscoverData = {
       url: "https://www.thetruthaboutcars.com/feed/",
       description: "Reviews",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
     {
       id: "car_bringatrailer",
@@ -2937,7 +2578,6 @@ export const DiscoverData = {
       url: "https://bringatrailer.com/feed/",
       description: "Vintage Cars",
       tags: ["Auto", "Cars"],
-      accentColor: "#FF4500",
     },
 
     // --- Cricket ---
@@ -2947,7 +2587,6 @@ export const DiscoverData = {
       url: "https://feeds.bbci.co.uk/sport/cricket/rss.xml",
       description: "BBC",
       tags: ["Sports", "Cricket"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_cantbowl",
@@ -2955,7 +2594,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/cantbowlcantthrow",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_cricbuzz",
@@ -2963,7 +2601,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCSRQXk5yErn4e14vN76upOw",
       description: "YouTube",
       tags: ["Sports", "Cricket", "Video"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_reddit",
@@ -2971,7 +2608,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/Cricket/.rss",
       description: "Reddit",
       tags: ["Sports", "Cricket", "Reddit"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_unfiltered",
@@ -2979,7 +2615,6 @@ export const DiscoverData = {
       url: "https://rss.acast.com/cricket-unfiltered",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_espn",
@@ -2987,7 +2622,6 @@ export const DiscoverData = {
       url: "https://www.espncricinfo.com/rss/content/story/feeds/0.xml",
       description: "News",
       tags: ["Sports", "Cricket"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_guardian",
@@ -2995,7 +2629,6 @@ export const DiscoverData = {
       url: "https://www.theguardian.com/sport/cricket/rss",
       description: "Guardian",
       tags: ["Sports", "Cricket"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_roar",
@@ -3003,7 +2636,6 @@ export const DiscoverData = {
       url: "https://www.theroar.com.au/cricket/feed/",
       description: "The Roar",
       tags: ["Sports", "Cricket"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_ecb",
@@ -3011,7 +2643,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=ecbcricket",
       description: "YouTube",
       tags: ["Sports", "Cricket", "Video"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_ndtv",
@@ -3019,7 +2650,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/ndtvsports-cricket",
       description: "NDTV",
       tags: ["Sports", "Cricket"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_pakistan",
@@ -3027,7 +2657,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?channel_id=UCiWrjBhlICf_L_RK5y6Vrxw",
       description: "YouTube",
       tags: ["Sports", "Cricket", "Video"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_sky",
@@ -3035,7 +2664,6 @@ export const DiscoverData = {
       url: "https://www.spreaker.com/show/3387348/episodes/feed",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_slc",
@@ -3043,7 +2671,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=TheOfficialSLC",
       description: "YouTube",
       tags: ["Sports", "Cricket", "Video"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_stumped",
@@ -3051,7 +2678,6 @@ export const DiscoverData = {
       url: "https://podcasts.files.bbci.co.uk/p02gsrmh.rss",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_switchhit",
@@ -3059,7 +2685,6 @@ export const DiscoverData = {
       url: "https://feeds.megaphone.fm/ESP9247246951",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_tailenders",
@@ -3067,7 +2692,6 @@ export const DiscoverData = {
       url: "https://podcasts.files.bbci.co.uk/p02pcb4w.rss",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_tms",
@@ -3075,7 +2699,6 @@ export const DiscoverData = {
       url: "https://podcasts.files.bbci.co.uk/p02nrsl2.rss",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_analyst",
@@ -3083,7 +2706,6 @@ export const DiscoverData = {
       url: "https://rss.acast.com/theanalystinsidecricket",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_grade",
@@ -3091,7 +2713,6 @@ export const DiscoverData = {
       url: "https://rss.whooshkaa.com/rss/podcast/id/1308",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_wisden",
@@ -3099,7 +2720,6 @@ export const DiscoverData = {
       url: "https://www.wisden.com/feed",
       description: "Wisden",
       tags: ["Sports", "Cricket"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_wisden_weekly",
@@ -3107,7 +2727,6 @@ export const DiscoverData = {
       url: "https://feeds.soundcloud.com/users/soundcloud:users:341034518/sounds.rss",
       description: "Podcast",
       tags: ["Sports", "Cricket", "Podcast"],
-      accentColor: "#800000",
     },
     {
       id: "cricket_australia",
@@ -3115,7 +2734,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=cricketaustraliatv",
       description: "YouTube",
       tags: ["Sports", "Cricket", "Video"],
-      accentColor: "#800000",
     },
 
     // --- DIY ---
@@ -3125,7 +2743,6 @@ export const DiscoverData = {
       url: "https://abeautifulmess.com/feed",
       description: "Crafts",
       tags: ["Lifestyle", "DIY"],
-      accentColor: "#FFA500",
     },
     {
       id: "diy_apartmenttherapy",
@@ -3133,7 +2750,6 @@ export const DiscoverData = {
       url: "https://www.apartmenttherapy.com/projects.rss",
       description: "DIY",
       tags: ["Lifestyle", "DIY"],
-      accentColor: "#FFA500",
     },
     {
       id: "diy_hackaday",
@@ -3141,7 +2757,6 @@ export const DiscoverData = {
       url: "https://hackaday.com/blog/feed/",
       description: "Hacks",
       tags: ["Lifestyle", "DIY", "Tech"],
-      accentColor: "#FFA500",
     },
     {
       id: "diy_centsational",
@@ -3149,7 +2764,6 @@ export const DiscoverData = {
       url: "https://centsationalstyle.com/feed/",
       description: "Design",
       tags: ["Lifestyle", "DIY"],
-      accentColor: "#FFA500",
     },
     {
       id: "diy_doityourself",
@@ -3157,7 +2771,6 @@ export const DiscoverData = {
       url: "https://www.doityourself.com/feed",
       description: "Home Improvement",
       tags: ["Lifestyle", "DIY"],
-      accentColor: "#FFA500",
     },
     {
       id: "diy_etsy",
@@ -3165,7 +2778,6 @@ export const DiscoverData = {
       url: "https://blog.etsy.com/en/feed/",
       description: "Inspiration",
       tags: ["Lifestyle", "DIY"],
-      accentColor: "#FFA500",
     },
     {
       id: "diy_howtogeek",
@@ -3173,7 +2785,6 @@ export const DiscoverData = {
       url: "https://www.howtogeek.com/feed/",
       description: "Tech",
       tags: ["Lifestyle", "DIY", "Tech"],
-      accentColor: "#FFA500",
     },
     {
       id: "diy_ikeahackers",
@@ -3181,7 +2792,6 @@ export const DiscoverData = {
       url: "https://www.ikeahackers.net/feed",
       description: "IKEA Hacks",
       tags: ["Lifestyle", "DIY"],
-      accentColor: "#FFA500",
     },
     {
       id: "diy_muo",
@@ -3189,7 +2799,6 @@ export const DiscoverData = {
       url: "https://www.makeuseof.com/feed/",
       description: "MakeUseOf",
       tags: ["Lifestyle", "DIY", "Tech"],
-      accentColor: "#FFA500",
     },
     {
       id: "diy_ohhappyday",
@@ -3197,7 +2806,6 @@ export const DiscoverData = {
       url: "https://ohhappyday.com/feed/",
       description: "Party",
       tags: ["Lifestyle", "DIY"],
-      accentColor: "#FFA500",
     },
     {
       id: "diy_wonderhowto",
@@ -3205,7 +2813,6 @@ export const DiscoverData = {
       url: "https://www.wonderhowto.com/rss.xml",
       description: "Videos",
       tags: ["Lifestyle", "DIY"],
-      accentColor: "#FFA500",
     },
 
     // --- Fashion ---
@@ -3215,7 +2822,6 @@ export const DiscoverData = {
       url: "https://www.elle.com/rss/fashion.xml/",
       description: "Elle",
       tags: ["Lifestyle", "Fashion"],
-      accentColor: "#E91E63",
     },
     {
       id: "fashion_guardian",
@@ -3223,7 +2829,6 @@ export const DiscoverData = {
       url: "https://www.theguardian.com/fashion/rss",
       description: "Guardian",
       tags: ["Lifestyle", "Fashion"],
-      accentColor: "#E91E63",
     },
     {
       id: "fashion_indian",
@@ -3231,7 +2836,6 @@ export const DiscoverData = {
       url: "https://www.fashionlady.in/category/fashion/feed",
       description: "India",
       tags: ["Lifestyle", "Fashion"],
-      accentColor: "#E91E63",
     },
     {
       id: "fashion_beans",
@@ -3239,7 +2843,6 @@ export const DiscoverData = {
       url: "https://www.fashionbeans.com/rss-feed/?category=fashion",
       description: "Men's Fashion",
       tags: ["Lifestyle", "Fashion"],
-      accentColor: "#E91E63",
     },
     {
       id: "fashion_fashionista",
@@ -3247,7 +2850,6 @@ export const DiscoverData = {
       url: "https://fashionista.com/.rss/excerpt/",
       description: "Fashionista",
       tags: ["Lifestyle", "Fashion"],
-      accentColor: "#E91E63",
     },
     {
       id: "fashion_nyt",
@@ -3255,7 +2857,6 @@ export const DiscoverData = {
       url: "https://rss.nytimes.com/services/xml/rss/nyt/FashionandStyle.xml",
       description: "NYT",
       tags: ["Lifestyle", "Fashion"],
-      accentColor: "#E91E63",
     },
     {
       id: "fashion_popsugar",
@@ -3263,7 +2864,6 @@ export const DiscoverData = {
       url: "https://www.popsugar.com/fashion/feed",
       description: "PopSugar",
       tags: ["Lifestyle", "Fashion"],
-      accentColor: "#E91E63",
     },
     {
       id: "fashion_refinery29",
@@ -3271,7 +2871,6 @@ export const DiscoverData = {
       url: "https://www.refinery29.com/fashion/rss.xml",
       description: "Refinery29",
       tags: ["Lifestyle", "Fashion"],
-      accentColor: "#E91E63",
     },
     {
       id: "fashion_yesstyle",
@@ -3279,7 +2878,6 @@ export const DiscoverData = {
       url: "https://www.yesstyle.com/blog/category/trend-and-style/feed/",
       description: "YesStyle",
       tags: ["Lifestyle", "Fashion"],
-      accentColor: "#E91E63",
     },
     {
       id: "fashion_whowhatwear",
@@ -3287,7 +2885,6 @@ export const DiscoverData = {
       url: "https://www.whowhatwear.com/rss",
       description: "Who What Wear",
       tags: ["Lifestyle", "Fashion"],
-      accentColor: "#E91E63",
     },
 
     // --- Food ---
@@ -3297,7 +2894,6 @@ export const DiscoverData = {
       url: "https://www.101cookbooks.com/feed",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_babish",
@@ -3305,7 +2901,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=bgfilms",
       description: "YouTube",
       tags: ["Lifestyle", "Food", "Video"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_bonappetit",
@@ -3313,7 +2908,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=BonAppetitDotCom",
       description: "YouTube",
       tags: ["Lifestyle", "Food", "Video"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_cnz",
@@ -3321,7 +2915,6 @@ export const DiscoverData = {
       url: "https://cnz.to/feed/",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_davidlebovitz",
@@ -3329,7 +2922,6 @@ export const DiscoverData = {
       url: "https://www.davidlebovitz.com/feed/",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_food52",
@@ -3337,7 +2929,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/food52-TheAandMBlog",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_greenkitchen",
@@ -3345,7 +2936,6 @@ export const DiscoverData = {
       url: "https://greenkitchenstories.com/feed/",
       description: "Vegetarian",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_howsweeteats",
@@ -3353,7 +2943,6 @@ export const DiscoverData = {
       url: "https://www.howsweeteats.com/feed/",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_joythebaker",
@@ -3361,7 +2950,6 @@ export const DiscoverData = {
       url: "https://joythebaker.com/feed/",
       description: "Baking",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_kitchn",
@@ -3369,7 +2957,6 @@ export const DiscoverData = {
       url: "https://www.thekitchn.com/main.rss",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_laura",
@@ -3377,7 +2964,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=LauraVitalesKitchen",
       description: "YouTube",
       tags: ["Lifestyle", "Food", "Video"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_loveandoliveoil",
@@ -3385,7 +2971,6 @@ export const DiscoverData = {
       url: "https://www.loveandoliveoil.com/feed",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_nyt",
@@ -3393,7 +2978,6 @@ export const DiscoverData = {
       url: "https://rss.nytimes.com/services/xml/rss/nyt/DiningandWine.xml",
       description: "NYT",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_ohsheglows",
@@ -3401,7 +2985,6 @@ export const DiscoverData = {
       url: "https://ohsheglows.com/feed/",
       description: "Vegan",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_seriouseats_yt",
@@ -3409,7 +2992,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=SeriousEats",
       description: "YouTube",
       tags: ["Lifestyle", "Food", "Video"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_seriouseats",
@@ -3417,7 +2999,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/seriouseats/recipes",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_shutterbean",
@@ -3425,7 +3006,6 @@ export const DiscoverData = {
       url: "https://www.shutterbean.com/feed/",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_skinnytaste",
@@ -3433,7 +3013,6 @@ export const DiscoverData = {
       url: "https://www.skinnytaste.com/feed/",
       description: "Healthy",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_sprouted",
@@ -3441,7 +3020,6 @@ export const DiscoverData = {
       url: "https://www.sproutedkitchen.com/home?format=rss",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_williams",
@@ -3449,7 +3027,6 @@ export const DiscoverData = {
       url: "https://blog.williams-sonoma.com/feed/",
       description: "Blog",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
     {
       id: "food_smitten",
@@ -3457,7 +3034,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/smittenkitchen",
       description: "Recipes",
       tags: ["Lifestyle", "Food"],
-      accentColor: "#FF69B4",
     },
 
     // --- Football ---
@@ -3467,7 +3043,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/Championship/.rss?format=xml",
       description: "Reddit",
       tags: ["Sports", "Football", "Reddit"],
-      accentColor: "#228B22",
     },
     {
       id: "foot_reddit",
@@ -3475,7 +3050,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/football/.rss?format=xml",
       description: "Reddit",
       tags: ["Sports", "Football", "Reddit"],
-      accentColor: "#228B22",
     },
     {
       id: "foot_goal",
@@ -3483,7 +3057,6 @@ export const DiscoverData = {
       url: "https://www.goal.com/feeds/en/news",
       description: "News",
       tags: ["Sports", "Football"],
-      accentColor: "#228B22",
     },
     {
       id: "foot_365",
@@ -3491,7 +3064,6 @@ export const DiscoverData = {
       url: "https://www.football365.com/feed",
       description: "News",
       tags: ["Sports", "Football"],
-      accentColor: "#228B22",
     },
     {
       id: "foot_soccernews",
@@ -3499,7 +3071,6 @@ export const DiscoverData = {
       url: "https://www.soccernews.com/feed",
       description: "News",
       tags: ["Sports", "Football"],
-      accentColor: "#228B22",
     },
 
     // --- Funny ---
@@ -3509,7 +3080,6 @@ export const DiscoverData = {
       url: "https://awkwardfamilyphotos.com/feed/",
       description: "Photos",
       tags: ["Funny"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_cracked",
@@ -3517,7 +3087,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/CrackedRSS",
       description: "Articles",
       tags: ["Funny"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_explosm",
@@ -3525,7 +3094,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/Explosm",
       description: "Comics",
       tags: ["Funny", "Comics"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_failblog",
@@ -3533,7 +3101,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/failblog",
       description: "Fail",
       tags: ["Funny"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_cheezburger",
@@ -3541,7 +3108,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/icanhascheezburger",
       description: "Cats",
       tags: ["Funny"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_phd",
@@ -3549,7 +3115,6 @@ export const DiscoverData = {
       url: "https://phdcomics.com/gradfeed.php",
       description: "Comics",
       tags: ["Funny", "Comics"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_pennyarcade",
@@ -3557,7 +3122,6 @@ export const DiscoverData = {
       url: "https://www.penny-arcade.com/feed",
       description: "Comics",
       tags: ["Funny", "Comics"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_postsecret",
@@ -3565,7 +3129,6 @@ export const DiscoverData = {
       url: "https://postsecret.com/feed/?alt=rss",
       description: "Secrets",
       tags: ["Funny"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_smbc",
@@ -3573,7 +3136,6 @@ export const DiscoverData = {
       url: "https://www.smbc-comics.com/comic/rss",
       description: "Comics",
       tags: ["Funny", "Comics"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_bloggess",
@@ -3581,7 +3143,6 @@ export const DiscoverData = {
       url: "https://thebloggess.com/feed/",
       description: "Blog",
       tags: ["Funny"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_dailywtf",
@@ -3589,7 +3150,6 @@ export const DiscoverData = {
       url: "https://syndication.thedailywtf.com/TheDailyWtf",
       description: "IT Humor",
       tags: ["Funny", "Tech"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_oatmeal",
@@ -3597,7 +3157,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/oatmealfeed",
       description: "Comics",
       tags: ["Funny", "Comics"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_onion",
@@ -3605,7 +3164,6 @@ export const DiscoverData = {
       url: "https://www.theonion.com/rss",
       description: "Satire",
       tags: ["Funny", "News"],
-      accentColor: "#FFD700",
     },
     {
       id: "fun_xkcd",
@@ -3613,7 +3171,6 @@ export const DiscoverData = {
       url: "https://xkcd.com/rss.xml",
       description: "Comics",
       tags: ["Funny", "Comics"],
-      accentColor: "#FFD700",
     },
 
     // --- Gaming ---
@@ -3623,7 +3180,6 @@ export const DiscoverData = {
       url: "https://www.escapistmagazine.com/v2/feed/",
       description: "Magazine",
       tags: ["Gaming"],
-      accentColor: "#800080",
     },
     {
       id: "game_eurogamer",
@@ -3631,7 +3187,6 @@ export const DiscoverData = {
       url: "https://www.eurogamer.net/?format=rss",
       description: "News",
       tags: ["Gaming"],
-      accentColor: "#800080",
     },
     {
       id: "game_gamasutra",
@@ -3639,7 +3194,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/GamasutraNews",
       description: "Dev News",
       tags: ["Gaming", "Dev"],
-      accentColor: "#800080",
     },
     {
       id: "game_gamespot",
@@ -3647,7 +3201,6 @@ export const DiscoverData = {
       url: "https://www.gamespot.com/feeds/mashup/",
       description: "All Content",
       tags: ["Gaming"],
-      accentColor: "#800080",
     },
     {
       id: "game_ign",
@@ -3655,7 +3208,6 @@ export const DiscoverData = {
       url: "https://feeds.ign.com/ign/all",
       description: "IGN",
       tags: ["Gaming"],
-      accentColor: "#800080",
     },
     {
       id: "game_indiegames",
@@ -3663,7 +3215,6 @@ export const DiscoverData = {
       url: "https://indiegamesplus.com/feed",
       description: "Indie",
       tags: ["Gaming"],
-      accentColor: "#800080",
     },
     {
       id: "game_kotaku",
@@ -3671,7 +3222,6 @@ export const DiscoverData = {
       url: "https://kotaku.com/rss",
       description: "News",
       tags: ["Gaming"],
-      accentColor: "#800080",
     },
     {
       id: "game_playstation",
@@ -3679,7 +3229,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/psblog",
       description: "Official Blog",
       tags: ["Gaming", "PlayStation"],
-      accentColor: "#800080",
     },
     {
       id: "game_polygon",
@@ -3687,7 +3236,6 @@ export const DiscoverData = {
       url: "https://www.polygon.com/rss/index.xml",
       description: "All",
       tags: ["Gaming"],
-      accentColor: "#800080",
     },
     {
       id: "game_rps",
@@ -3695,7 +3243,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/RockPaperShotgun",
       description: "PC Gaming",
       tags: ["Gaming"],
-      accentColor: "#800080",
     },
     {
       id: "game_steam",
@@ -3703,7 +3250,6 @@ export const DiscoverData = {
       url: "https://store.steampowered.com/feeds/news.xml",
       description: "Steam",
       tags: ["Gaming"],
-      accentColor: "#800080",
     },
     {
       id: "game_ancientnoob",
@@ -3711,7 +3257,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/TheAncientGamingNoob",
       description: "Blog",
       tags: ["Gaming"],
-      accentColor: "#800080",
     },
     {
       id: "game_toucharcade",
@@ -3719,7 +3264,6 @@ export const DiscoverData = {
       url: "https://toucharcade.com/community/forums/-/index.rss",
       description: "Mobile",
       tags: ["Gaming", "Mobile"],
-      accentColor: "#800080",
     },
     {
       id: "game_majornelson",
@@ -3727,7 +3271,6 @@ export const DiscoverData = {
       url: "https://majornelson.com/feed/",
       description: "Xbox",
       tags: ["Gaming", "Xbox"],
-      accentColor: "#800080",
     },
     {
       id: "game_reddit",
@@ -3735,7 +3278,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/gaming.rss",
       description: "Reddit",
       tags: ["Gaming", "Reddit"],
-      accentColor: "#800080",
     },
 
     // --- History ---
@@ -3745,7 +3287,6 @@ export const DiscoverData = {
       url: "https://feeds.megaphone.fm/ESP5765452710",
       description: "ESPN",
       tags: ["History", "Podcast"],
-      accentColor: "#8B4513",
     },
     {
       id: "hist_smithsonian",
@@ -3753,7 +3294,6 @@ export const DiscoverData = {
       url: "https://americanhistory.si.edu/blog/feed",
       description: "Blog",
       tags: ["History"],
-      accentColor: "#8B4513",
     },
     {
       id: "hist_dancarlin",
@@ -3761,7 +3301,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/dancarlin/history?format=xml",
       description: "Podcast",
       tags: ["History", "Podcast"],
-      accentColor: "#8B4513",
     },
     {
       id: "hist_28min",
@@ -3769,7 +3308,6 @@ export const DiscoverData = {
       url: "https://www.historyisnowmagazine.com/blog?format=RSS",
       description: "Podcast",
       tags: ["History", "Podcast"],
-      accentColor: "#8B4513",
     },
     {
       id: "hist_historynet",
@@ -3777,7 +3315,6 @@ export const DiscoverData = {
       url: "https://www.historynet.com/feed",
       description: "Articles",
       tags: ["History"],
-      accentColor: "#8B4513",
     },
     {
       id: "hist_lore",
@@ -3785,7 +3322,6 @@ export const DiscoverData = {
       url: "https://feeds.megaphone.fm/lore",
       description: "Podcast",
       tags: ["History", "Podcast"],
-      accentColor: "#8B4513",
     },
     {
       id: "hist_revisionist",
@@ -3793,7 +3329,6 @@ export const DiscoverData = {
       url: "https://feeds.megaphone.fm/revisionisthistory",
       description: "Podcast",
       tags: ["History", "Podcast"],
-      accentColor: "#8B4513",
     },
     {
       id: "hist_reader",
@@ -3801,7 +3336,6 @@ export const DiscoverData = {
       url: "https://www.thehistoryreader.com/feed/",
       description: "Blog",
       tags: ["History"],
-      accentColor: "#8B4513",
     },
     {
       id: "hist_throughline",
@@ -3809,7 +3343,6 @@ export const DiscoverData = {
       url: "https://feeds.npr.org/510333/podcast.xml",
       description: "NPR",
       tags: ["History", "Podcast"],
-      accentColor: "#8B4513",
     },
     {
       id: "hist_ymrt",
@@ -3817,7 +3350,6 @@ export const DiscoverData = {
       url: "https://feeds.megaphone.fm/YMRT7068253588",
       description: "Podcast",
       tags: ["History", "Podcast"],
-      accentColor: "#8B4513",
     },
     {
       id: "hist_memorypalace",
@@ -3825,7 +3357,6 @@ export const DiscoverData = {
       url: "https://feeds.thememorypalace.us/thememorypalace",
       description: "Podcast",
       tags: ["History", "Podcast"],
-      accentColor: "#8B4513",
     },
 
     // --- Interior Design ---
@@ -3835,7 +3366,6 @@ export const DiscoverData = {
       url: "https://www.apartmenttherapy.com/design.rss",
       description: "Design",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_betterliving",
@@ -3843,7 +3373,6 @@ export const DiscoverData = {
       url: "https://www.betterlivingthroughdesign.com/feed/",
       description: "Guide",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_decor8",
@@ -3851,7 +3380,6 @@ export const DiscoverData = {
       url: "https://www.decor8blog.com/blog?format=rss",
       description: "Blog",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_core77",
@@ -3859,7 +3387,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/core77/blog",
       description: "Industrial Design",
       tags: ["Design"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_designmilk",
@@ -3867,7 +3394,6 @@ export const DiscoverData = {
       url: "https://design-milk.com/category/interior-design/feed/",
       description: "Design Milk",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_fubiz",
@@ -3875,7 +3401,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/fubiz",
       description: "Creative",
       tags: ["Design", "Art"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_idealhome",
@@ -3883,7 +3408,6 @@ export const DiscoverData = {
       url: "https://www.idealhome.co.uk/feed",
       description: "Ideal Home",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_inmyownstyle",
@@ -3891,7 +3415,6 @@ export const DiscoverData = {
       url: "https://inmyownstyle.com/feed",
       description: "DIY",
       tags: ["Design", "DIY"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_inhabitat",
@@ -3899,7 +3422,6 @@ export const DiscoverData = {
       url: "https://inhabitat.com/design/feed/",
       description: "Green Design",
       tags: ["Design"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_reddit",
@@ -3907,7 +3429,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/InteriorDesign/.rss",
       description: "Reddit",
       tags: ["Design", "Decor", "Reddit"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_home_designing",
@@ -3915,7 +3436,6 @@ export const DiscoverData = {
       url: "https://www.home-designing.com/feed",
       description: "Ideas",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_interiordesign",
@@ -3923,7 +3443,6 @@ export const DiscoverData = {
       url: "https://www.interiordesign.net/rss/",
       description: "Latest",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_dezeen",
@@ -3931,7 +3450,6 @@ export const DiscoverData = {
       url: "https://www.dezeen.com/interiors/feed/",
       description: "Dezeen",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_lizmarie",
@@ -3939,7 +3457,6 @@ export const DiscoverData = {
       url: "https://www.lizmarieblog.com/feed/",
       description: "Blog",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_designfiles",
@@ -3947,7 +3464,6 @@ export const DiscoverData = {
       url: "https://thedesignfiles.net/feed/",
       description: "Australia",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_inspiredroom",
@@ -3955,7 +3471,6 @@ export const DiscoverData = {
       url: "https://theinspiredroom.net/feed/",
       description: "Blog",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_thrifty",
@@ -3963,7 +3478,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/blogspot/ZBcZ",
       description: "DIY",
       tags: ["Design", "DIY"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_trendir",
@@ -3971,7 +3485,6 @@ export const DiscoverData = {
       url: "https://www.trendir.com/feed/",
       description: "Trends",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_yanko",
@@ -3979,7 +3492,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/yankodesign",
       description: "Industrial Design",
       tags: ["Design"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_yatzer",
@@ -3987,7 +3499,6 @@ export const DiscoverData = {
       url: "https://www.yatzer.com/rss.xml",
       description: "Yatzer",
       tags: ["Design"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_younghouselove",
@@ -3995,7 +3506,6 @@ export const DiscoverData = {
       url: "https://www.younghouselove.com/feed/",
       description: "DIY",
       tags: ["Design", "DIY"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_decoist",
@@ -4003,7 +3513,6 @@ export const DiscoverData = {
       url: "https://www.decoist.com/feed/",
       description: "Decoist",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_designboom",
@@ -4011,7 +3520,6 @@ export const DiscoverData = {
       url: "https://www.designboom.com/design/feed",
       description: "Design",
       tags: ["Design"],
-      accentColor: "#20B2AA",
     },
     {
       id: "int_sfgirlbybay",
@@ -4019,7 +3527,6 @@ export const DiscoverData = {
       url: "https://www.sfgirlbybay.com/feed/",
       description: "Bohemian",
       tags: ["Design", "Decor"],
-      accentColor: "#20B2AA",
     },
 
     // --- Movies ---
@@ -4029,7 +3536,6 @@ export const DiscoverData = {
       url: "https://feeds2.feedburner.com/slashfilm",
       description: "News",
       tags: ["Movies"],
-      accentColor: "#005580",
     },
     {
       id: "mov_aintitcool",
@@ -4037,7 +3543,6 @@ export const DiscoverData = {
       url: "https://www.aintitcool.com/node/feed/",
       description: "News",
       tags: ["Movies"],
-      accentColor: "#005580",
     },
     {
       id: "mov_comingsoon",
@@ -4045,7 +3550,6 @@ export const DiscoverData = {
       url: "https://www.comingsoon.net/feed",
       description: "News",
       tags: ["Movies"],
-      accentColor: "#005580",
     },
     {
       id: "mov_deadline",
@@ -4053,7 +3557,6 @@ export const DiscoverData = {
       url: "https://deadline.com/feed/",
       description: "Hollywood",
       tags: ["Movies"],
-      accentColor: "#005580",
     },
     {
       id: "mov_fsr",
@@ -4061,7 +3564,6 @@ export const DiscoverData = {
       url: "https://filmschoolrejects.com/feed/",
       description: "Blog",
       tags: ["Movies"],
-      accentColor: "#005580",
     },
     {
       id: "mov_firstshowing",
@@ -4069,7 +3571,6 @@ export const DiscoverData = {
       url: "https://www.firstshowing.net/feed/",
       description: "News",
       tags: ["Movies"],
-      accentColor: "#005580",
     },
     {
       id: "mov_indiewire",
@@ -4077,7 +3578,6 @@ export const DiscoverData = {
       url: "https://www.indiewire.com/feed",
       description: "Indie",
       tags: ["Movies"],
-      accentColor: "#005580",
     },
     {
       id: "mov_reddit",
@@ -4085,7 +3585,6 @@ export const DiscoverData = {
       url: "https://reddit.com/r/movies/.rss",
       description: "Reddit",
       tags: ["Movies", "Reddit"],
-      accentColor: "#005580",
     },
     {
       id: "mov_bleedingcool",
@@ -4093,7 +3592,6 @@ export const DiscoverData = {
       url: "https://www.bleedingcool.com/movies/feed/",
       description: "Movies",
       tags: ["Movies"],
-      accentColor: "#005580",
     },
     {
       id: "mov_avclub",
@@ -4101,7 +3599,6 @@ export const DiscoverData = {
       url: "https://film.avclub.com/rss",
       description: "Film",
       tags: ["Movies"],
-      accentColor: "#005580",
     },
     {
       id: "mov_variety",
@@ -4109,7 +3606,6 @@ export const DiscoverData = {
       url: "https://variety.com/feed/",
       description: "Variety",
       tags: ["Movies"],
-      accentColor: "#005580",
     },
 
     // --- Music ---
@@ -4119,7 +3615,6 @@ export const DiscoverData = {
       url: "https://www.billboard.com/articles/rss.xml",
       description: "News",
       tags: ["Music"],
-      accentColor: "#1a1a1a",
     },
     {
       id: "music_consequence",
@@ -4127,7 +3622,6 @@ export const DiscoverData = {
       url: "https://consequenceofsound.net/feed",
       description: "News",
       tags: ["Music"],
-      accentColor: "#1a1a1a",
     },
     {
       id: "music_edm",
@@ -4135,7 +3629,6 @@ export const DiscoverData = {
       url: "https://edm.com/.rss/full/",
       description: "EDM",
       tags: ["Music", "EDM"],
-      accentColor: "#1a1a1a",
     },
     {
       id: "music_metalinjection",
@@ -4143,7 +3636,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/metalinjection",
       description: "Metal",
       tags: ["Music", "Metal"],
-      accentColor: "#1a1a1a",
     },
     {
       id: "music_mbw",
@@ -4151,7 +3643,6 @@ export const DiscoverData = {
       url: "https://www.musicbusinessworldwide.com/feed/",
       description: "Industry",
       tags: ["Music", "Business"],
-      accentColor: "#1a1a1a",
     },
     {
       id: "music_pitchfork",
@@ -4159,7 +3650,6 @@ export const DiscoverData = {
       url: "https://pitchfork.com/rss/news",
       description: "News",
       tags: ["Music"],
-      accentColor: "#1a1a1a",
     },
     {
       id: "music_songexploder",
@@ -4167,7 +3657,6 @@ export const DiscoverData = {
       url: "https://songexploder.net/feed",
       description: "Podcast",
       tags: ["Music", "Podcast"],
-      accentColor: "#1a1a1a",
     },
     {
       id: "music_youredm",
@@ -4175,7 +3664,6 @@ export const DiscoverData = {
       url: "https://www.youredm.com/feed",
       description: "EDM",
       tags: ["Music", "EDM"],
-      accentColor: "#1a1a1a",
     },
 
     // --- News (General) ---
@@ -4185,7 +3673,6 @@ export const DiscoverData = {
       url: "https://feeds.bbci.co.uk/news/world/rss.xml",
       description: "BBC",
       tags: ["News", "World"],
-      accentColor: "#bb1919",
     },
     {
       id: "news_cnn_world",
@@ -4193,7 +3680,6 @@ export const DiscoverData = {
       url: "https://rss.cnn.com/rss/edition_world.rss",
       description: "CNN",
       tags: ["News", "World"],
-      accentColor: "#cc0000",
     },
     {
       id: "news_cnbc_intl",
@@ -4201,7 +3687,6 @@ export const DiscoverData = {
       url: "https://www.cnbc.com/id/100727362/device/rss/rss.html",
       description: "CNBC",
       tags: ["News", "Business"],
-      accentColor: "#005599",
     },
     {
       id: "news_ndtv_world",
@@ -4209,7 +3694,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/ndtvnews-world-news",
       description: "NDTV",
       tags: ["News", "World"],
-      accentColor: "#ca0008",
     },
     {
       id: "news_nyt_world",
@@ -4217,7 +3701,6 @@ export const DiscoverData = {
       url: "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
       description: "NYT",
       tags: ["News", "World"],
-      accentColor: "#000000",
     },
     {
       id: "news_google",
@@ -4225,7 +3708,6 @@ export const DiscoverData = {
       url: "https://news.google.com/rss",
       description: "Top Stories",
       tags: ["News"],
-      accentColor: "#4285F4",
     },
     {
       id: "news_wapo_world",
@@ -4233,7 +3715,6 @@ export const DiscoverData = {
       url: "https://feeds.washingtonpost.com/rss/world",
       description: "WaPo",
       tags: ["News", "World"],
-      accentColor: "#000000",
     },
     {
       id: "news_reddit_world",
@@ -4241,7 +3722,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/worldnews/.rss",
       description: "Reddit",
       tags: ["News", "World", "Reddit"],
-      accentColor: "#FF4500",
     },
     {
       id: "news_toi_world",
@@ -4249,7 +3729,6 @@ export const DiscoverData = {
       url: "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms",
       description: "Times of India",
       tags: ["News", "World"],
-      accentColor: "#000000",
     },
     {
       id: "news_guardian_world",
@@ -4257,7 +3736,6 @@ export const DiscoverData = {
       url: "https://www.theguardian.com/world/rss",
       description: "Guardian",
       tags: ["News", "World"],
-      accentColor: "#052962",
     },
     {
       id: "news_yahoo",
@@ -4265,7 +3743,6 @@ export const DiscoverData = {
       url: "https://www.yahoo.com/news/rss",
       description: "Yahoo",
       tags: ["News"],
-      accentColor: "#720e9e",
     },
 
     // --- Personal Finance ---
@@ -4275,7 +3752,6 @@ export const DiscoverData = {
       url: "https://affordanything.com/feed/",
       description: "Blog",
       tags: ["Finance", "Lifestyle"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_studentloan",
@@ -4283,7 +3759,6 @@ export const DiscoverData = {
       url: "https://studentloanhero.com/blog/feed",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_budgetsaresexy",
@@ -4291,7 +3766,6 @@ export const DiscoverData = {
       url: "https://feeds2.feedburner.com/budgetsaresexy",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_financialsamurai",
@@ -4299,7 +3773,6 @@ export const DiscoverData = {
       url: "https://www.financialsamurai.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_frugalwoods",
@@ -4307,7 +3780,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/Frugalwoods",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_getrichslowly",
@@ -4315,7 +3787,6 @@ export const DiscoverData = {
       url: "https://www.getrichslowly.org/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_goodfinancialcents",
@@ -4323,7 +3794,6 @@ export const DiscoverData = {
       url: "https://www.goodfinancialcents.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_iwillteachyou",
@@ -4331,7 +3801,6 @@ export const DiscoverData = {
       url: "https://www.iwillteachyoutoberich.com/feed/",
       description: "Ramit Sethi",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_learntotrade",
@@ -4339,7 +3808,6 @@ export const DiscoverData = {
       url: "https://www.learntotradethemarket.com/feed",
       description: "Trading",
       tags: ["Finance", "Trading"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_makingsense",
@@ -4347,7 +3815,6 @@ export const DiscoverData = {
       url: "https://www.makingsenseofcents.com/feed",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_millennialmoney",
@@ -4355,7 +3822,6 @@ export const DiscoverData = {
       url: "https://millennialmoney.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_mint",
@@ -4363,7 +3829,6 @@ export const DiscoverData = {
       url: "https://blog.mint.com/feed/",
       description: "Mint",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_moneycrashers",
@@ -4371,7 +3836,6 @@ export const DiscoverData = {
       url: "https://www.moneycrashers.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_moneysavingmom",
@@ -4379,7 +3843,6 @@ export const DiscoverData = {
       url: "https://moneysavingmom.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_moneyunder30",
@@ -4387,7 +3850,6 @@ export const DiscoverData = {
       url: "https://www.moneyunder30.com/feed",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_moneyning",
@@ -4395,7 +3857,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/MoneyNing",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_mywifequitherjob",
@@ -4403,7 +3864,6 @@ export const DiscoverData = {
       url: "https://mywifequitherjob.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_kitces",
@@ -4411,7 +3871,6 @@ export const DiscoverData = {
       url: "https://feeds.feedblitz.com/kitcesnerdseyeview&x=1",
       description: "Kitces",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_nerdwallet",
@@ -4419,7 +3878,6 @@ export const DiscoverData = {
       url: "https://www.nerdwallet.com/blog/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_obliviousinvestor",
@@ -4427,7 +3885,6 @@ export const DiscoverData = {
       url: "https://obliviousinvestor.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_reddit",
@@ -4435,7 +3892,6 @@ export const DiscoverData = {
       url: "https://reddit.com/r/personalfinance/.rss",
       description: "Reddit",
       tags: ["Finance", "Reddit"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_savingadvice",
@@ -4443,7 +3899,6 @@ export const DiscoverData = {
       url: "https://www.savingadvice.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_sidehustle",
@@ -4451,7 +3906,6 @@ export const DiscoverData = {
       url: "https://www.sidehustlenation.com/feed",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_collegeinvestor",
@@ -4459,7 +3913,6 @@ export const DiscoverData = {
       url: "https://thecollegeinvestor.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_doughroller",
@@ -4467,7 +3920,6 @@ export const DiscoverData = {
       url: "https://www.doughroller.net/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_pennyhoarder",
@@ -4475,7 +3927,6 @@ export const DiscoverData = {
       url: "https://www.thepennyhoarder.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_wellkeptwallet",
@@ -4483,7 +3934,6 @@ export const DiscoverData = {
       url: "https://wellkeptwallet.com/feed/",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
     {
       id: "fin_wisebread",
@@ -4491,7 +3941,6 @@ export const DiscoverData = {
       url: "https://feeds.killeraces.com/wisebread",
       description: "Blog",
       tags: ["Finance"],
-      accentColor: "#85BB65",
     },
 
     // --- Photography ---
@@ -4501,7 +3950,6 @@ export const DiscoverData = {
       url: "https://iso.500px.com/feed/",
       description: "Blog",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_500px_editors",
@@ -4509,7 +3957,6 @@ export const DiscoverData = {
       url: "https://500px.com/editors.rss",
       description: "Editors Choice",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_bigpicture",
@@ -4517,7 +3964,6 @@ export const DiscoverData = {
       url: "https://www.bostonglobe.com/rss/bigpicture",
       description: "Boston Globe",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_canonrumors",
@@ -4525,7 +3971,6 @@ export const DiscoverData = {
       url: "https://www.canonrumors.com/feed/",
       description: "Canon",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_dps",
@@ -4533,7 +3978,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/DigitalPhotographySchool",
       description: "School",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_lightstalking",
@@ -4541,7 +3985,6 @@ export const DiscoverData = {
       url: "https://www.lightstalking.com/feed/",
       description: "Blog",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_lightroom",
@@ -4549,7 +3992,6 @@ export const DiscoverData = {
       url: "https://lightroomkillertips.com/feed/",
       description: "Tips",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_onebigphoto",
@@ -4557,7 +3999,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/OneBigPhoto",
       description: "Blog",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_petapixel",
@@ -4565,7 +4006,6 @@ export const DiscoverData = {
       url: "https://petapixel.com/feed/",
       description: "Blog",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_strobist",
@@ -4573,7 +4013,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/blogspot/WOBq",
       description: "Lighting",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_stuckincustoms",
@@ -4581,7 +4020,6 @@ export const DiscoverData = {
       url: "https://stuckincustoms.com/feed/",
       description: "HDR",
       tags: ["Photography"],
-      accentColor: "#9932CC",
     },
     {
       id: "photo_sartorialist",
@@ -4589,7 +4027,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/TheSartorialist",
       description: "Fashion",
       tags: ["Photography", "Fashion"],
-      accentColor: "#9932CC",
     },
 
     // --- Programming ---
@@ -4599,7 +4036,6 @@ export const DiscoverData = {
       url: "https://medium.com/feed/better-programming",
       description: "Medium",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_etsy",
@@ -4607,7 +4043,6 @@ export const DiscoverData = {
       url: "https://codeascraft.com/feed/atom/",
       description: "Etsy Eng",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_codenewbie",
@@ -4615,7 +4050,6 @@ export const DiscoverData = {
       url: "https://feeds.codenewbie.org/cnpodcast.xml",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_codinghorror",
@@ -4623,7 +4057,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/codinghorror",
       description: "Jeff Atwood",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_completedev",
@@ -4631,7 +4064,6 @@ export const DiscoverData = {
       url: "https://completedeveloperpodcast.com/feed/podcast/",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_overreacted",
@@ -4639,7 +4071,6 @@ export const DiscoverData = {
       url: "https://overreacted.io/rss.xml",
       description: "Dan Abramov",
       tags: ["Dev", "React"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_devtea",
@@ -4647,7 +4078,6 @@ export const DiscoverData = {
       url: "https://feeds.simplecast.com/dLRotFGk",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_twitter",
@@ -4655,7 +4085,6 @@ export const DiscoverData = {
       url: "https://blog.twitter.com/engineering/en_us/blog.rss",
       description: "Twitter",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_floss",
@@ -4663,7 +4092,6 @@ export const DiscoverData = {
       url: "https://feeds.twit.tv/floss.xml",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_fb",
@@ -4671,7 +4099,6 @@ export const DiscoverData = {
       url: "https://engineering.fb.com/feed/",
       description: "Facebook",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_gitlab",
@@ -4679,7 +4106,6 @@ export const DiscoverData = {
       url: "https://about.gitlab.com/atom.xml",
       description: "GitLab",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_googledev",
@@ -4687,7 +4113,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/GDBcode",
       description: "Blog",
       tags: ["Dev", "Google"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_google_talks",
@@ -4695,7 +4120,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=GoogleTechTalks",
       description: "YouTube",
       tags: ["Dev", "Video"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_hackernoon",
@@ -4703,7 +4127,6 @@ export const DiscoverData = {
       url: "https://medium.com/feed/hackernoon",
       description: "Medium",
       tags: ["Dev", "Tech"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_hanselminutes",
@@ -4711,7 +4134,6 @@ export const DiscoverData = {
       url: "https://feeds.simplecast.com/gvtxUiIf",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_infoq",
@@ -4719,7 +4141,6 @@ export const DiscoverData = {
       url: "https://feed.infoq.com",
       description: "InfoQ",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_instagram",
@@ -4727,7 +4148,6 @@ export const DiscoverData = {
       url: "https://instagram-engineering.com/feed/",
       description: "Medium",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_jooq",
@@ -4735,7 +4155,6 @@ export const DiscoverData = {
       url: "https://blog.jooq.org/feed",
       description: "Java SQL",
       tags: ["Dev", "Java"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_jetbrains",
@@ -4743,7 +4162,6 @@ export const DiscoverData = {
       url: "https://blog.jetbrains.com/feed",
       description: "JetBrains",
       tags: ["Dev", "Tools"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_joel",
@@ -4751,7 +4169,6 @@ export const DiscoverData = {
       url: "https://www.joelonsoftware.com/feed/",
       description: "Joel Spolsky",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_linkedin",
@@ -4759,7 +4176,6 @@ export const DiscoverData = {
       url: "https://engineering.linkedin.com/blog.rss.html",
       description: "LinkedIn",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_martinfowler",
@@ -4767,7 +4183,6 @@ export const DiscoverData = {
       url: "https://martinfowler.com/feed.atom",
       description: "Martin Fowler",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_netflix",
@@ -4775,7 +4190,6 @@ export const DiscoverData = {
       url: "https://netflixtechblog.com/feed",
       description: "Medium",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_buffer",
@@ -4783,7 +4197,6 @@ export const DiscoverData = {
       url: "https://buffer.com/resources/overflow/rss/",
       description: "Buffer",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_sedaily",
@@ -4791,7 +4204,6 @@ export const DiscoverData = {
       url: "https://softwareengineeringdaily.com/category/podcast/feed",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_3340",
@@ -4799,7 +4211,6 @@ export const DiscoverData = {
       url: "https://www.thirtythreeforty.net/posts/index.xml",
       description: "Embedded",
       tags: ["Dev", "Embedded"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_prezi",
@@ -4807,7 +4218,6 @@ export const DiscoverData = {
       url: "https://engineering.prezi.com/feed",
       description: "Medium",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_throwdown",
@@ -4815,7 +4225,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/ProgrammingThrowdown",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_crazyprogrammer",
@@ -4823,7 +4232,6 @@ export const DiscoverData = {
       url: "https://www.thecrazyprogrammer.com/category/programming/feed",
       description: "Blog",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_heaton",
@@ -4831,7 +4239,6 @@ export const DiscoverData = {
       url: "https://robertheaton.com/feed.xml",
       description: "Blog",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_hanselman",
@@ -4839,7 +4246,6 @@ export const DiscoverData = {
       url: "https://feeds.hanselman.com/ScottHanselman",
       description: "Blog",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_scripting",
@@ -4847,7 +4253,6 @@ export const DiscoverData = {
       url: "https://scripting.com/rss.xml",
       description: "Dave Winer",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_svn",
@@ -4855,7 +4260,6 @@ export const DiscoverData = {
       url: "https://m.signalvnoise.com/feed/",
       description: "Basecamp",
       tags: ["Dev", "Design"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_slack",
@@ -4863,7 +4267,6 @@ export const DiscoverData = {
       url: "https://slack.engineering/feed",
       description: "Slack",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_sdt",
@@ -4871,7 +4274,6 @@ export const DiscoverData = {
       url: "https://feeds.fireside.fm/sdt/rss",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_seradio",
@@ -4879,7 +4281,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/se-radio",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_soundcloud",
@@ -4887,7 +4288,6 @@ export const DiscoverData = {
       url: "https://developers.soundcloud.com/blog/blog.rss",
       description: "SoundCloud",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_spotify",
@@ -4895,7 +4295,6 @@ export const DiscoverData = {
       url: "https://labs.spotify.com/feed/",
       description: "Spotify",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_stackabuse",
@@ -4903,7 +4302,6 @@ export const DiscoverData = {
       url: "https://stackabuse.com/rss/",
       description: "Tutorials",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_stackoverflow",
@@ -4911,7 +4309,6 @@ export const DiscoverData = {
       url: "https://stackoverflow.blog/feed/",
       description: "Blog",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_6figure",
@@ -4919,7 +4316,6 @@ export const DiscoverData = {
       url: "https://6figuredev.com/feed/rss/",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_airbnb",
@@ -4927,7 +4323,6 @@ export const DiscoverData = {
       url: "https://medium.com/feed/airbnb-engineering",
       description: "Medium",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_cynical",
@@ -4935,7 +4330,6 @@ export const DiscoverData = {
       url: "https://cynicaldeveloper.com/feed/podcast",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_github",
@@ -4943,7 +4337,6 @@ export const DiscoverData = {
       url: "https://github.blog/feed/",
       description: "GitHub",
       tags: ["Dev", "Programming"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_pit",
@@ -4951,7 +4344,6 @@ export const DiscoverData = {
       url: "https://feeds.transistor.fm/productivity-in-tech-podcast",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_rabbithole",
@@ -4959,7 +4351,6 @@ export const DiscoverData = {
       url: "https://therabbithole.libsyn.com/rss",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_stackoverflow_pod",
@@ -4967,7 +4358,6 @@ export const DiscoverData = {
       url: "https://feeds.simplecast.com/XA_851k3",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_standup",
@@ -4975,7 +4365,6 @@ export const DiscoverData = {
       url: "https://feeds.fireside.fm/standup/rss",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_womenintech",
@@ -4983,7 +4372,6 @@ export const DiscoverData = {
       url: "https://thewomenintechshow.com/category/podcast/feed/",
       description: "Podcast",
       tags: ["Dev", "Podcast"],
-      accentColor: "#0000FF",
     },
     {
       id: "prog_reddit",
@@ -4991,7 +4379,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/programming/.rss",
       description: "Reddit",
       tags: ["Dev", "Reddit"],
-      accentColor: "#0000FF",
     },
 
     // --- Science ---
@@ -5001,7 +4388,6 @@ export const DiscoverData = {
       url: "https://rss.sciam.com/sciam/60secsciencepodcast",
       description: "Podcast",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_bbc",
@@ -5009,7 +4395,6 @@ export const DiscoverData = {
       url: "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
       description: "BBC",
       tags: ["Science", "News"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_discovery",
@@ -5017,7 +4402,6 @@ export const DiscoverData = {
       url: "https://podcasts.files.bbci.co.uk/p002w557.rss",
       description: "Podcast",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_flowingdata",
@@ -5025,7 +4409,6 @@ export const DiscoverData = {
       url: "https://flowingdata.com/feed",
       description: "Data",
       tags: ["Science", "Data"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_gastropod",
@@ -5033,7 +4416,6 @@ export const DiscoverData = {
       url: "https://www.omnycontent.com/d/playlist/aaea4e69-af51-495e-afc9-a9760146922b/2a195077-f014-41d2-8313-ab190186b4c2/277bcd5c-0a05-4c14-8ba6-ab190186b4d5/podcast.rss",
       description: "Podcast",
       tags: ["Science", "Food", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_gizmodo",
@@ -5041,7 +4423,6 @@ export const DiscoverData = {
       url: "https://gizmodo.com/tag/science/rss",
       description: "Gizmodo",
       tags: ["Science"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_hiddenbrain",
@@ -5049,7 +4430,6 @@ export const DiscoverData = {
       url: "https://feeds.npr.org/510308/podcast.xml",
       description: "NPR",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_invisibilia",
@@ -5057,7 +4437,6 @@ export const DiscoverData = {
       url: "https://feeds.npr.org/510307/podcast.xml",
       description: "NPR",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_sciencedaily",
@@ -5065,7 +4444,6 @@ export const DiscoverData = {
       url: "https://www.sciencedaily.com/rss/all.xml",
       description: "News",
       tags: ["Science"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_nyt",
@@ -5073,7 +4451,6 @@ export const DiscoverData = {
       url: "https://rss.nytimes.com/services/xml/rss/nyt/Science.xml",
       description: "NYT",
       tags: ["Science", "News"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_nature",
@@ -5081,7 +4458,6 @@ export const DiscoverData = {
       url: "https://www.nature.com/nature.rss",
       description: "Journal",
       tags: ["Science"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_physorg",
@@ -5089,7 +4465,6 @@ export const DiscoverData = {
       url: "https://phys.org/rss-feed/",
       description: "News",
       tags: ["Science"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_probably",
@@ -5097,7 +4472,6 @@ export const DiscoverData = {
       url: "https://probablyscience.libsyn.com/rss",
       description: "Podcast",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_radiolab",
@@ -5105,7 +4479,6 @@ export const DiscoverData = {
       url: "https://feeds.wnyc.org/radiolab",
       description: "Podcast",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_reddit",
@@ -5113,7 +4486,6 @@ export const DiscoverData = {
       url: "https://reddit.com/r/science/.rss",
       description: "Reddit",
       tags: ["Science", "Reddit"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_sawbones",
@@ -5121,7 +4493,6 @@ export const DiscoverData = {
       url: "https://feeds.simplecast.com/y1LF_sn2",
       description: "Medical History",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_wired",
@@ -5129,7 +4500,6 @@ export const DiscoverData = {
       url: "https://www.wired.com/feed/category/science/latest/rss",
       description: "Wired",
       tags: ["Science"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_sciencevs",
@@ -5137,7 +4507,6 @@ export const DiscoverData = {
       url: "https://feeds.gimletmedia.com/ScienceVs",
       description: "Podcast",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_sbm",
@@ -5145,7 +4514,6 @@ export const DiscoverData = {
       url: "https://sciencebasedmedicine.org/feed/",
       description: "Medicine",
       tags: ["Science", "Medicine"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_sciam",
@@ -5153,7 +4521,6 @@ export const DiscoverData = {
       url: "https://rss.sciam.com/ScientificAmerican-Global",
       description: "SciAm",
       tags: ["Science"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_shirtloads",
@@ -5161,7 +4528,6 @@ export const DiscoverData = {
       url: "https://shirtloadsofscience.libsyn.com/rss",
       description: "Dr Karl",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_ted",
@@ -5169,7 +4535,6 @@ export const DiscoverData = {
       url: "https://pa.tedcdn.com/feeds/talks.rss",
       description: "TED",
       tags: ["Science", "Video"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_monkeycage",
@@ -5177,7 +4542,6 @@ export const DiscoverData = {
       url: "https://podcasts.files.bbci.co.uk/b00snr0w.rss",
       description: "BBC",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
     {
       id: "sci_twis",
@@ -5185,7 +4549,6 @@ export const DiscoverData = {
       url: "https://www.twis.org/feed/",
       description: "Podcast",
       tags: ["Science", "Podcast"],
-      accentColor: "#4682B4",
     },
 
     // --- Space ---
@@ -5195,7 +4558,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/space/.rss?format=xml",
       description: "Reddit",
       tags: ["Space", "Reddit"],
-      accentColor: "#191970",
     },
     {
       id: "space_nasa",
@@ -5203,7 +4565,6 @@ export const DiscoverData = {
       url: "https://www.nasa.gov/rss/dyn/breaking_news.rss",
       description: "NASA",
       tags: ["Space"],
-      accentColor: "#191970",
     },
     {
       id: "space_newscientist",
@@ -5211,7 +4572,6 @@ export const DiscoverData = {
       url: "https://www.newscientist.com/subject/space/feed/",
       description: "New Scientist",
       tags: ["Space"],
-      accentColor: "#191970",
     },
     {
       id: "space_skytelescope",
@@ -5219,7 +4579,6 @@ export const DiscoverData = {
       url: "https://www.skyandtelescope.com/feed/",
       description: "Astronomy",
       tags: ["Space"],
-      accentColor: "#191970",
     },
     {
       id: "space_guardian",
@@ -5227,7 +4586,6 @@ export const DiscoverData = {
       url: "https://www.theguardian.com/science/space/rss",
       description: "Guardian",
       tags: ["Space"],
-      accentColor: "#191970",
     },
     {
       id: "space_spacecom",
@@ -5235,7 +4593,6 @@ export const DiscoverData = {
       url: "https://www.space.com/feeds/all",
       description: "Space.com",
       tags: ["Space"],
-      accentColor: "#191970",
     },
     {
       id: "space_spacex",
@@ -5243,7 +4600,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=spacexchannel",
       description: "YouTube",
       tags: ["Space", "Video"],
-      accentColor: "#191970",
     },
 
     // --- Sports ---
@@ -5253,7 +4609,6 @@ export const DiscoverData = {
       url: "https://feeds.bbci.co.uk/sport/rss.xml",
       description: "BBC",
       tags: ["Sports"],
-      accentColor: "#008000",
     },
     {
       id: "sport_reddit",
@@ -5261,7 +4616,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/sports.rss",
       description: "Reddit",
       tags: ["Sports", "Reddit"],
-      accentColor: "#008000",
     },
     {
       id: "sport_sky",
@@ -5269,7 +4623,6 @@ export const DiscoverData = {
       url: "https://feeds.skynews.com/feeds/rss/sports.xml",
       description: "Sky",
       tags: ["Sports"],
-      accentColor: "#008000",
     },
     {
       id: "sport_sportskeeda",
@@ -5277,7 +4630,6 @@ export const DiscoverData = {
       url: "https://www.sportskeeda.com/feed",
       description: "News",
       tags: ["Sports"],
-      accentColor: "#008000",
     },
     {
       id: "sport_yahoo",
@@ -5285,7 +4637,6 @@ export const DiscoverData = {
       url: "https://sports.yahoo.com/rss/",
       description: "Yahoo",
       tags: ["Sports"],
-      accentColor: "#008000",
     },
     {
       id: "sport_espn",
@@ -5293,7 +4644,6 @@ export const DiscoverData = {
       url: "https://www.espn.com/espn/rss/news",
       description: "ESPN",
       tags: ["Sports"],
-      accentColor: "#008000",
     },
 
     // --- Startups ---
@@ -5303,7 +4653,6 @@ export const DiscoverData = {
       url: "https://avc.com/feed/",
       description: "VC",
       tags: ["Startups", "VC"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_bothsides",
@@ -5311,7 +4660,6 @@ export const DiscoverData = {
       url: "https://bothsidesofthetable.com/feed",
       description: "Mark Suster",
       tags: ["Startups", "VC"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_entrepreneur",
@@ -5319,7 +4667,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/entrepreneur/latest",
       description: "Entrepreneur",
       tags: ["Startups", "Business"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_feld",
@@ -5327,7 +4674,6 @@ export const DiscoverData = {
       url: "https://feld.com/feed",
       description: "Brad Feld",
       tags: ["Startups", "VC"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_forbes",
@@ -5335,7 +4681,6 @@ export const DiscoverData = {
       url: "https://www.forbes.com/entrepreneurs/feed/",
       description: "Forbes",
       tags: ["Startups", "Business"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_garyvee",
@@ -5343,7 +4688,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=GaryVaynerchuk",
       description: "YouTube",
       tags: ["Startups", "Video"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_hackernews",
@@ -5351,7 +4695,6 @@ export const DiscoverData = {
       url: "https://hnrss.org/frontpage",
       description: "Y Combinator",
       tags: ["Startups", "Tech"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_inc",
@@ -5359,7 +4702,6 @@ export const DiscoverData = {
       url: "https://www.inc.com/rss/",
       description: "Inc.",
       tags: ["Startups", "Business"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_intercom",
@@ -5367,7 +4709,6 @@ export const DiscoverData = {
       url: "https://www.intercom.com/blog/feed",
       description: "Blog",
       tags: ["Startups", "Tech"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_marieforleo",
@@ -5375,7 +4716,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=marieforleo",
       description: "YouTube",
       tags: ["Startups", "Video"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_mastersofscale",
@@ -5383,7 +4723,6 @@ export const DiscoverData = {
       url: "https://rss.art19.com/masters-of-scale",
       description: "Reid Hoffman",
       tags: ["Startups", "Podcast"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_paulgraham",
@@ -5391,7 +4730,6 @@ export const DiscoverData = {
       url: "https://www.aaronsw.com/2002/feeds/pgessays.rss",
       description: "Essays",
       tags: ["Startups"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_producthunt",
@@ -5399,7 +4737,6 @@ export const DiscoverData = {
       url: "https://www.producthunt.com/feed",
       description: "New Products",
       tags: ["Startups", "Tech"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_quicksprout",
@@ -5407,7 +4744,6 @@ export const DiscoverData = {
       url: "https://www.quicksprout.com/rss",
       description: "Marketing",
       tags: ["Startups", "Marketing"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_smallbiztrends",
@@ -5415,7 +4751,6 @@ export const DiscoverData = {
       url: "https://feeds2.feedburner.com/SmallBusinessTrends",
       description: "Trends",
       tags: ["Startups", "Business"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_spi",
@@ -5423,7 +4758,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/smartpassiveincome",
       description: "Pat Flynn",
       tags: ["Startups", "Business"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_springwise",
@@ -5431,7 +4765,6 @@ export const DiscoverData = {
       url: "https://www.springwise.com/feed",
       description: "Innovation",
       tags: ["Startups"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_steveblank",
@@ -5439,7 +4772,6 @@ export const DiscoverData = {
       url: "https://steveblank.com/feed/",
       description: "Innovation",
       tags: ["Startups"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_junkies",
@@ -5447,7 +4779,6 @@ export const DiscoverData = {
       url: "https://startupjunkie.libsyn.com/rss",
       description: "Podcast",
       tags: ["Startups", "Podcast"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_timferriss",
@@ -5455,7 +4786,6 @@ export const DiscoverData = {
       url: "https://rss.art19.com/tim-ferriss-show",
       description: "Podcast",
       tags: ["Startups", "Podcast"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_twist",
@@ -5463,7 +4793,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/twistvid",
       description: "Jason Calacanis",
       tags: ["Startups", "Video"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_venturebeat",
@@ -5471,7 +4800,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/venturebeat/SZYF",
       description: "News",
       tags: ["Startups", "Tech"],
-      accentColor: "#FF4500",
     },
     {
       id: "start_feldblog",
@@ -5479,7 +4807,6 @@ export const DiscoverData = {
       url: "https://feld.com/archives/tag/blog/feed",
       description: "Brad Feld",
       tags: ["Startups", "VC"],
-      accentColor: "#FF4500",
     },
 
     // --- Tech ---
@@ -5489,7 +4816,6 @@ export const DiscoverData = {
       url: "https://atp.fm/rss",
       description: "Podcast",
       tags: ["Tech", "Podcast"],
-      accentColor: "#000000",
     },
     {
       id: "tech_analogue",
@@ -5497,7 +4823,6 @@ export const DiscoverData = {
       url: "https://www.relay.fm/analogue/feed",
       description: "Podcast",
       tags: ["Tech", "Podcast"],
-      accentColor: "#000000",
     },
     {
       id: "tech_arstechnica",
@@ -5505,7 +4830,6 @@ export const DiscoverData = {
       url: "https://feeds.arstechnica.com/arstechnica/index",
       description: "News",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
     {
       id: "tech_cnet_vid",
@@ -5513,7 +4837,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=CNETTV",
       description: "YouTube",
       tags: ["Tech", "Video"],
-      accentColor: "#000000",
     },
     {
       id: "tech_cnet",
@@ -5521,7 +4844,6 @@ export const DiscoverData = {
       url: "https://www.cnet.com/rss/news/",
       description: "News",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
     {
       id: "tech_clockwise",
@@ -5529,7 +4851,6 @@ export const DiscoverData = {
       url: "https://www.relay.fm/clockwise/feed",
       description: "Podcast",
       tags: ["Tech", "Podcast"],
-      accentColor: "#000000",
     },
     {
       id: "tech_gizmodo",
@@ -5537,7 +4858,6 @@ export const DiscoverData = {
       url: "https://gizmodo.com/rss",
       description: "News",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
     {
       id: "tech_hackernews",
@@ -5545,7 +4865,6 @@ export const DiscoverData = {
       url: "https://news.ycombinator.com/rss",
       description: "News",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
     {
       id: "tech_lifehacker",
@@ -5553,7 +4872,6 @@ export const DiscoverData = {
       url: "https://lifehacker.com/rss",
       description: "Tips",
       tags: ["Tech", "Lifehacker"],
-      accentColor: "#000000",
     },
     {
       id: "tech_linus",
@@ -5561,7 +4879,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=LinusTechTips",
       description: "YouTube",
       tags: ["Tech", "Video"],
-      accentColor: "#000000",
     },
     {
       id: "tech_mkbhd",
@@ -5569,7 +4886,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=marquesbrownlee",
       description: "YouTube",
       tags: ["Tech", "Video"],
-      accentColor: "#000000",
     },
     {
       id: "tech_mashable",
@@ -5577,7 +4893,6 @@ export const DiscoverData = {
       url: "https://feeds.mashable.com/Mashable",
       description: "News",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
     {
       id: "tech_readwrite",
@@ -5585,7 +4900,6 @@ export const DiscoverData = {
       url: "https://readwrite.com/feed/",
       description: "IoT",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
     {
       id: "tech_replyall",
@@ -5593,7 +4907,6 @@ export const DiscoverData = {
       url: "https://feeds.megaphone.fm/replyall",
       description: "Podcast",
       tags: ["Tech", "Podcast"],
-      accentColor: "#000000",
     },
     {
       id: "tech_rocket",
@@ -5601,7 +4914,6 @@ export const DiscoverData = {
       url: "https://www.relay.fm/rocket/feed",
       description: "Podcast",
       tags: ["Tech", "Podcast"],
-      accentColor: "#000000",
     },
     {
       id: "tech_slashdot",
@@ -5609,7 +4921,6 @@ export const DiscoverData = {
       url: "https://rss.slashdot.org/Slashdot/slashdotMain",
       description: "News",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
     {
       id: "tech_stratechery",
@@ -5617,7 +4928,6 @@ export const DiscoverData = {
       url: "https://stratechery.com/feed/",
       description: "Ben Thompson",
       tags: ["Tech", "Business"],
-      accentColor: "#000000",
     },
     {
       id: "tech_techcrunch",
@@ -5625,7 +4935,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/TechCrunch",
       description: "News",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
     {
       id: "tech_keyword",
@@ -5633,7 +4942,6 @@ export const DiscoverData = {
       url: "https://www.blog.google/rss/",
       description: "Google Blog",
       tags: ["Tech", "Google"],
-      accentColor: "#000000",
     },
     {
       id: "tech_tnw",
@@ -5641,7 +4949,6 @@ export const DiscoverData = {
       url: "https://thenextweb.com/feed/",
       description: "News",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
     {
       id: "tech_verge_yt",
@@ -5649,7 +4956,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=TheVerge",
       description: "YouTube",
       tags: ["Tech", "Video"],
-      accentColor: "#000000",
     },
     {
       id: "tech_verge",
@@ -5657,7 +4963,6 @@ export const DiscoverData = {
       url: "https://www.theverge.com/rss/index.xml",
       description: "News",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
     {
       id: "tech_vergecast",
@@ -5665,7 +4970,6 @@ export const DiscoverData = {
       url: "https://feeds.megaphone.fm/vergecast",
       description: "Podcast",
       tags: ["Tech", "Podcast"],
-      accentColor: "#000000",
     },
     {
       id: "tech_twit",
@@ -5673,7 +4977,6 @@ export const DiscoverData = {
       url: "https://feeds.twit.tv/twit.xml",
       description: "Podcast",
       tags: ["Tech", "Podcast"],
-      accentColor: "#000000",
     },
     {
       id: "tech_unboxtherapy",
@@ -5681,7 +4984,6 @@ export const DiscoverData = {
       url: "https://www.youtube.com/feeds/videos.xml?user=unboxtherapy",
       description: "YouTube",
       tags: ["Tech", "Video"],
-      accentColor: "#000000",
     },
     {
       id: "tech_engadget",
@@ -5689,7 +4991,6 @@ export const DiscoverData = {
       url: "https://www.engadget.com/rss.xml",
       description: "News",
       tags: ["Tech"],
-      accentColor: "#000000",
     },
 
     // --- Television ---
@@ -5699,7 +5000,6 @@ export const DiscoverData = {
       url: "https://www.bleedingcool.com/tv/feed/",
       description: "News",
       tags: ["TV"],
-      accentColor: "#800080",
     },
     {
       id: "tv_fanatic",
@@ -5707,7 +5007,6 @@ export const DiscoverData = {
       url: "https://www.tvfanatic.com/rss.xml",
       description: "News",
       tags: ["TV"],
-      accentColor: "#800080",
     },
     {
       id: "tv_tvline",
@@ -5715,7 +5014,6 @@ export const DiscoverData = {
       url: "https://tvline.com/feed/",
       description: "News",
       tags: ["TV"],
-      accentColor: "#800080",
     },
     {
       id: "tv_reddit",
@@ -5723,7 +5021,6 @@ export const DiscoverData = {
       url: "https://reddit.com/r/television/.rss",
       description: "Reddit",
       tags: ["TV", "Reddit"],
-      accentColor: "#800080",
     },
     {
       id: "tv_avclub",
@@ -5731,7 +5028,6 @@ export const DiscoverData = {
       url: "https://tv.avclub.com/rss",
       description: "TV",
       tags: ["TV"],
-      accentColor: "#800080",
     },
     {
       id: "tv_tvaddict",
@@ -5739,7 +5035,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/thetvaddict/AXob",
       description: "News",
       tags: ["TV"],
-      accentColor: "#800080",
     },
 
     // --- Tennis ---
@@ -5749,7 +5044,6 @@ export const DiscoverData = {
       url: "https://feeds.bbci.co.uk/sport/tennis/rss.xml",
       description: "BBC",
       tags: ["Sports", "Tennis"],
-      accentColor: "#008000",
     },
     {
       id: "tennis_essential",
@@ -5757,7 +5051,6 @@ export const DiscoverData = {
       url: "https://feed.podbean.com/essentialtennis/feed.xml",
       description: "Podcast",
       tags: ["Sports", "Tennis", "Podcast"],
-      accentColor: "#008000",
     },
     {
       id: "tennis_grandslam",
@@ -5765,7 +5058,6 @@ export const DiscoverData = {
       url: "https://www.grandslamfantasytennis.com/feed/?x=1",
       description: "Fantasy",
       tags: ["Sports", "Tennis"],
-      accentColor: "#008000",
     },
     {
       id: "tennis_atp",
@@ -5773,7 +5065,6 @@ export const DiscoverData = {
       url: "https://www.atptour.com/en/media/rss-feed/xml-feed",
       description: "News",
       tags: ["Sports", "Tennis"],
-      accentColor: "#008000",
     },
     {
       id: "tennis_reddit",
@@ -5781,7 +5072,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/tennis/.rss",
       description: "Reddit",
       tags: ["Sports", "Tennis", "Reddit"],
-      accentColor: "#008000",
     },
     {
       id: "tennis_perfect",
@@ -5789,7 +5079,6 @@ export const DiscoverData = {
       url: "https://www.perfect-tennis.com/feed/",
       description: "Blog",
       tags: ["Sports", "Tennis"],
-      accentColor: "#008000",
     },
     {
       id: "tennis_espn",
@@ -5797,7 +5086,6 @@ export const DiscoverData = {
       url: "https://www.espn.com/espn/rss/tennis/news",
       description: "ESPN",
       tags: ["Sports", "Tennis"],
-      accentColor: "#008000",
     },
 
     // --- Travel ---
@@ -5807,7 +5095,6 @@ export const DiscoverData = {
       url: "https://www.atlasobscura.com/feeds/latest",
       description: "Curiosities",
       tags: ["Travel"],
-      accentColor: "#00BFFF",
     },
     {
       id: "travel_livelife",
@@ -5815,7 +5102,6 @@ export const DiscoverData = {
       url: "https://www.livelifetravel.world/feed/",
       description: "Blog",
       tags: ["Travel"],
-      accentColor: "#00BFFF",
     },
     {
       id: "travel_lonelyplanet",
@@ -5823,7 +5109,6 @@ export const DiscoverData = {
       url: "https://www.lonelyplanet.com/news/feed/atom/",
       description: "News",
       tags: ["Travel"],
-      accentColor: "#00BFFF",
     },
     {
       id: "travel_nyt",
@@ -5831,7 +5116,6 @@ export const DiscoverData = {
       url: "https://rss.nytimes.com/services/xml/rss/nyt/Travel.xml",
       description: "NYT",
       tags: ["Travel"],
-      accentColor: "#00BFFF",
     },
     {
       id: "travel_nomadicmatt",
@@ -5839,7 +5123,6 @@ export const DiscoverData = {
       url: "https://www.nomadicmatt.com/travel-blog/feed/",
       description: "Budget Travel",
       tags: ["Travel"],
-      accentColor: "#00BFFF",
     },
     {
       id: "travel_guardian",
@@ -5847,7 +5130,6 @@ export const DiscoverData = {
       url: "https://www.theguardian.com/uk/travel/rss",
       description: "Guardian",
       tags: ["Travel"],
-      accentColor: "#00BFFF",
     },
 
     // --- UI/UX ---
@@ -5857,7 +5139,6 @@ export const DiscoverData = {
       url: "https://www.smashingmagazine.com/feed",
       description: "Design",
       tags: ["Design", "UI", "UX"],
-      accentColor: "#FF00FF",
     },
     {
       id: "ux_boxesandarrows",
@@ -5865,7 +5146,6 @@ export const DiscoverData = {
       url: "https://boxesandarrows.com/rss/",
       description: "Design",
       tags: ["Design", "UX"],
-      accentColor: "#FF00FF",
     },
     {
       id: "ux_designernews",
@@ -5873,7 +5153,6 @@ export const DiscoverData = {
       url: "https://www.designernews.co/?format=rss",
       description: "News",
       tags: ["Design", "News"],
-      accentColor: "#FF00FF",
     },
     {
       id: "ux_insidedesign",
@@ -5881,7 +5160,6 @@ export const DiscoverData = {
       url: "https://www.invisionapp.com/inside-design/feed",
       description: "InVision",
       tags: ["Design", "UX"],
-      accentColor: "#FF00FF",
     },
     {
       id: "ux_justcreative",
@@ -5889,7 +5167,6 @@ export const DiscoverData = {
       url: "https://feeds.feedburner.com/JustCreativeDesignBlog",
       description: "Jacob Cass",
       tags: ["Design"],
-      accentColor: "#FF00FF",
     },
     {
       id: "ux_nng",
@@ -5897,7 +5174,6 @@ export const DiscoverData = {
       url: "https://www.nngroup.com/feed/rss/",
       description: "UX Research",
       tags: ["Design", "UX"],
-      accentColor: "#FF00FF",
     },
     {
       id: "ux_uxstudio",
@@ -5905,7 +5181,6 @@ export const DiscoverData = {
       url: "https://uxstudioteam.com/ux-blog/feed/",
       description: "Blog",
       tags: ["Design", "UX"],
-      accentColor: "#FF00FF",
     },
     {
       id: "ux_collective",
@@ -5913,7 +5188,6 @@ export const DiscoverData = {
       url: "https://uxdesign.cc/feed",
       description: "Medium",
       tags: ["Design", "UX"],
-      accentColor: "#FF00FF",
     },
     {
       id: "ux_movement",
@@ -5921,7 +5195,6 @@ export const DiscoverData = {
       url: "https://uxmovement.com/feed/",
       description: "Blog",
       tags: ["Design", "UX"],
-      accentColor: "#FF00FF",
     },
     {
       id: "ux_usabilitygeek",
@@ -5929,7 +5202,6 @@ export const DiscoverData = {
       url: "https://usabilitygeek.com/feed/",
       description: "Usability",
       tags: ["Design", "UX"],
-      accentColor: "#FF00FF",
     },
     {
       id: "ux_reddit",
@@ -5937,7 +5209,6 @@ export const DiscoverData = {
       url: "https://www.reddit.com/r/userexperience/.rss",
       description: "Reddit",
       tags: ["Design", "UX", "Reddit"],
-      accentColor: "#FF00FF",
     },
 
     // --- Web Development ---
@@ -5947,7 +5218,6 @@ export const DiscoverData = {
       url: "https://alistapart.com/main/feed/",
       description: "Web Design",
       tags: ["Dev", "Web"],
-      accentColor: "#0000FF",
     },
     {
       id: "web_csstricks",
@@ -5955,7 +5225,6 @@ export const DiscoverData = {
       url: "https://css-tricks.com/feed/",
       description: "CSS",
       tags: ["Dev", "Web", "CSS"],
-      accentColor: "#0000FF",
     },
     {
       id: "web_codewall",
@@ -5963,7 +5232,6 @@ export const DiscoverData = {
       url: "https://www.codewall.co.uk/feed/",
       description: "Tutorials",
       tags: ["Dev", "Web"],
-      accentColor: "#0000FF",
     },
     {
       id: "web_davidwalsh",
@@ -5971,7 +5239,6 @@ export const DiscoverData = {
       url: "https://davidwalsh.name/feed",
       description: "David Walsh",
       tags: ["Dev", "Web"],
-      accentColor: "#0000FF",
     },
     {
       id: "web_mozilla",
@@ -5979,7 +5246,6 @@ export const DiscoverData = {
       url: "https://hacks.mozilla.org/feed/",
       description: "Mozilla",
       tags: ["Dev", "Web"],
-      accentColor: "#0000FF",
     },
     {
       id: "web_sinkin",
@@ -5987,7 +5253,6 @@ export const DiscoverData = {
       url: "https://gosink.in/rss/",
       description: "Tech & Travel",
       tags: ["Dev", "Web"],
-      accentColor: "#0000FF",
     },
     {
       id: "web_google",
@@ -5995,7 +5260,6 @@ export const DiscoverData = {
       url: "https://developers.google.com/web/updates/rss.xml",
       description: "Google Web",
       tags: ["Dev", "Web", "Google"],
-      accentColor: "#0000FF",
     },
 
     // --- iOS Development ---
@@ -6005,7 +5269,6 @@ export const DiscoverData = {
       url: "https://feeds.feedwrench.com/all-shows-devchattv.rss",
       description: "Podcast",
       tags: ["Dev", "iOS", "Podcast"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_alberto",
@@ -6013,7 +5276,6 @@ export const DiscoverData = {
       url: "https://albertodebortoli.com/rss/",
       description: "Blog",
       tags: ["Dev", "iOS"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_augmented",
@@ -6021,7 +5283,6 @@ export const DiscoverData = {
       url: "https://augmentedcode.io/feed/",
       description: "Blog",
       tags: ["Dev", "iOS"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_benoit",
@@ -6029,7 +5290,6 @@ export const DiscoverData = {
       url: "https://benoitpasquier.com/index.xml",
       description: "Swift",
       tags: ["Dev", "iOS", "Swift"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_fabisevich",
@@ -6037,7 +5297,6 @@ export const DiscoverData = {
       url: "https://www.fabisevi.ch/feed.xml",
       description: "Blog",
       tags: ["Dev", "iOS"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_mobilea11y",
@@ -6045,7 +5304,6 @@ export const DiscoverData = {
       url: "https://mobilea11y.com/index.xml",
       description: "Accessibility",
       tags: ["Dev", "iOS", "Accessibility"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_mtjc",
@@ -6053,7 +5311,6 @@ export const DiscoverData = {
       url: "https://feeds.fireside.fm/mtjc/rss",
       description: "Podcast",
       tags: ["Dev", "iOS", "Podcast"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_appledev",
@@ -6061,7 +5318,6 @@ export const DiscoverData = {
       url: "https://developer.apple.com/news/rss/news.rss",
       description: "Apple",
       tags: ["Dev", "iOS", "Apple"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_ole",
@@ -6069,7 +5325,6 @@ export const DiscoverData = {
       url: "https://oleb.net/blog/atom.xml",
       description: "Blog",
       tags: ["Dev", "iOS"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_pavel",
@@ -6077,7 +5332,6 @@ export const DiscoverData = {
       url: "https://nerdyak.tech/feed.xml",
       description: "Blog",
       tags: ["Dev", "iOS"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_sundell",
@@ -6085,7 +5339,6 @@ export const DiscoverData = {
       url: "https://www.swiftbysundell.com/feed.rss",
       description: "John Sundell",
       tags: ["Dev", "iOS", "Swift"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_swiftrocks",
@@ -6093,7 +5346,6 @@ export const DiscoverData = {
       url: "https://swiftrocks.com/rss.xml",
       description: "Swift",
       tags: ["Dev", "iOS", "Swift"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_atomicbird",
@@ -6101,7 +5353,6 @@ export const DiscoverData = {
       url: "https://atomicbird.com/index.xml",
       description: "Blog",
       tags: ["Dev", "iOS"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_undertheradar",
@@ -6109,7 +5360,6 @@ export const DiscoverData = {
       url: "https://www.relay.fm/radar/feed",
       description: "Podcast",
       tags: ["Dev", "iOS", "Podcast"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_useyourloaf",
@@ -6117,7 +5367,6 @@ export const DiscoverData = {
       url: "https://useyourloaf.com/blog/rss.xml",
       description: "Blog",
       tags: ["Dev", "iOS"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_inessential",
@@ -6125,7 +5374,6 @@ export const DiscoverData = {
       url: "https://inessential.com/xml/rss.xml",
       description: "Brent Simmons",
       tags: ["Dev", "iOS"],
-      accentColor: "#A2AAAD",
     },
     {
       id: "ios_tyler",
@@ -6133,7 +5381,6 @@ export const DiscoverData = {
       url: "https://tyler.io/feed/",
       description: "Tyler Hall",
       tags: ["Dev", "iOS"],
-      accentColor: "#A2AAAD",
     },
   ],
   packs: [
