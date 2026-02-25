@@ -157,31 +157,29 @@ export const ReaderService = {
         maxEnd = Math.max(maxEnd, c.position + c.length);
       });
 
-      // Apply custom merge strategy for data if defined
-      if (
-        rendererConfig.mergeStrategy &&
-        typeof rendererConfig.mergeStrategy === "function"
-      ) {
-        cadData.data = rendererConfig.mergeStrategy(overlapping, cadData);
-      }
-
-      // Remove overlapping from array
-      const overlappingSet = new Set(overlapping);
-      article.cads = article.cads.filter((c) => !overlappingSet.has(c));
-
       // Update new CAD geometry
       cadData.position = minPos;
       cadData.length = maxEnd - minPos;
 
-      let fullText = "";
       if (article.fullContent) {
-        fullText = Utils.divToText(article.fullContent);
         const sourceHTML =
           article.fullContent || article.content || article.description || "";
         // We need the CLEAN source HTML that ReaderView uses.
         const cleanHTML = DOMPurify.sanitize(sourceHTML);
         cadData.originalContent = cleanHTML.substring(minPos, maxEnd);
       }
+
+      // Apply custom merge strategy for data if defined
+      if (
+        rendererConfig.mergeStrategy &&
+        typeof rendererConfig.mergeStrategy === "function"
+      ) {
+        cadData.data = await rendererConfig.mergeStrategy(overlapping, cadData);
+      }
+
+      // Remove overlapping from array
+      const overlappingSet = new Set(overlapping);
+      article.cads = article.cads.filter((c) => !overlappingSet.has(c));
     }
 
     article.cads.push(cadData);
