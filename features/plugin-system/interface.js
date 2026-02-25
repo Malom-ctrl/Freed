@@ -155,6 +155,25 @@ export class Interface {
         alert: (msg) => alert(msg),
         confirm: (msg) => confirm(msg),
       },
+      utils: {
+        rgbToHex: (color) => Utils.rgbToHex(color),
+        ensureUrlProtocol: (input) => Utils.ensureUrlProtocol(input),
+        divToText: (html) => Utils.divToText(html),
+        countWords: (text) => Utils.countWords(text),
+        generateId: () => Utils.generateId(),
+        getRandomFromPalette: () => Utils.getRandomFromPalette(),
+        getColorForId: (str) => Utils.getColorForId(str),
+        formatRelativeTime: (dateStr) => Utils.formatRelativeTime(dateStr),
+        formatFullDate: (dateStr) => Utils.formatFullDate(dateStr),
+        proxifyUrl: (url) => Utils.proxifyUrl(url),
+        hexToRgba: (hex, alpha) => Utils.hexToRgba(hex, alpha),
+        throttle: (func, limit) => Utils.throttle(func, limit),
+        getFaviconUrl: (domain) => Utils.getFaviconUrl(domain),
+        fetchImageAsBase64: (url) => Utils.fetchImageAsBase64(url),
+        getDominantColor: (base64) => Utils.getDominantColor(base64),
+        fetchFaviconAndColor: (url) => Utils.fetchFaviconAndColor(url),
+        semVer: Utils.SemVer,
+      },
     };
   }
 

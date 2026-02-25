@@ -168,6 +168,21 @@ export const Utils = {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   },
 
+  rgbToHex: function (color) {
+    if (!color) return "#000000";
+    if (color.startsWith("#")) return color;
+
+    // Handle rgb/rgba
+    const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+      const r = parseInt(match[1]).toString(16).padStart(2, "0");
+      const g = parseInt(match[2]).toString(16).padStart(2, "0");
+      const b = parseInt(match[3]).toString(16).padStart(2, "0");
+      return `#${r}${g}${b}`;
+    }
+    return "#000000";
+  },
+
   throttle: function (func, limit) {
     let lastFunc;
     let lastRan;
