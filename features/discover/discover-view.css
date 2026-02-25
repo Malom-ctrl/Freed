@@ -233,7 +233,7 @@
 }
 
 .card-tags {
-    margin-top: 8px;
+    margin-top: auto;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
