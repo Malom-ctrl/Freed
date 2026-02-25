@@ -221,6 +221,79 @@
     color: var(--text-muted);
 }
 
+.discover-section-title svg {
+    margin-right: 8px;
+}
+
+.pack-feed-preview-label {
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.card-tags {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.card-tags .tag-pill {
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    border: 1px solid var(--border);
+}
+
+.discover-no-results {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 40px;
+    grid-column: 1/-1;
+}
+
+.discover-sentinel {
+    height: 20px;
+    grid-column: 1/-1;
+}
+
+.discover-search-wrapper {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#discover-search.discover-search-input {
+    width: 100%;
+    padding: 0.75em;
+    padding-left: 36px;
+    background: var(--bg-card);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+#discover-search.discover-search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.discover-toggle-tags-btn {
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.pack-add-btn {
+    margin-top: auto;
+    width: 100%;
+}
+
+.feed-add-btn.is-adding {
+    cursor: wait;
+}
+
 /* Mobile Discover Overrides */
 @media (max-width: 768px) {
     /* Discover view filter bar specific override for mobile */

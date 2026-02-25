@@ -1,0 +1,31 @@
+/* Feed Modal Styles */
+
+#feed-tags-input {
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.feed-icon-preview {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    object-fit: contain;
+    background: #f3f4f6;
+}
+
+.feed-icon-preview[hidden] {
+    display: none;
+}
+
+.btn-delete-feed {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.btn-delete-feed[hidden] {
+    display: none;
+}
+
+#feed-modal .settings-api-key-desc {
+    margin-top: -12px;
+}

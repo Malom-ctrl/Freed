@@ -35,6 +35,10 @@
     display: none; /* hidden by default */
 }
 
+.reader-hero.show {
+    display: block;
+}
+
 .reader-header-content {
     padding: 30px 24px 10px;
     max-width: 700px;
@@ -55,6 +59,7 @@
     color: var(--text-muted);
     font-weight: 400;
     text-transform: none;
+    cursor: help;
 }
 
 .reader-title {
@@ -272,4 +277,41 @@
     color: var(--text-muted);
     font-size: 0.8rem;
     margin-left: 8px;
+}
+
+.reader-modal-header-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.reader-modal-header-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+#reader-actions-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.reader-header-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border);
+    margin: 0 4px;
+}
+
+.reader-meta-divider {
+    color: var(--border);
+}
+
+.cad-highlight {
+    background-color: #fde04780;
+    border-bottom: 2px solid #fde047;
+    color: inherit;
+    padding: 0 2px;
+    border-radius: 2px;
 }

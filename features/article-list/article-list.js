@@ -32,7 +32,7 @@ export const ArticleList = {
     const renderBatch = (count = batchSize) => {
       const batch = items.slice(renderedCount, renderedCount + count);
       if (batch.length === 0) {
-        sentinel.style.display = "none";
+        sentinel.classList.add("hidden");
         return false;
       }
 
@@ -46,7 +46,7 @@ export const ArticleList = {
       renderedCount += batch.length;
 
       if (renderedCount >= items.length) {
-        sentinel.style.display = "none";
+        sentinel.classList.add("hidden");
         if (observer) {
           observer.disconnect();
           observer = null;
@@ -81,7 +81,7 @@ export const ArticleList = {
 
     // Setup Observer
     if (renderedCount >= items.length) {
-      sentinel.style.display = "none";
+      sentinel.classList.add("hidden");
       return {
         observer: null,
         getRenderedCount: () => renderedCount,
@@ -291,7 +291,9 @@ export const ArticleList = {
       this._articleObserver = null;
     }
 
-    list.innerHTML = "";
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
 
     if (articles.length === 0) {
       const hasFilters =

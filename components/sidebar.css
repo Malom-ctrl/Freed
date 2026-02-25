@@ -88,6 +88,32 @@
     stroke: currentColor;
 }
 
+.nav-item-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    overflow: hidden;
+}
+
+.feed-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 2px;
+    object-fit: contain;
+}
+
+.feed-title-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.feed-actions {
+    display: flex;
+    gap: 2px;
+}
+
 .feed-btn-icon {
     margin-left: 2px;
     padding: 4px;
@@ -159,7 +185,7 @@
     #sidebar.open {
         transform: translateX(0);
     }
-    
+
     .feed-btn-icon {
         opacity: 1;
     } /* Always show settings on mobile */

@@ -47,6 +47,9 @@
     justify-content: space-between;
     align-items: center;
 }
+.modal-header h3 {
+    margin: 0;
+}
 .close-btn,
 .icon-btn {
     background: none;
@@ -195,4 +198,63 @@
 
 .global-popover-content {
     padding-right: 16px; /* Avoid overlap with close button */
+}
+
+.modal-prompt-backdrop {
+    z-index: 10000;
+}
+
+.modal-prompt {
+    max-width: 350px;
+    padding: 20px;
+}
+
+.modal-prompt-title {
+    margin: 0 0 16px 0;
+}
+
+.modal-prompt-input {
+    width: 100%;
+    min-height: 80px;
+    margin-bottom: 16px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-body);
+    color: var(--text-main);
+    font-family: inherit;
+    resize: vertical;
+}
+
+.modal-prompt-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.modal-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.modal-row-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-section {
+    margin-bottom: 16px;
+}
+
+.modal-actions-between {
+    justify-content: space-between;
+}
+
+.modal-action-buttons {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
 }

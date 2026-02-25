@@ -14,12 +14,15 @@
 @import "../components/toast.css";
 
 /* 3. Features */
-@import "../features/reader/article-list.css";
+@import "../features/article-list/article-list.css";
 @import "../features/reader/reader-view.css";
 @import "../features/discover/discover-view.css";
 @import "../features/settings/settings-modal.css";
+@import "../features/stats/stats-view.css";
+@import "../features/plugin-system/manager-view.css";
 @import "../features/tags/tags.css";
 @import "../features/tools/tools.css";
+@import "../features/feeds/feed-modal.css";
 
 /* 4. Global Variables & Themes */
 :root {
@@ -109,3 +112,7 @@ body {
 body.modal-open {
     overflow: hidden;
 } /* Lock scroll for mobile */
+
+[hidden] {
+    display: none !important;
+}

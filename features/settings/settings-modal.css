@@ -42,6 +42,11 @@
     display: none;
 }
 
+.settings-tab-pane h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
 .settings-tab-pane.active {
     display: block;
     animation: tabFadeIn 0.2s ease-out;
@@ -122,4 +127,79 @@
         padding: 12px 8px;
         font-size: 0.85rem;
     }
+}
+
+.settings-modal-actions {
+    justify-content: flex-end;
+}
+
+.settings-section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 0 24px;
+}
+
+.settings-api-key-desc {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.settings-api-key-link {
+    font-size: 0.8rem;
+    margin: 0;
+}
+
+.settings-api-key-link a {
+    color: var(--primary);
+}
+
+.import-export-container {
+    background: var(--bg-body);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.import-export-label {
+    margin-bottom: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.import-export-option {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.import-export-option-last {
+    margin-bottom: 12px;
+}
+
+.btn-export {
+    width: 100%;
+    justify-content: center;
+}
+
+.settings-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+}
+
+.settings-divider-large {
+    height: 1px;
+    background: var(--border);
+    margin: 24px 0;
+}
+
+.data-retention-desc {
+    margin-top: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
 }

@@ -171,15 +171,7 @@
                 <div class="header-title" id="page-title">All Articles</div>
 
                 <!-- Plugin Navbar Actions -->
-                <div
-                    id="navbar-actions"
-                    style="
-                        display: flex;
-                        align-items: center;
-                        margin-left: auto;
-                        margin-right: 8px;
-                    "
-                ></div>
+                <div id="navbar-actions"></div>
 
                 <button
                     class="mobile-filter-btn"
@@ -253,11 +245,7 @@
                         />
                     </div>
 
-                    <button
-                        id="btn-clear-filters"
-                        class="btn-text"
-                        style="display: none"
-                    >
+                    <button id="btn-clear-filters" class="btn-text">
                         Clear
                     </button>
                 </div>
@@ -272,25 +260,10 @@
         <div class="modal-backdrop" id="read-modal">
             <div class="modal reader-modal">
                 <div class="modal-header">
-                    <div
-                        style="
-                            font-weight: 600;
-                            font-size: 0.9rem;
-                            color: var(--text-muted);
-                        "
-                    >
-                        Reading View
-                    </div>
-                    <div style="display: flex; gap: 12px; align-items: center">
+                    <div class="reader-modal-header-label">Reading View</div>
+                    <div class="reader-modal-header-actions">
                         <!-- Plugin Reader Actions -->
-                        <div
-                            id="reader-actions-container"
-                            style="
-                                display: flex;
-                                gap: 12px;
-                                align-items: center;
-                            "
-                        ></div>
+                        <div id="reader-actions-container"></div>
 
                         <a
                             href="#"
@@ -364,14 +337,7 @@
                                 ></line>
                             </svg>
                         </button>
-                        <div
-                            style="
-                                width: 1px;
-                                height: 16px;
-                                background: var(--border);
-                                margin: 0 4px;
-                            "
-                        ></div>
+                        <div class="reader-header-divider"></div>
                         <button class="close-btn" onclick="window.closeModal()">
                             <svg
                                 width="24"
@@ -397,7 +363,7 @@
 
                         <div class="reader-meta-row">
                             <span id="reader-feed-title">Feed Source</span>
-                            <span style="color: var(--border)">|</span>
+                            <span class="reader-meta-divider">|</span>
                             <span id="reader-date" class="reader-meta-date"
                                 >Date</span
                             >
@@ -423,7 +389,7 @@
         <div id="global-tooltip" class="global-tooltip"></div>
 
         <!-- Tag Color Popup -->
-        <div id="tag-color-popup" class="tag-color-popup" style="display: none">
+        <div id="tag-color-popup" class="tag-color-popup">
             <div id="tag-color-popup-swatches" class="color-picker-row"></div>
         </div>
 
@@ -431,11 +397,7 @@
         <div id="global-autocomplete" class="autocomplete-suggestions"></div>
 
         <!-- Selection Toolbar -->
-        <div
-            id="selection-toolbar"
-            class="selection-toolbar"
-            style="display: none"
-        >
+        <div id="selection-toolbar" class="selection-toolbar">
             <!-- Core Buttons -->
             <button id="btn-tool-highlight">
                 <svg
@@ -468,7 +430,7 @@
                 </svg>
                 Annotate
             </button>
-            <button id="btn-tool-clear" style="display: none">
+            <button id="btn-tool-clear">
                 <svg
                     width="16"
                     height="16"
@@ -487,15 +449,11 @@
                 Clear
             </button>
             <!-- Divider for Plugins -->
-            <div
-                class="divider"
-                id="toolbar-divider"
-                style="display: none"
-            ></div>
+            <div class="divider" id="toolbar-divider"></div>
             <!-- Plugin buttons injected here -->
             <div
                 id="plugin-tools-container"
-                style="display: flex; gap: 4px"
+                class="plugin-tools-container"
             ></div>
         </div>
 
@@ -503,9 +461,7 @@
         <div class="modal-backdrop" id="feed-modal">
             <div class="modal">
                 <div class="modal-header">
-                    <h3 style="margin: 0" id="feed-modal-title">
-                        Add New Feed
-                    </h3>
+                    <h3 id="feed-modal-title">Add New Feed</h3>
                     <button class="close-btn" onclick="window.closeFeedModal()">
                         <svg
                             width="24"
@@ -523,71 +479,30 @@
                 <div class="modal-content">
                     <input type="hidden" id="feed-id-input" />
 
-                    <label
-                        style="
-                            font-size: 0.85rem;
-                            font-weight: 600;
-                            color: var(--text-muted);
-                            display: block;
-                            margin-bottom: 6px;
-                        "
-                        >Feed URL</label
-                    >
+                    <label class="modal-label">Feed URL</label>
                     <input
                         type="url"
                         id="feed-url-input"
                         placeholder="https://example.com/rss"
-                        style="width: 100%; margin-bottom: 16px"
+                        class="modal-input"
                     />
 
-                    <label
-                        style="
-                            font-size: 0.85rem;
-                            font-weight: 600;
-                            color: var(--text-muted);
-                            display: block;
-                            margin-bottom: 6px;
-                        "
-                        >Feed Name</label
-                    >
+                    <label class="modal-label">Feed Name</label>
                     <input
                         type="text"
                         id="feed-name-input"
                         placeholder="e.g. Tech News (Optional)"
-                        style="width: 100%; margin-bottom: 16px"
+                        class="modal-input"
                     />
 
-                    <div
-                        style="
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                            margin-bottom: 16px;
-                        "
-                    >
-                        <div
-                            style="display: flex; align-items: center; gap: 8px"
-                        >
-                            <label
-                                style="
-                                    font-size: 0.85rem;
-                                    font-weight: 600;
-                                    color: var(--text-muted);
-                                    margin: 0;
-                                "
-                                for="feed-use-icon-input"
+                    <div class="modal-row">
+                        <div class="modal-row-left">
+                            <label class="modal-label" for="feed-use-icon-input"
                                 >Use website icon</label
                             >
                             <img
                                 id="feed-icon-preview"
-                                style="
-                                    width: 20px;
-                                    height: 20px;
-                                    border-radius: 4px;
-                                    object-fit: contain;
-                                    display: none;
-                                    background: #f3f4f6;
-                                "
+                                class="feed-icon-preview"
                                 alt="Icon Preview"
                             />
                         </div>
@@ -597,44 +512,22 @@
                         </label>
                     </div>
 
-                    <label
-                        style="
-                            font-size: 0.85rem;
-                            font-weight: 600;
-                            color: var(--text-muted);
-                            display: block;
-                            margin-bottom: 6px;
-                        "
-                        >Tags</label
-                    >
-                    <div style="margin-bottom: 16px">
+                    <label class="modal-label">Tags</label>
+                    <div class="modal-section">
                         <div id="feed-tags-list" class="tags-container"></div>
                         <div class="tag-input-wrapper">
                             <input
                                 type="text"
                                 id="feed-tags-input"
                                 placeholder="Add a tag..."
-                                style="width: 100%; margin-top: 8px"
+                                class="modal-input"
                                 autocomplete="off"
                             />
                         </div>
                     </div>
 
-                    <div
-                        style="
-                            display: flex;
-                            align-items: center;
-                            justify-content: space-between;
-                            margin-bottom: 16px;
-                        "
-                    >
-                        <label
-                            style="
-                                font-size: 0.85rem;
-                                font-weight: 600;
-                                color: var(--text-muted);
-                            "
-                            for="feed-autofetch-input"
+                    <div class="modal-row">
+                        <label class="modal-label" for="feed-autofetch-input"
                             >Autofetch Full Content</label
                         >
                         <label class="toggle-switch">
@@ -642,50 +535,26 @@
                             <span class="slider"></span>
                         </label>
                     </div>
-                    <div
-                        style="
-                            font-size: 0.8rem;
-                            color: var(--text-muted);
-                            margin-top: -12px;
-                            margin-bottom: 16px;
-                        "
-                    >
+                    <div class="settings-api-key-desc">
                         Automatically downloads full article text in the
                         background.
                     </div>
 
-                    <label
-                        style="
-                            font-size: 0.85rem;
-                            font-weight: 600;
-                            color: var(--text-muted);
-                            display: block;
-                            margin-bottom: 8px;
-                        "
-                        >Feed Accent Color</label
-                    >
+                    <label class="modal-label">Feed Accent Color</label>
                     <div id="color-picker-container" class="color-picker-row">
                         <!-- JS injects colors here -->
                     </div>
                 </div>
-                <div
-                    class="modal-actions"
-                    style="justify-content: space-between"
-                >
+                <div class="modal-actions modal-actions-between">
                     <button
-                        class="btn btn-outline"
+                        class="btn btn-outline btn-delete-feed"
                         id="btn-delete-feed"
-                        style="
-                            border-color: #ef4444;
-                            color: #ef4444;
-                            display: none;
-                        "
                     >
                         Delete
                     </button>
                     <div
                         id="feed-modal-action-buttons"
-                        style="display: flex; gap: 8px; margin-left: auto"
+                        class="modal-action-buttons"
                     >
                         <button
                             class="btn btn-outline"
@@ -705,7 +574,7 @@
         <div class="modal-backdrop" id="stats-modal">
             <div class="modal">
                 <div class="modal-header">
-                    <h3 style="margin: 0" id="stats-modal-title">Feed Stats</h3>
+                    <h3 id="stats-modal-title">Feed Stats</h3>
                     <button
                         class="close-btn"
                         onclick="window.closeStatsModal()"
@@ -726,7 +595,7 @@
                 <div class="modal-content" id="stats-modal-content">
                     <!-- Injected via JS -->
                 </div>
-                <div class="modal-actions" style="justify-content: flex-end">
+                <div class="modal-actions stats-modal-actions">
                     <button
                         class="btn btn-primary"
                         onclick="window.closeStatsModal()"
@@ -741,7 +610,7 @@
         <div class="modal-backdrop" id="settings-modal">
             <div class="modal">
                 <div class="modal-header">
-                    <h3 style="margin: 0">Settings</h3>
+                    <h3>Settings</h3>
                     <button
                         class="close-btn"
                         onclick="window.closeSettingsModal()"
@@ -792,20 +661,8 @@
                             id="tab-appearance"
                             class="settings-tab-pane active"
                         >
-                            <label
-                                style="
-                                    font-size: 0.85rem;
-                                    font-weight: 600;
-                                    color: var(--text-muted);
-                                    display: block;
-                                    margin-bottom: 6px;
-                                "
-                                >App Theme</label
-                            >
-                            <select
-                                id="settings-theme"
-                                style="width: 100%; margin-bottom: 16px"
-                            >
+                            <label class="modal-label">App Theme</label>
+                            <select id="settings-theme" class="modal-input">
                                 <option value="system">System Default</option>
                                 <option value="light">Light</option>
                                 <option value="dark">Dark (Gray)</option>
@@ -821,20 +678,8 @@
                                 </option>
                             </select>
 
-                            <label
-                                style="
-                                    font-size: 0.85rem;
-                                    font-weight: 600;
-                                    color: var(--text-muted);
-                                    display: block;
-                                    margin-bottom: 6px;
-                                "
-                                >App Font</label
-                            >
-                            <select
-                                id="settings-font"
-                                style="width: 100%; margin-bottom: 16px"
-                            >
+                            <label class="modal-label">App Font</label>
+                            <select id="settings-font" class="modal-input">
                                 <option value="system">System UI</option>
                                 <option value="inter">Inter (Default)</option>
                                 <option value="serif">
@@ -845,20 +690,9 @@
                                 <option value="georgia">Georgia</option>
                             </select>
 
-                            <div
-                                style="
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: space-between;
-                                    margin-bottom: 16px;
-                                "
-                            >
+                            <div class="modal-row">
                                 <label
-                                    style="
-                                        font-size: 0.85rem;
-                                        font-weight: 600;
-                                        color: var(--text-muted);
-                                    "
+                                    class="modal-label"
                                     for="settings-show-images"
                                     >Show Featured Images</label
                                 >
@@ -882,22 +716,10 @@
                             <!-- Plugin settings will be injected here -->
                             <div id="plugin-settings-container-general"></div>
 
-                            <div
-                                style="
-                                    height: 1px;
-                                    background: var(--border);
-                                    margin: 0 0 24px;
-                                "
-                            ></div>
+                            <div class="settings-section-divider"></div>
 
-                            <h4 style="margin-bottom: 10px">Gemini API Key</h4>
-                            <p
-                                style="
-                                    margin-top: 0;
-                                    font-size: 0.9rem;
-                                    color: var(--text-muted);
-                                "
-                            >
+                            <h4>Gemini API Key</h4>
+                            <p class="settings-api-key-desc">
                                 Required if using Gemini for parsing complex
                                 feeds.
                             </p>
@@ -905,13 +727,12 @@
                                 type="password"
                                 id="settings-api-key"
                                 placeholder="Enter your Gemini API Key"
-                                style="width: 100%; margin-bottom: 8px"
+                                class="modal-input"
                             />
-                            <p style="font-size: 0.8rem; margin: 0">
+                            <p class="settings-api-key-link">
                                 <a
                                     href="https://aistudio.google.com/app/apikey"
                                     target="_blank"
-                                    style="color: var(--primary)"
                                     >Get an API key here</a
                                 >
                             </p>
@@ -922,36 +743,13 @@
                             <!-- Plugin settings will be injected here -->
                             <div id="plugin-settings-container-data"></div>
 
-                            <h4 style="margin-top: 0; margin-bottom: 10px">
-                                Import / Export (OPML)
-                            </h4>
+                            <h4>Import / Export (OPML)</h4>
 
-                            <div
-                                style="
-                                    background: var(--bg-body);
-                                    padding: 12px;
-                                    border-radius: 8px;
-                                    border: 1px solid var(--border);
-                                "
-                            >
-                                <div
-                                    style="
-                                        margin-bottom: 12px;
-                                        font-weight: 600;
-                                        font-size: 0.85rem;
-                                        color: var(--text-muted);
-                                    "
-                                >
+                            <div class="import-export-container">
+                                <div class="import-export-label">
                                     Export Options
                                 </div>
-                                <label
-                                    style="
-                                        display: flex;
-                                        gap: 8px;
-                                        margin-bottom: 8px;
-                                        font-size: 0.9rem;
-                                    "
-                                >
+                                <label class="import-export-option">
                                     <input
                                         type="checkbox"
                                         id="export-feeds"
@@ -959,14 +757,7 @@
                                     />
                                     Feeds & Parsing Rules
                                 </label>
-                                <label
-                                    style="
-                                        display: flex;
-                                        gap: 8px;
-                                        margin-bottom: 8px;
-                                        font-size: 0.9rem;
-                                    "
-                                >
+                                <label class="import-export-option">
                                     <input
                                         type="checkbox"
                                         id="export-settings"
@@ -975,12 +766,7 @@
                                     App Settings
                                 </label>
                                 <label
-                                    style="
-                                        display: flex;
-                                        gap: 8px;
-                                        margin-bottom: 12px;
-                                        font-size: 0.9rem;
-                                    "
+                                    class="import-export-option import-export-option-last"
                                 >
                                     <input
                                         type="checkbox"
@@ -991,38 +777,17 @@
                                 </label>
                                 <button
                                     id="btn-export-opml"
-                                    class="btn btn-primary"
-                                    style="width: 100%; justify-content: center"
+                                    class="btn btn-primary btn-export"
                                 >
                                     Download Backup (OPML)
                                 </button>
 
-                                <div
-                                    style="
-                                        height: 1px;
-                                        background: var(--border);
-                                        margin: 16px 0;
-                                    "
-                                ></div>
+                                <div class="settings-divider"></div>
 
-                                <div
-                                    style="
-                                        margin-bottom: 12px;
-                                        font-weight: 600;
-                                        font-size: 0.85rem;
-                                        color: var(--text-muted);
-                                    "
-                                >
+                                <div class="import-export-label">
                                     Import Options
                                 </div>
-                                <label
-                                    style="
-                                        display: flex;
-                                        gap: 8px;
-                                        margin-bottom: 8px;
-                                        font-size: 0.9rem;
-                                    "
-                                >
+                                <label class="import-export-option">
                                     <input
                                         type="checkbox"
                                         id="import-feeds"
@@ -1030,14 +795,7 @@
                                     />
                                     Feeds & Parsing Rules
                                 </label>
-                                <label
-                                    style="
-                                        display: flex;
-                                        gap: 8px;
-                                        margin-bottom: 8px;
-                                        font-size: 0.9rem;
-                                    "
-                                >
+                                <label class="import-export-option">
                                     <input
                                         type="checkbox"
                                         id="import-settings"
@@ -1045,14 +803,7 @@
                                     />
                                     App Settings
                                 </label>
-                                <label
-                                    style="
-                                        display: flex;
-                                        gap: 8px;
-                                        margin-bottom: 8px;
-                                        font-size: 0.9rem;
-                                    "
-                                >
+                                <label class="import-export-option">
                                     <input
                                         type="checkbox"
                                         id="import-favorites"
@@ -1061,12 +812,7 @@
                                     Favorites & Saved Content
                                 </label>
                                 <label
-                                    style="
-                                        display: flex;
-                                        gap: 8px;
-                                        margin-bottom: 12px;
-                                        font-size: 0.9rem;
-                                    "
+                                    class="import-export-option import-export-option-last"
                                 >
                                     <input
                                         type="checkbox"
@@ -1077,51 +823,26 @@
                                 <input
                                     type="file"
                                     id="file-input-import"
-                                    style="display: none"
+                                    hidden
                                     accept=".opml,.xml"
                                 />
                                 <button
                                     id="btn-import-opml"
-                                    class="btn btn-outline"
-                                    style="
-                                        width: 100%;
-                                        justify-content: center;
-                                        background: var(--bg-card);
-                                    "
+                                    class="btn btn-outline btn-export"
                                 >
                                     Import Backup (OPML)
                                 </button>
                             </div>
 
-                            <div
-                                style="
-                                    height: 1px;
-                                    background: var(--border);
-                                    margin: 24px 0;
-                                "
-                            ></div>
+                            <div class="settings-divider-large"></div>
 
-                            <h4 style="margin-bottom: 10px">Data Retention</h4>
-                            <p
-                                style="
-                                    margin-top: 0;
-                                    font-size: 0.9rem;
-                                    color: var(--text-muted);
-                                    margin-bottom: 12px;
-                                "
-                            >
+                            <h4>Data Retention</h4>
+                            <p class="data-retention-desc">
                                 Favorites are never deleted. Policies run on app
                                 launch.
                             </p>
 
-                            <label
-                                style="
-                                    font-size: 0.85rem;
-                                    font-weight: 600;
-                                    color: var(--text-muted);
-                                    display: block;
-                                    margin-bottom: 6px;
-                                "
+                            <label class="modal-label"
                                 >Delete unread (unopened) articles older than
                                 (days)</label
                             >
@@ -1129,17 +850,10 @@
                                 type="number"
                                 id="settings-cleanup-unread"
                                 min="1"
-                                style="width: 100%; margin-bottom: 12px"
+                                class="modal-input"
                             />
 
-                            <label
-                                style="
-                                    font-size: 0.85rem;
-                                    font-weight: 600;
-                                    color: var(--text-muted);
-                                    display: block;
-                                    margin-bottom: 6px;
-                                "
+                            <label class="modal-label"
                                 >Remove article body text older than
                                 (days)</label
                             >
@@ -1147,17 +861,10 @@
                                 type="number"
                                 id="settings-cleanup-content"
                                 min="1"
-                                style="width: 100%; margin-bottom: 12px"
+                                class="modal-input"
                             />
 
-                            <label
-                                style="
-                                    font-size: 0.85rem;
-                                    font-weight: 600;
-                                    color: var(--text-muted);
-                                    display: block;
-                                    margin-bottom: 16px;
-                                "
+                            <label class="modal-label"
                                 >Delete read and unfinished articles older than
                                 (days)</label
                             >
@@ -1165,27 +872,19 @@
                                 type="number"
                                 id="settings-cleanup-read"
                                 min="1"
-                                style="width: 100%; margin-bottom: 16px"
+                                class="modal-input"
                             />
                         </div>
 
                         <!-- Tab: Plugins -->
                         <div id="tab-plugins" class="settings-tab-pane">
-                            <h4 style="margin-top: 0; margin-bottom: 10px">
-                                Install Plugin
-                            </h4>
-                            <div
-                                style="
-                                    display: flex;
-                                    gap: 8px;
-                                    margin-bottom: 20px;
-                                "
-                            >
+                            <h4>Install Plugin</h4>
+                            <div class="plugin-install-container">
                                 <input
                                     type="url"
                                     id="plugin-install-url"
                                     placeholder="https://example.com/manifest.json"
-                                    style="flex: 1"
+                                    class="modal-input"
                                 />
                                 <button
                                     id="btn-install-plugin"
@@ -1195,24 +894,16 @@
                                 </button>
                             </div>
 
-                            <div
-                                style="
-                                    height: 1px;
-                                    background: var(--border);
-                                    margin: 20px 0;
-                                "
-                            ></div>
+                            <div class="settings-divider"></div>
 
-                            <h4 style="margin-bottom: 10px">
-                                Installed Plugins
-                            </h4>
+                            <h4>Installed Plugins</h4>
                             <div id="plugins-list-container">
                                 <!-- Injected JS -->
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-actions" style="justify-content: flex-end">
+                <div class="modal-actions settings-modal-actions">
                     <button class="btn btn-primary" id="btn-save-settings">
                         Save Settings
                     </button>

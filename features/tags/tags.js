@@ -181,7 +181,7 @@ export const Tags = {
 
       const span = document.createElement("span");
       span.className = "tag-dot";
-      span.style.backgroundColor = item.color || "#ccc";
+      span.style.setProperty("--tag-color", item.color || "#ccc");
 
       div.appendChild(span);
       div.appendChild(document.createTextNode(" " + item.name));
@@ -209,7 +209,7 @@ export const Tags = {
     Config.COLOR_PALETTE.forEach((color) => {
       const swatch = document.createElement("div");
       swatch.className = "color-swatch";
-      swatch.style.backgroundColor = color;
+      swatch.style.setProperty("--swatch-color", color);
       swatch.onclick = (e) => {
         e.stopPropagation();
         if (this.editingTag) {
@@ -242,11 +242,9 @@ export const Tags = {
     this.currentTags.forEach((tag, index) => {
       const pill = document.createElement("span");
       pill.className = "tag-pill";
-      pill.style.backgroundColor = tag.color;
-      pill.style.color = "#fff";
+      pill.style.setProperty("--tag-color", tag.color);
       pill.textContent = tag.name;
       pill.title = "Click to change color";
-      pill.style.cursor = "pointer";
 
       pill.onclick = (e) => {
         e.stopPropagation();
@@ -296,7 +294,7 @@ export const Tags = {
     Config.COLOR_PALETTE.forEach((color) => {
       const swatch = document.createElement("div");
       swatch.className = `color-swatch ${color === initialColor ? "selected" : ""}`;
-      swatch.style.backgroundColor = color;
+      swatch.style.setProperty("--swatch-color", color);
       swatch.title = color;
       swatch.onclick = () => {
         this.selectedColor = color;

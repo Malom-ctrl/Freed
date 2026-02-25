@@ -1,0 +1,122 @@
+/* Plugin Manager View Styles */
+.plugin-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: var(--bg-card);
+}
+
+.plugin-card.incompatible {
+    border-color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.05);
+}
+
+.plugin-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 8px;
+}
+
+.plugin-card-name-row {
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.plugin-card-version {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 0.8em;
+}
+
+.plugin-card-incompatible-badge {
+    background: #ef4444;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
+.plugin-card-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.plugin-card-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.plugin-card-actions.mt-8 {
+    margin-top: 8px;
+}
+
+.plugin-btn-small {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+}
+
+.plugin-btn-uninstall {
+    color: #ef4444;
+    border-color: #ef4444;
+}
+
+.plugin-btn-install {
+    font-size: 0.8rem;
+    padding: 4px 12px;
+}
+
+.plugin-empty-state {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.plugin-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+}
+
+.plugin-section-title {
+    margin-bottom: 10px;
+}
+
+.toggle-switch.disabled {
+    opacity: 0.5;
+}
+
+.plugin-install-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.plugin-install-container .modal-input {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.plugin-tools-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.plugin-settings-wrapper {
+    margin-bottom: 20px;
+}
+
+.plugin-settings-header {
+    margin-top: 0;
+    margin-bottom: 10px;
+}

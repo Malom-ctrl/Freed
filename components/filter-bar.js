@@ -104,12 +104,12 @@ export const FilterBar = {
         (State.filters.tags && State.filters.tags.length > 0) ||
         State.filters.search
       ) {
-        clearBtn.style.display = "block";
+        clearBtn.classList.add("show");
         // Also highlight toggle button if on mobile
         const toggle = document.getElementById("btn-toggle-filters");
         if (toggle) toggle.classList.add("active");
       } else {
-        clearBtn.style.display = "none";
+        clearBtn.classList.remove("show");
         const toggle = document.getElementById("btn-toggle-filters");
         if (toggle) toggle.classList.remove("active");
       }
@@ -129,15 +129,12 @@ export const FilterBar = {
       const pill = document.createElement("span");
       pill.className = "tag-pill";
       pill.style.backgroundColor = color;
-      pill.style.color = "#fff";
 
       // Use textContent for safety
       pill.textContent = tagName;
 
       const removeSpan = document.createElement("span");
       removeSpan.className = "remove-tag";
-      removeSpan.style.marginLeft = "4px";
-      removeSpan.style.cursor = "pointer";
       removeSpan.textContent = "\u00D7"; // &times; equivalent
 
       removeSpan.onclick = () => {

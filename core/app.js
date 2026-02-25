@@ -15,8 +15,9 @@ import { ReaderView } from "../features/reader/reader-view.js";
 import { FeedModal } from "../features/feeds/feed-modal.js";
 import { Sidebar } from "../components/sidebar.js";
 import { Modals } from "../components/modals.js";
+import { StatsView } from "../features/stats/stats-view.js";
 import { FeedList } from "../features/feeds/feed-list.js";
-import { ArticleList } from "../features/reader/article-list.js";
+import { ArticleList } from "../features/article-list/article-list.js";
 import { DiscoverView } from "../features/discover/discover-view.js";
 import { DiscoverService } from "../features/discover/discover-service.js";
 import { Navbar } from "../components/navbar.js";
@@ -139,7 +140,7 @@ async function refreshUI() {
     State.currentFeedId,
     switchFeed,
     FeedModal.openEditFeedModal.bind(FeedModal),
-    (feed) => Modals.renderStatsModal(feed),
+    (feed) => StatsView.renderStatsModal(feed),
   );
 
   Sidebar.renderPrimaryItems();

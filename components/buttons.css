@@ -42,3 +42,23 @@
 .btn-text:hover {
     color: var(--primary);
 }
+
+.icon-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        background-color 0.2s,
+        color 0.2s;
+}
+
+.icon-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--text-main);
+}

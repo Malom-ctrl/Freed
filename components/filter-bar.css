@@ -97,6 +97,14 @@
     ); /* Keep filter inputs matching select dropdowns */
 }
 
+#btn-clear-filters {
+    display: none;
+}
+
+#btn-clear-filters.show {
+    display: block;
+}
+
 @media (min-width: 769px) {
     #filter-search:focus {
         width: 240px;
@@ -118,7 +126,7 @@
         display: flex;
         animation: slideDown 0.2s ease-out;
     }
-    
+
     .filter-group {
         flex-direction: column;
         align-items: stretch;

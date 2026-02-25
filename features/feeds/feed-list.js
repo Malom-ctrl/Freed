@@ -26,19 +26,11 @@ export const FeedList = {
 
       const contentDiv = document.createElement("div");
       contentDiv.className = "nav-item-content";
-      contentDiv.style.display = "flex";
-      contentDiv.style.alignItems = "center";
-      contentDiv.style.gap = "12px";
-      contentDiv.style.flex = "1";
-      contentDiv.style.overflow = "hidden";
 
       if (feed.iconData) {
         const img = document.createElement("img");
         img.src = DOMPurify.sanitize(feed.iconData);
-        img.style.width = "20px";
-        img.style.height = "20px";
-        img.style.borderRadius = "2px";
-        img.style.objectFit = "contain";
+        img.className = "feed-icon";
         contentDiv.appendChild(img);
       } else if (feed.type === "web") {
         const svgNS = "http://www.w3.org/2000/svg";
@@ -96,15 +88,11 @@ export const FeedList = {
 
       const titleSpan = document.createElement("span");
       titleSpan.className = "feed-title-text";
-      titleSpan.style.whiteSpace = "nowrap";
-      titleSpan.style.overflow = "hidden";
-      titleSpan.style.textOverflow = "ellipsis";
       titleSpan.textContent = feed.title;
       contentDiv.appendChild(titleSpan);
 
       const actionsDiv = document.createElement("div");
-      actionsDiv.style.display = "flex";
-      actionsDiv.style.gap = "2px";
+      actionsDiv.className = "feed-actions";
 
       const statsBtn = document.createElement("div");
       statsBtn.className = "feed-btn-icon feed-stats-btn";

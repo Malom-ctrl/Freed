@@ -36,6 +36,7 @@
     height: 8px;
     border-radius: 50%;
     flex-shrink: 0;
+    background-color: var(--tag-color, #ccc);
 }
 
 .tag-input-wrapper {
@@ -53,6 +54,8 @@
     line-height: 1.4;
     white-space: nowrap;
     cursor: default;
+    background-color: var(--tag-color);
+    color: #fff;
 }
 
 .tags-container {
@@ -96,6 +99,7 @@
         transform 0.2s,
         border-color 0.2s;
     flex-shrink: 0;
+    background-color: var(--swatch-color);
 }
 .color-swatch:hover {
     transform: scale(1.1);

@@ -75,7 +75,7 @@ export const FeedModal = {
 
     document.getElementById("feed-name-input").value = "";
     document.getElementById("feed-autofetch-input").checked = false;
-    document.getElementById("btn-delete-feed").style.display = "none";
+    document.getElementById("btn-delete-feed").setAttribute("hidden", "");
 
     const iconToggle = document.getElementById("feed-use-icon-input");
     iconToggle.checked = false;
@@ -83,7 +83,7 @@ export const FeedModal = {
     this._updateIconPreview(false);
 
     const actionBtns = document.getElementById("feed-modal-action-buttons");
-    if (actionBtns) actionBtns.style.display = "flex";
+    if (actionBtns) actionBtns.removeAttribute("hidden");
 
     Tags.currentTags = [];
     Tags.renderTagEditor();
@@ -115,14 +115,14 @@ export const FeedModal = {
     if (feed.iconData) {
       const preview = document.getElementById("feed-icon-preview");
       preview.src = feed.iconData;
-      preview.style.display = "block";
+      preview.removeAttribute("hidden");
     } else {
       // If editing and no icon stored, try to init preview based on URL
       this._processUrlForIcon(feed.url);
     }
 
     const deleteBtn = document.getElementById("btn-delete-feed");
-    deleteBtn.style.display = "block";
+    deleteBtn.removeAttribute("hidden");
 
     // Handle Delete UI interaction
     deleteBtn.onclick = () => {
@@ -141,7 +141,7 @@ export const FeedModal = {
     };
 
     const actionBtns = document.getElementById("feed-modal-action-buttons");
-    if (actionBtns) actionBtns.style.display = "none";
+    if (actionBtns) actionBtns.setAttribute("hidden", "");
 
     Tags.currentTags = [];
     for (const tagName of feed.tags || []) {
@@ -167,7 +167,7 @@ export const FeedModal = {
     const checkbox = document.getElementById("feed-use-icon-input");
     if (preview) {
       preview.src = "";
-      preview.style.display = "none";
+      preview.setAttribute("hidden", "");
     }
     if (checkbox) {
       checkbox.disabled = true;
@@ -196,9 +196,9 @@ export const FeedModal = {
     const preview = document.getElementById("feed-icon-preview");
     if (this.tempIconData) {
       preview.src = this.tempIconData;
-      preview.style.display = "block";
+      preview.removeAttribute("hidden");
     } else {
-      preview.style.display = "none";
+      preview.setAttribute("hidden", "");
     }
   },
 

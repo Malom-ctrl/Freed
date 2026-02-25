@@ -10,8 +10,7 @@ export const Navbar = {
     const actions = Registry.getExtensions("navbar:action");
     actions.forEach((action) => {
       const btn = document.createElement("button");
-      btn.className = "icon-btn"; // Reuse existing icon-btn style
-      btn.style.marginLeft = "8px";
+      btn.className = "icon-btn";
       btn.title = action.label || "";
 
       const parser = new DOMParser();

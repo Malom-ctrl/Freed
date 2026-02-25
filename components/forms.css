@@ -75,3 +75,16 @@ input:checked + .slider:before {
 input:focus + .slider {
     box-shadow: 0 0 1px var(--primary);
 }
+
+.modal-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.modal-input {
+    width: 100%;
+    margin-bottom: 16px;
+}

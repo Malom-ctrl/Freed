@@ -6,6 +6,7 @@ import { Utils } from "../../core/utils.js";
 import { Data } from "../../core/data-service.js";
 import { DB } from "../../core/db.js";
 import { Manager as PluginManager } from "../plugin-system/manager.js";
+import { ManagerView as PluginManagerView } from "../plugin-system/manager-view.js";
 import { Events } from "../../core/events.js";
 
 export const SettingsModal = {
@@ -15,8 +16,8 @@ export const SettingsModal = {
 
     document.getElementById("btn-settings")?.addEventListener("click", () => {
       Modals.toggleModal("settings-modal", true);
-      Modals.renderPluginSettings(); // Ensure plugin settings are rendered
-      Modals.renderPluginTabs(); // Ensure plugin tabs are rendered
+      PluginManagerView.renderPluginSettings(); // Ensure plugin settings are rendered
+      PluginManagerView.renderPluginTabs(); // Ensure plugin tabs are rendered
       const keyInput = document.getElementById("settings-api-key");
       if (keyInput)
         keyInput.value = localStorage.getItem("freed_api_key") || "";
@@ -81,7 +82,7 @@ export const SettingsModal = {
           }
         }
 
-        Modals.renderPluginsList(
+        PluginManagerView.renderPluginsList(
           installed,
           official,
           {

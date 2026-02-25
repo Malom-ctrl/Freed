@@ -29,8 +29,7 @@ export const DiscoverView = {
     searchRow.className = "filter-bar discover-filter-bar";
 
     const searchWrapper = document.createElement("div");
-    searchWrapper.className = "search-wrapper";
-    searchWrapper.style.width = "100%";
+    searchWrapper.className = "discover-search-wrapper";
 
     const svgNS = "http://www.w3.org/2000/svg";
     const searchIcon = document.createElementNS(svgNS, "svg");
@@ -56,10 +55,8 @@ export const DiscoverView = {
     const searchInput = document.createElement("input");
     searchInput.type = "text";
     searchInput.id = "discover-search";
-    searchInput.className = "filter-input";
+    searchInput.className = "discover-search-input";
     searchInput.placeholder = "Search for feeds & packs...";
-    searchInput.style.width = "100%";
-    searchInput.style.paddingLeft = "36px";
 
     searchWrapper.appendChild(searchIcon);
     searchWrapper.appendChild(searchInput);
@@ -96,9 +93,7 @@ export const DiscoverView = {
 
     const toggleTagsBtn = document.createElement("button");
     toggleTagsBtn.id = "btn-toggle-tags";
-    toggleTagsBtn.className = "btn-text";
-    toggleTagsBtn.style.fontSize = "0.8rem";
-    toggleTagsBtn.style.marginTop = "4px";
+    toggleTagsBtn.className = "btn-text discover-toggle-tags-btn";
     toggleTagsBtn.textContent = "Show all topics";
 
     tagsSection.appendChild(tagsContainer);
@@ -160,7 +155,6 @@ export const DiscoverView = {
         packIcon.setAttribute("fill", "none");
         packIcon.setAttribute("stroke", "currentColor");
         packIcon.setAttribute("stroke-width", "2");
-        packIcon.style.marginRight = "8px";
         const pPath = document.createElementNS(svgNS, "path");
         pPath.setAttribute(
           "d",
@@ -211,10 +205,7 @@ export const DiscoverView = {
           const pPreview = document.createElement("div");
           pPreview.className = "pack-feed-preview-text";
           const pLabel = document.createElement("span");
-          pLabel.style.fontWeight = "600";
-          pLabel.style.fontSize = "0.75rem";
-          pLabel.style.textTransform = "uppercase";
-          pLabel.style.color = "var(--text-muted)";
+          pLabel.className = "pack-feed-preview-label";
           pLabel.textContent = "Includes:";
           const pList = document.createElement("span");
           pList.className = "feed-list-text";
@@ -223,9 +214,7 @@ export const DiscoverView = {
           pPreview.appendChild(pList);
 
           const pBtn = document.createElement("button");
-          pBtn.className = `btn btn-outline ${alreadyAdded ? "added" : ""}`;
-          pBtn.style.marginTop = "auto";
-          pBtn.style.width = "100%";
+          pBtn.className = `btn btn-outline pack-add-btn ${alreadyAdded ? "added" : ""}`;
           if (alreadyAdded) pBtn.disabled = true;
           pBtn.textContent = alreadyAdded ? "Pack Added" : "Add Pack";
 
@@ -278,10 +267,7 @@ export const DiscoverView = {
 
       if (filteredFeeds.length === 0) {
         const noFeeds = document.createElement("div");
-        noFeeds.style.textAlign = "center";
-        noFeeds.style.color = "var(--text-muted)";
-        noFeeds.style.padding = "40px";
-        noFeeds.style.gridColumn = "1/-1";
+        noFeeds.className = "discover-no-results";
         noFeeds.textContent = "No feeds found matching filters.";
         feedGrid.appendChild(noFeeds);
       } else {
@@ -326,15 +312,10 @@ export const DiscoverView = {
 
             const cardTags = document.createElement("div");
             cardTags.className = "card-tags";
-            cardTags.style.marginTop = "8px";
 
             feed.tags.forEach((t) => {
               const tSpan = document.createElement("span");
               tSpan.className = "tag-pill";
-              tSpan.style.background = "transparent";
-              tSpan.style.color = "var(--text-muted)";
-              tSpan.style.fontSize = "0.7rem";
-              tSpan.style.border = "1px solid var(--border)";
               tSpan.textContent = DOMPurify.sanitize(t);
               cardTags.appendChild(tSpan);
             });
@@ -356,18 +337,17 @@ export const DiscoverView = {
               fBtn.onclick = async () => {
                 fBtn.textContent = "Adding...";
                 fBtn.disabled = true;
-                fBtn.style.cursor = "wait";
+                fBtn.classList.add("is-adding");
                 const success = await onAddFeed(feed);
                 if (success) {
                   fBtn.textContent = "Added";
                   fBtn.className = "feed-add-btn added";
                   fBtn.onclick = null;
-                  fBtn.style.cursor = "default";
                 } else {
                   fBtn.textContent = "Add";
                   fBtn.className = "feed-add-btn";
                   fBtn.disabled = false;
-                  fBtn.style.cursor = "pointer";
+                  fBtn.classList.remove("is-adding");
                 }
               };
             }
@@ -380,8 +360,7 @@ export const DiscoverView = {
 
         // Simple infinite scroll
         const sentinel = document.createElement("div");
-        sentinel.style.height = "20px";
-        sentinel.style.gridColumn = "1/-1";
+        sentinel.className = "discover-sentinel";
         feedGrid.appendChild(sentinel);
 
         gridObserver = new IntersectionObserver((entries) => {
