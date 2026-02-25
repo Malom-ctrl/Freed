@@ -162,18 +162,48 @@ export const Modals = {
         }
 
         const info = document.createElement("div");
-        info.innerHTML = DOMPurify.sanitize(`
-            <div style="font-weight:600; font-size:1rem; display:flex; align-items:center; gap:8px;">
-                <span class="plugin-name"></span>
-                <span style="font-weight:400; color:var(--text-muted); font-size:0.8em;">v${plugin.version}</span>
-                ${badge}
-            </div>
-            <div class="plugin-desc" style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;"></div>
-        `);
 
-        info.querySelector(".plugin-name").textContent = plugin.name;
-        info.querySelector(".plugin-desc").textContent =
-          plugin.description || "No description";
+        const nameRow = document.createElement("div");
+        nameRow.style.fontWeight = "600";
+        nameRow.style.fontSize = "1rem";
+        nameRow.style.display = "flex";
+        nameRow.style.alignItems = "center";
+        nameRow.style.gap = "8px";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "plugin-name";
+        nameSpan.textContent = plugin.name;
+
+        const verSpan = document.createElement("span");
+        verSpan.style.fontWeight = "400";
+        verSpan.style.color = "var(--text-muted)";
+        verSpan.style.fontSize = "0.8em";
+        verSpan.textContent = `v${plugin.version}`;
+
+        nameRow.appendChild(nameSpan);
+        nameRow.appendChild(verSpan);
+
+        if (isIncompatible) {
+          const badgeSpan = document.createElement("span");
+          badgeSpan.style.background = "#ef4444";
+          badgeSpan.style.color = "white";
+          badgeSpan.style.fontSize = "0.7rem";
+          badgeSpan.style.padding = "2px 6px";
+          badgeSpan.style.borderRadius = "4px";
+          badgeSpan.style.marginLeft = "8px";
+          badgeSpan.textContent = "Incompatible";
+          nameRow.appendChild(badgeSpan);
+        }
+
+        const descDiv = document.createElement("div");
+        descDiv.className = "plugin-desc";
+        descDiv.style.fontSize = "0.85rem";
+        descDiv.style.color = "var(--text-muted)";
+        descDiv.style.marginTop = "4px";
+        descDiv.textContent = plugin.description || "No description";
+
+        info.appendChild(nameRow);
+        info.appendChild(descDiv);
 
         const toggleLabel = document.createElement("label");
         toggleLabel.className = "toggle-switch";
@@ -280,17 +310,36 @@ export const Modals = {
         card.style.background = "var(--bg-card)";
 
         const info = document.createElement("div");
-        info.innerHTML = DOMPurify.sanitize(`
-                    <div style="font-weight:600; font-size:1rem; display:flex; align-items:center; gap:8px;">
-                        <span class="plugin-name"></span>
-                        <span style="font-weight:400; color:var(--text-muted); font-size:0.8em;">v${plugin.version}</span>
-                    </div>
-                    <div class="plugin-desc" style="font-size:0.85rem; color:var(--text-muted); margin-top:4px;"></div>
-                `);
 
-        info.querySelector(".plugin-name").textContent = plugin.name;
-        info.querySelector(".plugin-desc").textContent =
-          plugin.description || "No description";
+        const nameRow = document.createElement("div");
+        nameRow.style.fontWeight = "600";
+        nameRow.style.fontSize = "1rem";
+        nameRow.style.display = "flex";
+        nameRow.style.alignItems = "center";
+        nameRow.style.gap = "8px";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "plugin-name";
+        nameSpan.textContent = plugin.name;
+
+        const verSpan = document.createElement("span");
+        verSpan.style.fontWeight = "400";
+        verSpan.style.color = "var(--text-muted)";
+        verSpan.style.fontSize = "0.8em";
+        verSpan.textContent = `v${plugin.version}`;
+
+        nameRow.appendChild(nameSpan);
+        nameRow.appendChild(verSpan);
+
+        const descDiv = document.createElement("div");
+        descDiv.className = "plugin-desc";
+        descDiv.style.fontSize = "0.85rem";
+        descDiv.style.color = "var(--text-muted)";
+        descDiv.style.marginTop = "4px";
+        descDiv.textContent = plugin.description || "No description";
+
+        info.appendChild(nameRow);
+        info.appendChild(descDiv);
 
         const actions = document.createElement("div");
         actions.style.display = "flex";
@@ -322,16 +371,50 @@ export const Modals = {
 
   _createStatBar: function (label, value, total, color) {
     const pct = Math.min(100, Math.round((value / total) * 100)) || 0;
-    return `
-            <div style="margin-bottom: 16px;">
-                <div style="display:flex; justify-content:space-between; font-size: 0.9rem; margin-bottom: 6px;">
-                    <span>${DOMPurify.sanitize(label)}</span>
-                    <span style="font-weight:600;">${value} <span style="font-weight:400;color:var(--text-muted);font-size:0.8em">(${pct}%)</span></span>
-                </div>
-                <div style="width:100%; height:8px; background:var(--border); border-radius:4px; overflow:hidden;">
-                    <div style="width:${pct}%; height:100%; background:${color};"></div>
-                </div>
-            </div>`;
+
+    const container = document.createElement("div");
+    container.style.marginBottom = "16px";
+
+    const labelRow = document.createElement("div");
+    labelRow.style.display = "flex";
+    labelRow.style.justifyContent = "space-between";
+    labelRow.style.fontSize = "0.9rem";
+    labelRow.style.marginBottom = "6px";
+
+    const labelSpan = document.createElement("span");
+    labelSpan.textContent = label;
+
+    const valueSpan = document.createElement("span");
+    valueSpan.style.fontWeight = "600";
+    valueSpan.textContent = `${value} `;
+
+    const pctSpan = document.createElement("span");
+    pctSpan.style.fontWeight = "400";
+    pctSpan.style.color = "var(--text-muted)";
+    pctSpan.style.fontSize = "0.8em";
+    pctSpan.textContent = `(${pct}%)`;
+
+    valueSpan.appendChild(pctSpan);
+    labelRow.appendChild(labelSpan);
+    labelRow.appendChild(valueSpan);
+
+    const barContainer = document.createElement("div");
+    barContainer.style.width = "100%";
+    barContainer.style.height = "8px";
+    barContainer.style.background = "var(--border)";
+    barContainer.style.borderRadius = "4px";
+    barContainer.style.overflow = "hidden";
+
+    const bar = document.createElement("div");
+    bar.style.width = `${pct}%`;
+    bar.style.height = "100%";
+    bar.style.background = color;
+
+    barContainer.appendChild(bar);
+    container.appendChild(labelRow);
+    container.appendChild(barContainer);
+
+    return container;
   },
 
   renderStatsModal: function (feed) {
@@ -349,16 +432,40 @@ export const Modals = {
 
     const total = Math.max(stats.totalFetched, 1);
 
-    content.innerHTML = DOMPurify.sanitize(`
-            <div style="text-align:center; padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:20px;">
-                <div style="font-size:3rem; font-weight:700; color:var(--text-main);">${stats.totalFetched}</div>
-                <div style="color:var(--text-muted); font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em;">Total Articles Fetched</div>
-            </div>
+    content.innerHTML = "";
 
-            ${Modals._createStatBar("Read", stats.read, total, "#10b981")}
-            ${Modals._createStatBar("Discarded", stats.discarded, total, "#ef4444")}
-            ${Modals._createStatBar("Favorited", stats.favorited, total, "#f59e0b")}
-        `);
+    const headerDiv = document.createElement("div");
+    headerDiv.style.textAlign = "center";
+    headerDiv.style.paddingBottom = "16px";
+    headerDiv.style.borderBottom = "1px solid var(--border)";
+    headerDiv.style.marginBottom = "20px";
+
+    const countDiv = document.createElement("div");
+    countDiv.style.fontSize = "3rem";
+    countDiv.style.fontWeight = "700";
+    countDiv.style.color = "var(--text-main)";
+    countDiv.textContent = stats.totalFetched;
+
+    const labelDiv = document.createElement("div");
+    labelDiv.style.color = "var(--text-muted)";
+    labelDiv.style.fontSize = "0.9rem";
+    labelDiv.style.textTransform = "uppercase";
+    labelDiv.style.letterSpacing = "0.05em";
+    labelDiv.textContent = "Total Articles Fetched";
+
+    headerDiv.appendChild(countDiv);
+    headerDiv.appendChild(labelDiv);
+    content.appendChild(headerDiv);
+
+    const parser = new DOMParser();
+    const appendStatBar = (label, value, total, color) => {
+      const el = Modals._createStatBar(label, value, total, color);
+      content.appendChild(el);
+    };
+
+    appendStatBar("Read", stats.read, total, "#10b981");
+    appendStatBar("Discarded", stats.discarded, total, "#ef4444");
+    appendStatBar("Favorited", stats.favorited, total, "#f59e0b");
 
     // Render Custom Plugin Stats
     const customStats = Registry.getExtensions("stats:feed");
@@ -368,7 +475,11 @@ export const Modals = {
           const html = item.render(feed);
           if (html) {
             const div = document.createElement("div");
-            div.innerHTML = DOMPurify.sanitize(html);
+            const doc = parser.parseFromString(
+              DOMPurify.sanitize(html),
+              "text/html",
+            );
+            while (doc.body.firstChild) div.appendChild(doc.body.firstChild);
             content.appendChild(div);
           }
         }
@@ -422,18 +533,47 @@ export const Modals = {
     });
   },
 
-  showPopover: function (rect, contentHTML) {
+  showPopover: function (rect, content) {
     let popover = document.getElementById("global-popover");
     if (!popover) {
       popover = document.createElement("div");
       popover.id = "global-popover";
       popover.className = "global-popover";
-      popover.innerHTML = `
-        <button class="close-popover" aria-label="Close">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-        <div class="global-popover-content"></div>
-      `;
+
+      const closeBtn = document.createElement("button");
+      closeBtn.className = "close-popover";
+      closeBtn.setAttribute("aria-label", "Close");
+
+      const svgNS = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(svgNS, "svg");
+      svg.setAttribute("width", "14");
+      svg.setAttribute("height", "14");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.setAttribute("fill", "none");
+      svg.setAttribute("stroke", "currentColor");
+      svg.setAttribute("stroke-width", "2");
+
+      const line1 = document.createElementNS(svgNS, "line");
+      line1.setAttribute("x1", "18");
+      line1.setAttribute("y1", "6");
+      line1.setAttribute("x2", "6");
+      line1.setAttribute("y2", "18");
+      const line2 = document.createElementNS(svgNS, "line");
+      line2.setAttribute("x1", "6");
+      line2.setAttribute("y1", "6");
+      line2.setAttribute("x2", "18");
+      line2.setAttribute("y2", "18");
+
+      svg.appendChild(line1);
+      svg.appendChild(line2);
+      closeBtn.appendChild(svg);
+
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "global-popover-content";
+
+      popover.appendChild(closeBtn);
+      popover.appendChild(contentDiv);
+
       document.body.appendChild(popover);
 
       popover.querySelector(".close-popover").onclick = () => {
@@ -442,7 +582,17 @@ export const Modals = {
     }
 
     const contentEl = popover.querySelector(".global-popover-content");
-    contentEl.innerHTML = contentHTML;
+    contentEl.innerHTML = "";
+
+    if (typeof content === "string") {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(content, "text/html");
+      while (doc.body.firstChild) {
+        contentEl.appendChild(doc.body.firstChild);
+      }
+    } else if (content instanceof Node) {
+      contentEl.appendChild(content);
+    }
 
     popover.classList.add("show");
 

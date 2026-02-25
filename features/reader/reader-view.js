@@ -26,7 +26,7 @@ export const ReaderView = {
         const safeComment = comment.replace(/"/g, "&quot;");
         const tooltipAttr = comment ? `data-tooltip="${safeComment}"` : "";
         const style = `background-color: ${color}80; border-bottom: 2px solid ${color}; color: inherit; padding: 0 2px; border-radius: 2px;`;
-        return `<mark class="cad-highlight" style="${style}" data-cad-id="${data.id}" ${tooltipAttr}>${content}</mark>`;
+        return `<mark class="cad-highlight" style="background-color: ${data.color || "var(--highlight-color)"}" data-cad-id="${data.id}" ${tooltipAttr}>${content}</mark>`;
       },
       shouldMerge: true,
       mergeStrategy: (overlapping, newCAD) => {
@@ -145,7 +145,18 @@ export const ReaderView = {
     if (!modal.querySelector(".read-indicator")) {
       const indicator = document.createElement("div");
       indicator.className = "read-indicator";
-      indicator.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+      const svgNS = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(svgNS, "svg");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.setAttribute("fill", "none");
+      svg.setAttribute("stroke", "currentColor");
+      svg.setAttribute("stroke-width", "3");
+      svg.setAttribute("stroke-linecap", "round");
+      svg.setAttribute("stroke-linejoin", "round");
+      const polyline = document.createElementNS(svgNS, "polyline");
+      polyline.setAttribute("points", "20 6 9 17 4 12");
+      svg.appendChild(polyline);
+      indicator.appendChild(svg);
       modal.querySelector(".modal").appendChild(indicator);
     }
 
@@ -234,41 +245,27 @@ export const ReaderView = {
       // Observe content element for size changes
       this._resizeObserver.observe(contentEl);
 
-      // --- Media Player Injection ---
-      let mediaHtml = "";
-      if (article.mediaType === "audio" && article.mediaUrl) {
-        mediaHtml = `
-                <div class="media-player-container">
-                    <audio controls style="width: 100%; margin-bottom: 16px; border-radius: 8px;">
-                        <source src="${article.mediaUrl}" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>`;
-      } else if (article.mediaType === "youtube" && article.mediaUrl) {
-        mediaHtml = `
-                <div class="media-player-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-bottom: 16px; border-radius: 12px;">
-                    <iframe
-                        src="https://www.youtube.com/embed/${article.mediaUrl}"
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen>
-                    </iframe>
-                </div>`;
-      } else if (article.mediaType === "video" && article.mediaUrl) {
-        mediaHtml = `
-                <div class="media-player-container">
-                    <video controls style="width: 100%; margin-bottom: 16px; border-radius: 12px;">
-                        <source src="${article.mediaUrl}">
-                        Your browser does not support the video element.
-                    </video>
-                </div>`;
-      }
-
       if (article.fullContent) {
         // Sanitized full content
         const cleanContent = DOMPurify.sanitize(article.fullContent);
-        contentEl.innerHTML =
-          mediaHtml + this._renderContentWithCADs(cleanContent, article.cads);
+        const { html, orphans } = this._renderContentWithCADs(
+          cleanContent,
+          article.cads,
+        );
+
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        while (contentEl.firstChild)
+          contentEl.removeChild(contentEl.firstChild);
+
+        const mediaPlayer = this._createMediaPlayer(article);
+        if (mediaPlayer) contentEl.appendChild(mediaPlayer);
+
+        while (doc.body.firstChild) contentEl.appendChild(doc.body.firstChild);
+
+        if (orphans) contentEl.appendChild(orphans);
+
         // Schedule restore after layout
         setTimeout(() => {
           this._applyRestoreScroll();
@@ -280,21 +277,58 @@ export const ReaderView = {
 
         if (article.mediaType === "youtube") {
           const cleanContent = DOMPurify.sanitize(baseContent);
-          contentEl.innerHTML =
-            mediaHtml + this._renderContentWithCADs(cleanContent, article.cads);
+          const { html, orphans } = this._renderContentWithCADs(
+            cleanContent,
+            article.cads,
+          );
+
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+
+          while (contentEl.firstChild)
+            contentEl.removeChild(contentEl.firstChild);
+
+          const mediaPlayer = this._createMediaPlayer(article);
+          if (mediaPlayer) contentEl.appendChild(mediaPlayer);
+
+          while (doc.body.firstChild)
+            contentEl.appendChild(doc.body.firstChild);
+
+          if (orphans) contentEl.appendChild(orphans);
+
           setTimeout(() => {
             this._applyRestoreScroll();
             this._updateProgress(scrollContainer);
           }, 100);
         } else {
           ReaderService.setLoadingContent(true); // Block progress updates
-          const loadingHtml = `<div class="full-content-loader">Fetching full article content...</div>`;
+
+          const loader = document.createElement("div");
+          loader.className = "full-content-loader";
+          loader.textContent = "Fetching full article content...";
+
           // Sanitized base content
           const cleanBase = DOMPurify.sanitize(baseContent);
-          contentEl.innerHTML =
-            mediaHtml +
-            loadingHtml +
-            this._renderContentWithCADs(cleanBase, article.cads);
+          const { html, orphans } = this._renderContentWithCADs(
+            cleanBase,
+            article.cads,
+          );
+
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+
+          while (contentEl.firstChild)
+            contentEl.removeChild(contentEl.firstChild);
+
+          const mediaPlayer = this._createMediaPlayer(article);
+          if (mediaPlayer) contentEl.appendChild(mediaPlayer);
+
+          contentEl.appendChild(loader);
+
+          while (doc.body.firstChild)
+            contentEl.appendChild(doc.body.firstChild);
+
+          if (orphans) contentEl.appendChild(orphans);
 
           ReaderService.fetchFullArticle(article.link).then((fullHtml) => {
             const currentGuid = contentEl.getAttribute("data-guid");
@@ -323,15 +357,38 @@ export const ReaderView = {
 
               // Sanitized full content
               const cleanFull = DOMPurify.sanitize(fullHtml);
-              contentEl.innerHTML =
-                mediaHtml +
-                this._renderContentWithCADs(cleanFull, article.cads);
+              const { html, orphans } = this._renderContentWithCADs(
+                cleanFull,
+                article.cads,
+              );
+
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(html, "text/html");
+
+              while (contentEl.firstChild)
+                contentEl.removeChild(contentEl.firstChild);
+
+              const mediaPlayer = this._createMediaPlayer(article);
+              if (mediaPlayer) contentEl.appendChild(mediaPlayer);
+
+              while (doc.body.firstChild)
+                contentEl.appendChild(doc.body.firstChild);
+
+              if (orphans) contentEl.appendChild(orphans);
+
               Utils.showToast("Article optimized");
             } else {
               const loader = contentEl.querySelector(".full-content-loader");
               if (loader) {
-                loader.innerHTML =
-                  "Unable to fetch full content.<br>Showing summary only.";
+                while (loader.firstChild) loader.removeChild(loader.firstChild);
+                const text1 = document.createTextNode(
+                  "Unable to fetch full content.",
+                );
+                const br = document.createElement("br");
+                const text2 = document.createTextNode("Showing summary only.");
+                loader.appendChild(text1);
+                loader.appendChild(br);
+                loader.appendChild(text2);
                 loader.style.color = "var(--text-muted)";
               }
               Utils.showToast("Could not retrieve full content");
@@ -422,8 +479,9 @@ export const ReaderView = {
   },
 
   _cleanCADsFromHTML: function (html) {
-    const div = document.createElement("div");
-    div.innerHTML = html;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const div = doc.body;
 
     // Find all elements with data-cad-id
     const cadElements = div.querySelectorAll("[data-cad-id]");
@@ -436,7 +494,12 @@ export const ReaderView = {
       parent.removeChild(el);
     });
 
-    return div.innerHTML;
+    const serializer = new XMLSerializer();
+    let serialized = "";
+    div.childNodes.forEach((node) => {
+      serialized += serializer.serializeToString(node);
+    });
+    return serialized;
   },
 
   clearCADsInSelection: async function () {
@@ -492,17 +555,41 @@ export const ReaderView = {
     const scrollTop = contentEl.parentElement.scrollTop;
     if (article.fullContent) {
       const cleanContent = DOMPurify.sanitize(article.fullContent);
-      contentEl.innerHTML = this._renderContentWithCADs(
+      const { html, orphans } = this._renderContentWithCADs(
         cleanContent,
         article.cads,
       );
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+
+      while (contentEl.firstChild) contentEl.removeChild(contentEl.firstChild);
+
+      const mediaPlayer = this._createMediaPlayer(article);
+      if (mediaPlayer) contentEl.appendChild(mediaPlayer);
+
+      while (doc.body.firstChild) contentEl.appendChild(doc.body.firstChild);
+
+      if (orphans) contentEl.appendChild(orphans);
     } else {
       const base = article.content || article.description || "";
       const cleanBase = DOMPurify.sanitize(base);
-      contentEl.innerHTML = this._renderContentWithCADs(
+      const { html, orphans } = this._renderContentWithCADs(
         cleanBase,
         article.cads,
       );
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+
+      while (contentEl.firstChild) contentEl.removeChild(contentEl.firstChild);
+
+      const mediaPlayer = this._createMediaPlayer(article);
+      if (mediaPlayer) contentEl.appendChild(mediaPlayer);
+
+      while (doc.body.firstChild) contentEl.appendChild(doc.body.firstChild);
+
+      if (orphans) contentEl.appendChild(orphans);
     }
     contentEl.parentElement.scrollTop = scrollTop;
     document.getElementById("selection-toolbar").style.display = "none";
@@ -542,7 +629,16 @@ export const ReaderView = {
     startRange.insertNode(startMarker);
 
     // 3. Get HTML with markers
-    let tempHTML = contentEl.innerHTML;
+    const tempDiv = document.createElement("div");
+    Array.from(contentEl.childNodes).forEach((node) =>
+      tempDiv.appendChild(node.cloneNode(true)),
+    );
+
+    const serializer = new XMLSerializer();
+    let tempHTML = "";
+    tempDiv.childNodes.forEach((node) => {
+      tempHTML += serializer.serializeToString(node);
+    });
 
     // 4. Cleanup DOM immediately
     startMarker.remove();
@@ -651,17 +747,41 @@ export const ReaderView = {
 
     if (updatedArticle.fullContent) {
       const cleanContent = DOMPurify.sanitize(updatedArticle.fullContent);
-      contentEl.innerHTML = this._renderContentWithCADs(
+      const { html, orphans } = this._renderContentWithCADs(
         cleanContent,
         updatedArticle.cads,
       );
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+
+      while (contentEl.firstChild) contentEl.removeChild(contentEl.firstChild);
+
+      const mediaPlayer = this._createMediaPlayer(updatedArticle);
+      if (mediaPlayer) contentEl.appendChild(mediaPlayer);
+
+      while (doc.body.firstChild) contentEl.appendChild(doc.body.firstChild);
+
+      if (orphans) contentEl.appendChild(orphans);
     } else {
       const base = updatedArticle.content || updatedArticle.description || "";
       const cleanBase = DOMPurify.sanitize(base);
-      contentEl.innerHTML = this._renderContentWithCADs(
+      const { html, orphans } = this._renderContentWithCADs(
         cleanBase,
         updatedArticle.cads,
       );
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+
+      while (contentEl.firstChild) contentEl.removeChild(contentEl.firstChild);
+
+      const mediaPlayer = this._createMediaPlayer(updatedArticle);
+      if (mediaPlayer) contentEl.appendChild(mediaPlayer);
+
+      while (doc.body.firstChild) contentEl.appendChild(doc.body.firstChild);
+
+      if (orphans) contentEl.appendChild(orphans);
     }
 
     contentEl.parentElement.scrollTop = scrollTop;
@@ -685,8 +805,78 @@ export const ReaderView = {
     }
   },
 
+  _createMediaPlayer: function (article) {
+    if (article.mediaType === "audio" && article.mediaUrl) {
+      const container = document.createElement("div");
+      container.className = "media-player-container";
+
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.className = "reader-audio-player";
+
+      const source = document.createElement("source");
+      source.src = article.mediaUrl;
+      source.type = "audio/mpeg";
+
+      audio.appendChild(source);
+      audio.appendChild(
+        document.createTextNode(
+          "Your browser does not support the audio element.",
+        ),
+      );
+      container.appendChild(audio);
+      return container;
+    } else if (article.mediaType === "youtube" && article.mediaUrl) {
+      const container = document.createElement("div");
+      container.className = "media-player-container";
+      container.style.position = "relative";
+      container.style.paddingBottom = "56.25%";
+      container.style.height = "0";
+      container.style.overflow = "hidden";
+      container.style.marginBottom = "16px";
+      container.style.borderRadius = "12px";
+
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${article.mediaUrl}`;
+      iframe.style.position = "absolute";
+      iframe.style.top = "0";
+      iframe.style.left = "0";
+      iframe.style.width = "100%";
+      iframe.style.height = "100%";
+      iframe.style.border = "0";
+      iframe.setAttribute(
+        "allow",
+        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+      );
+      iframe.setAttribute("allowfullscreen", "");
+
+      container.appendChild(iframe);
+      return container;
+    } else if (article.mediaType === "video" && article.mediaUrl) {
+      const container = document.createElement("div");
+      container.className = "media-player-container";
+
+      const video = document.createElement("video");
+      video.controls = true;
+      video.className = "reader-video-player";
+
+      const source = document.createElement("source");
+      source.src = article.mediaUrl;
+
+      video.appendChild(source);
+      video.appendChild(
+        document.createTextNode(
+          "Your browser does not support the video element.",
+        ),
+      );
+      container.appendChild(video);
+      return container;
+    }
+    return null;
+  },
+
   _renderContentWithCADs: function (htmlContent, cads) {
-    if (!cads || cads.length === 0) return htmlContent;
+    if (!cads || cads.length === 0) return { html: htmlContent, orphans: null };
 
     // Sort CADs by position
     const sortedCADs = [...cads].sort((a, b) => a.position - b.position);
@@ -742,29 +932,73 @@ export const ReaderView = {
     result += htmlContent.substring(lastIndex);
 
     // Append Orphans
+    let orphansEl = null;
     if (orphaned.length > 0) {
-      result += this._renderOrphanedCADs(orphaned);
+      orphansEl = this._renderOrphanedCADs(orphaned);
     }
 
-    return result;
+    return { html: result, orphans: orphansEl };
   },
 
   _renderOrphanedCADs: function (orphans) {
-    let html = `<div class="orphaned-cads-section" style="margin-top: 40px; padding: 20px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;">
-            <h4 style="margin-top: 0; color: var(--text-muted);">Orphaned Annotations</h4>
-            <p style="font-size: 0.9rem; color: var(--text-muted);">The following annotations could not be reattached to the text:</p>
-            <ul style="list-style: none; padding: 0;">`;
+    const container = document.createElement("div");
+    container.className = "orphaned-cads-section";
+    container.style.marginTop = "40px";
+    container.style.padding = "20px";
+    container.style.background = "var(--bg-card)";
+    container.style.border = "1px solid var(--border)";
+    container.style.borderRadius = "8px";
+
+    const header = document.createElement("h4");
+    header.style.marginTop = "0";
+    header.style.color = "var(--text-muted)";
+    header.textContent = "Orphaned Annotations";
+    container.appendChild(header);
+
+    const p = document.createElement("p");
+    p.style.fontSize = "0.9rem";
+    p.style.color = "var(--text-muted)";
+    p.textContent =
+      "The following annotations could not be reattached to the text:";
+    container.appendChild(p);
+
+    const ul = document.createElement("ul");
+    ul.style.listStyle = "none";
+    ul.style.padding = "0";
 
     orphans.forEach((cad) => {
-      html += `<li style="margin-bottom: 8px; font-size: 0.9rem; padding: 8px; background: var(--bg-main); border-radius: 4px;">
-                <strong style="text-transform: uppercase; font-size: 0.75rem; color: var(--primary);">${cad.type}</strong>:
-                <span style="font-style: italic;">"${DOMPurify.sanitize(cad.originalContent)}"</span>
-                <span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 8px;">(${cad.reason || "Unknown"})</span>
-            </li>`;
+      const li = document.createElement("li");
+      li.style.marginBottom = "8px";
+      li.style.fontSize = "0.9rem";
+      li.style.padding = "8px";
+      li.style.background = "var(--bg-main)";
+      li.style.borderRadius = "4px";
+
+      const strong = document.createElement("strong");
+      strong.style.textTransform = "uppercase";
+      strong.style.fontSize = "0.75rem";
+      strong.style.color = "var(--primary)";
+      strong.textContent = cad.type;
+
+      const spanContent = document.createElement("span");
+      spanContent.style.fontStyle = "italic";
+      spanContent.textContent = ` "${cad.originalContent}"`; // Text content is safe
+
+      const spanReason = document.createElement("span");
+      spanReason.style.color = "var(--text-muted)";
+      spanReason.style.fontSize = "0.8rem";
+      spanReason.style.marginLeft = "8px";
+      spanReason.textContent = `(${cad.reason || "Unknown"})`;
+
+      li.appendChild(strong);
+      li.appendChild(document.createTextNode(":"));
+      li.appendChild(spanContent);
+      li.appendChild(spanReason);
+      ul.appendChild(li);
     });
 
-    html += `</ul></div>`;
-    return html;
+    container.appendChild(ul);
+    return container;
   },
 
   closeModal: function (skipHistoryBack) {
@@ -796,7 +1030,8 @@ export const ReaderView = {
     if (contentEl) {
       if (this._closeTimeout) clearTimeout(this._closeTimeout);
       this._closeTimeout = setTimeout(() => {
-        contentEl.innerHTML = "";
+        while (contentEl.firstChild)
+          contentEl.removeChild(contentEl.firstChild);
         this._closeTimeout = null;
       }, 300);
     }
@@ -874,7 +1109,12 @@ export const ReaderView = {
           if (el) {
             if (typeof el === "string") {
               const div = document.createElement("div");
-              div.innerHTML = DOMPurify.sanitize(el);
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(
+                DOMPurify.sanitize(el),
+                "text/html",
+              );
+              while (doc.body.firstChild) div.appendChild(doc.body.firstChild);
               headerContainer.appendChild(div);
             } else {
               headerContainer.appendChild(el);
@@ -895,7 +1135,12 @@ export const ReaderView = {
           if (el) {
             if (typeof el === "string") {
               const div = document.createElement("div");
-              div.innerHTML = DOMPurify.sanitize(el);
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(
+                DOMPurify.sanitize(el),
+                "text/html",
+              );
+              while (doc.body.firstChild) div.appendChild(doc.body.firstChild);
               footerContainer.appendChild(div);
             } else {
               footerContainer.appendChild(el);
@@ -916,7 +1161,12 @@ export const ReaderView = {
         const btn = document.createElement("button");
         btn.className = "icon-btn";
         btn.title = action.label || "";
-        btn.innerHTML = DOMPurify.sanitize(action.icon || "");
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(
+          DOMPurify.sanitize(action.icon || ""),
+          "text/html",
+        );
+        while (doc.body.firstChild) btn.appendChild(doc.body.firstChild);
         btn.onclick = () => {
           if (action.onClick) action.onClick(article);
         };

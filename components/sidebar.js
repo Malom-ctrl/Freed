@@ -50,7 +50,23 @@ export const Sidebar = {
       const div = document.createElement("div");
       div.className = "nav-item";
       if (item.id) div.dataset.id = `custom:${item.id}`;
-      div.innerHTML = DOMPurify.sanitize(`${item.icon || ""} ${item.label}`);
+
+      if (item.icon instanceof HTMLElement || item.icon instanceof SVGElement) {
+        div.appendChild(item.icon.cloneNode(true));
+        if (item.label) {
+          div.appendChild(document.createTextNode(" " + item.label));
+        }
+      } else {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(
+          DOMPurify.sanitize(`${item.icon || ""} ${item.label}`),
+          "text/html",
+        );
+        while (doc.body.firstChild) {
+          div.appendChild(doc.body.firstChild);
+        }
+      }
+
       div.onclick = () => {
         if (item.onClick) item.onClick();
       };
@@ -70,7 +86,16 @@ export const Sidebar = {
       const div = document.createElement("div");
       div.className = "nav-item";
       if (item.id) div.dataset.id = `custom:${item.id}`;
-      div.innerHTML = DOMPurify.sanitize(`${item.icon || ""} ${item.label}`);
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(
+        DOMPurify.sanitize(`${item.icon || ""} ${item.label}`),
+        "text/html",
+      );
+      while (doc.body.firstChild) {
+        div.appendChild(doc.body.firstChild);
+      }
+
       div.onclick = () => {
         if (item.onClick) item.onClick();
       };
@@ -88,7 +113,16 @@ export const Sidebar = {
       const div = document.createElement("div");
       div.className = "nav-item";
       if (item.id) div.dataset.id = `custom:${item.id}`;
-      div.innerHTML = DOMPurify.sanitize(`${item.icon || ""} ${item.label}`);
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(
+        DOMPurify.sanitize(`${item.icon || ""} ${item.label}`),
+        "text/html",
+      );
+      while (doc.body.firstChild) {
+        div.appendChild(doc.body.firstChild);
+      }
+
       div.onclick = () => {
         if (item.onClick) item.onClick();
       };

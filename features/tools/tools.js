@@ -58,9 +58,24 @@ export const Tools = {
           visibleTools.forEach((tool) => {
             const btn = document.createElement("button");
             btn.className = "tool-btn"; // Ensure class for styling
-            btn.innerHTML = DOMPurify.sanitize(
-              `${tool.icon || ""} ${tool.label || ""}`,
-            );
+
+            if (
+              tool.icon instanceof HTMLElement ||
+              tool.icon instanceof SVGElement
+            ) {
+              btn.appendChild(tool.icon.cloneNode(true));
+              if (tool.label) {
+                btn.appendChild(document.createTextNode(" " + tool.label));
+              }
+            } else {
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(
+                DOMPurify.sanitize(`${tool.icon || ""} ${tool.label || ""}`),
+                "text/html",
+              );
+              while (doc.body.firstChild) btn.appendChild(doc.body.firstChild);
+            }
+
             btn.onclick = async (e) => {
               e.preventDefault();
               e.stopPropagation();

@@ -24,44 +24,151 @@ export const FeedList = {
 
       const strokeColor = activeColor ? activeColor : "currentColor";
 
-      // Choose icon based on feed type or use cached iconData
-      let iconSvg = "";
+      const contentDiv = document.createElement("div");
+      contentDiv.className = "nav-item-content";
+      contentDiv.style.display = "flex";
+      contentDiv.style.alignItems = "center";
+      contentDiv.style.gap = "12px";
+      contentDiv.style.flex = "1";
+      contentDiv.style.overflow = "hidden";
 
       if (feed.iconData) {
-        // Sanitize URL just in case, though it's likely base64
-        const safeUrl = DOMPurify.sanitize(feed.iconData);
-        iconSvg = `<img src="${safeUrl}" style="width:20px; height:20px; border-radius:2px; object-fit:contain;">`;
+        const img = document.createElement("img");
+        img.src = DOMPurify.sanitize(feed.iconData);
+        img.style.width = "20px";
+        img.style.height = "20px";
+        img.style.borderRadius = "2px";
+        img.style.objectFit = "contain";
+        contentDiv.appendChild(img);
       } else if (feed.type === "web") {
-        // Globe icon
-        iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="${strokeColor}" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>`;
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("fill", "none");
+        svg.setAttribute("stroke", strokeColor);
+        svg.setAttribute("stroke-width", "2");
+
+        const circle = document.createElementNS(svgNS, "circle");
+        circle.setAttribute("cx", "12");
+        circle.setAttribute("cy", "12");
+        circle.setAttribute("r", "10");
+
+        const line = document.createElementNS(svgNS, "line");
+        line.setAttribute("x1", "2");
+        line.setAttribute("y1", "12");
+        line.setAttribute("x2", "22");
+        line.setAttribute("y2", "12");
+
+        const path = document.createElementNS(svgNS, "path");
+        path.setAttribute(
+          "d",
+          "M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z",
+        );
+
+        svg.appendChild(circle);
+        svg.appendChild(line);
+        svg.appendChild(path);
+        contentDiv.appendChild(svg);
       } else {
-        // RSS icon
-        iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="${strokeColor}" stroke-width="2"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg>`;
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("fill", "none");
+        svg.setAttribute("stroke", strokeColor);
+        svg.setAttribute("stroke-width", "2");
+
+        const path1 = document.createElementNS(svgNS, "path");
+        path1.setAttribute("d", "M4 11a9 9 0 0 1 9 9");
+
+        const path2 = document.createElementNS(svgNS, "path");
+        path2.setAttribute("d", "M4 4a16 16 0 0 1 16 16");
+
+        const circle = document.createElementNS(svgNS, "circle");
+        circle.setAttribute("cx", "5");
+        circle.setAttribute("cy", "19");
+        circle.setAttribute("r", "1");
+
+        svg.appendChild(path1);
+        svg.appendChild(path2);
+        svg.appendChild(circle);
+        contentDiv.appendChild(svg);
       }
 
-      // Stats Icon (Bar Chart)
-      const statsIcon = `<div class="feed-btn-icon feed-stats-btn" title="Stats"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>`;
+      const titleSpan = document.createElement("span");
+      titleSpan.className = "feed-title-text";
+      titleSpan.style.whiteSpace = "nowrap";
+      titleSpan.style.overflow = "hidden";
+      titleSpan.style.textOverflow = "ellipsis";
+      titleSpan.textContent = feed.title;
+      contentDiv.appendChild(titleSpan);
 
-      // Gear icon for settings
-      const settingsIcon = `<div class="feed-btn-icon feed-settings-btn" title="Edit Feed"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 0 2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></div>`;
+      const actionsDiv = document.createElement("div");
+      actionsDiv.style.display = "flex";
+      actionsDiv.style.gap = "2px";
 
-      // Use DOMPurify for the structure, but insert title as textContent for safety
-      const contentHtml = `
-                <div class="nav-item-content" style="display: flex; align-items: center; gap: 12px; flex: 1; overflow: hidden;">
-                    ${iconSvg}
-                    <span class="feed-title-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></span>
-                </div>
-                <div style="display: flex; gap: 2px;">
-                    ${statsIcon}
-                    ${settingsIcon}
-                </div>
-            `;
+      const statsBtn = document.createElement("div");
+      statsBtn.className = "feed-btn-icon feed-stats-btn";
+      statsBtn.title = "Stats";
+      const statsSvgNS = "http://www.w3.org/2000/svg";
+      const statsSvg = document.createElementNS(statsSvgNS, "svg");
+      statsSvg.setAttribute("width", "16");
+      statsSvg.setAttribute("height", "16");
+      statsSvg.setAttribute("viewBox", "0 0 24 24");
+      statsSvg.setAttribute("fill", "none");
+      statsSvg.setAttribute("stroke", "currentColor");
+      statsSvg.setAttribute("stroke-width", "2");
+      statsSvg.setAttribute("stroke-linecap", "round");
+      statsSvg.setAttribute("stroke-linejoin", "round");
+      const sLine1 = document.createElementNS(statsSvgNS, "line");
+      sLine1.setAttribute("x1", "18");
+      sLine1.setAttribute("y1", "20");
+      sLine1.setAttribute("x2", "18");
+      sLine1.setAttribute("y2", "10");
+      const sLine2 = document.createElementNS(statsSvgNS, "line");
+      sLine2.setAttribute("x1", "12");
+      sLine2.setAttribute("y1", "20");
+      sLine2.setAttribute("x2", "12");
+      sLine2.setAttribute("y2", "4");
+      const sLine3 = document.createElementNS(statsSvgNS, "line");
+      sLine3.setAttribute("x1", "6");
+      sLine3.setAttribute("y1", "20");
+      sLine3.setAttribute("x2", "6");
+      sLine3.setAttribute("y2", "14");
+      statsSvg.appendChild(sLine1);
+      statsSvg.appendChild(sLine2);
+      statsSvg.appendChild(sLine3);
+      statsBtn.appendChild(statsSvg);
 
-      div.innerHTML = DOMPurify.sanitize(contentHtml);
+      const settingsBtn = document.createElement("div");
+      settingsBtn.className = "feed-btn-icon feed-settings-btn";
+      settingsBtn.title = "Edit Feed";
+      const setSvg = document.createElementNS(statsSvgNS, "svg");
+      setSvg.setAttribute("width", "16");
+      setSvg.setAttribute("height", "16");
+      setSvg.setAttribute("viewBox", "0 0 24 24");
+      setSvg.setAttribute("fill", "none");
+      setSvg.setAttribute("stroke", "currentColor");
+      setSvg.setAttribute("stroke-width", "2");
+      setSvg.setAttribute("stroke-linecap", "round");
+      setSvg.setAttribute("stroke-linejoin", "round");
+      const setCircle = document.createElementNS(statsSvgNS, "circle");
+      setCircle.setAttribute("cx", "12");
+      setCircle.setAttribute("cy", "12");
+      setCircle.setAttribute("r", "3");
+      const setPath = document.createElementNS(statsSvgNS, "path");
+      setPath.setAttribute(
+        "d",
+        "M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1 0-2.83 2 2 0 0 1 0 2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z",
+      );
+      setSvg.appendChild(setCircle);
+      setSvg.appendChild(setPath);
+      settingsBtn.appendChild(setSvg);
 
-      // Set title safely
-      const titleSpan = div.querySelector(".feed-title-text");
-      if (titleSpan) titleSpan.textContent = feed.title;
+      actionsDiv.appendChild(statsBtn);
+      actionsDiv.appendChild(settingsBtn);
+
+      div.appendChild(contentDiv);
+      div.appendChild(actionsDiv);
 
       // Handle main click on the entire row
       div.onclick = (e) => {
@@ -69,22 +176,16 @@ export const FeedList = {
       };
 
       // Handle stats click
-      const statsBtn = div.querySelector(".feed-stats-btn");
-      if (statsBtn) {
-        statsBtn.onclick = (e) => {
-          e.stopPropagation();
-          onStats(feed);
-        };
-      }
+      statsBtn.onclick = (e) => {
+        e.stopPropagation();
+        onStats(feed);
+      };
 
       // Handle edit click
-      const settingsBtn = div.querySelector(".feed-settings-btn");
-      if (settingsBtn) {
-        settingsBtn.onclick = (e) => {
-          e.stopPropagation();
-          onEdit(feed);
-        };
-      }
+      settingsBtn.onclick = (e) => {
+        e.stopPropagation();
+        onEdit(feed);
+      };
 
       container.appendChild(div);
     });

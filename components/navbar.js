@@ -13,7 +13,16 @@ export const Navbar = {
       btn.className = "icon-btn"; // Reuse existing icon-btn style
       btn.style.marginLeft = "8px";
       btn.title = action.label || "";
-      btn.innerHTML = DOMPurify.sanitize(action.icon || "");
+
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(
+        DOMPurify.sanitize(action.icon || ""),
+        "text/html",
+      );
+      while (doc.body.firstChild) {
+        btn.appendChild(doc.body.firstChild);
+      }
+
       btn.onclick = () => {
         if (action.onClick) action.onClick();
       };

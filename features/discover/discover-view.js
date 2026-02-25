@@ -27,12 +27,43 @@ export const DiscoverView = {
     // --- Header Search ---
     const searchRow = document.createElement("div");
     searchRow.className = "filter-bar discover-filter-bar";
-    searchRow.innerHTML = `
-         <div class="search-wrapper" style="width:100%">
-             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-             <input type="text" id="discover-search" class="filter-input" placeholder="Search for feeds & packs..." style="width:100%; padding-left:36px;">
-         </div>
-      `;
+
+    const searchWrapper = document.createElement("div");
+    searchWrapper.className = "search-wrapper";
+    searchWrapper.style.width = "100%";
+
+    const svgNS = "http://www.w3.org/2000/svg";
+    const searchIcon = document.createElementNS(svgNS, "svg");
+    searchIcon.setAttribute("width", "16");
+    searchIcon.setAttribute("height", "16");
+    searchIcon.setAttribute("viewBox", "0 0 24 24");
+    searchIcon.setAttribute("fill", "none");
+    searchIcon.setAttribute("stroke", "currentColor");
+    searchIcon.setAttribute("stroke-width", "2");
+    searchIcon.setAttribute("class", "search-icon");
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("cx", "11");
+    circle.setAttribute("cy", "11");
+    circle.setAttribute("r", "8");
+    const line = document.createElementNS(svgNS, "line");
+    line.setAttribute("x1", "21");
+    line.setAttribute("y1", "21");
+    line.setAttribute("x2", "16.65");
+    line.setAttribute("y2", "16.65");
+    searchIcon.appendChild(circle);
+    searchIcon.appendChild(line);
+
+    const searchInput = document.createElement("input");
+    searchInput.type = "text";
+    searchInput.id = "discover-search";
+    searchInput.className = "filter-input";
+    searchInput.placeholder = "Search for feeds & packs...";
+    searchInput.style.width = "100%";
+    searchInput.style.paddingLeft = "36px";
+
+    searchWrapper.appendChild(searchIcon);
+    searchWrapper.appendChild(searchInput);
+    searchRow.appendChild(searchWrapper);
 
     const contentWrapper = document.createElement("div");
     contentWrapper.className = "discover-container";
@@ -45,17 +76,33 @@ export const DiscoverView = {
     const tagsSection = document.createElement("div");
     tagsSection.className = "discover-tags-wrapper";
 
-    let tagsHtml = `<div class="discover-tag-pill active" data-tag="all">All Topics</div>`;
+    const tagsContainer = document.createElement("div");
+    tagsContainer.className = "discover-tags-container collapsed";
+    tagsContainer.id = "discover-tags-container";
+
+    const allTagPill = document.createElement("div");
+    allTagPill.className = "discover-tag-pill active";
+    allTagPill.dataset.tag = "all";
+    allTagPill.textContent = "All Topics";
+    tagsContainer.appendChild(allTagPill);
+
     sortedTags.forEach((tag) => {
-      tagsHtml += `<div class="discover-tag-pill" data-tag="${DOMPurify.sanitize(tag)}">${DOMPurify.sanitize(tag)}</div>`;
+      const pill = document.createElement("div");
+      pill.className = "discover-tag-pill";
+      pill.dataset.tag = DOMPurify.sanitize(tag);
+      pill.textContent = DOMPurify.sanitize(tag);
+      tagsContainer.appendChild(pill);
     });
 
-    tagsSection.innerHTML = `
-        <div class="discover-tags-container collapsed" id="discover-tags-container">
-            ${tagsHtml}
-        </div>
-        <button id="btn-toggle-tags" class="btn-text" style="font-size:0.8rem; margin-top:4px;">Show all topics</button>
-      `;
+    const toggleTagsBtn = document.createElement("button");
+    toggleTagsBtn.id = "btn-toggle-tags";
+    toggleTagsBtn.className = "btn-text";
+    toggleTagsBtn.style.fontSize = "0.8rem";
+    toggleTagsBtn.style.marginTop = "4px";
+    toggleTagsBtn.textContent = "Show all topics";
+
+    tagsSection.appendChild(tagsContainer);
+    tagsSection.appendChild(toggleTagsBtn);
 
     // --- Feed Grid Container ---
     const feedGrid = document.createElement("div");
@@ -103,7 +150,35 @@ export const DiscoverView = {
 
       if (visiblePacks.length > 0) {
         const packsSection = document.createElement("div");
-        packsSection.innerHTML = `<div class="discover-section-title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg> Featured Packs</div>`;
+
+        const sectionTitle = document.createElement("div");
+        sectionTitle.className = "discover-section-title";
+        const packIcon = document.createElementNS(svgNS, "svg");
+        packIcon.setAttribute("width", "20");
+        packIcon.setAttribute("height", "20");
+        packIcon.setAttribute("viewBox", "0 0 24 24");
+        packIcon.setAttribute("fill", "none");
+        packIcon.setAttribute("stroke", "currentColor");
+        packIcon.setAttribute("stroke-width", "2");
+        packIcon.style.marginRight = "8px";
+        const pPath = document.createElementNS(svgNS, "path");
+        pPath.setAttribute(
+          "d",
+          "M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z",
+        );
+        const pPoly = document.createElementNS(svgNS, "polyline");
+        pPoly.setAttribute("points", "3.27 6.96 12 12.01 20.73 6.96");
+        const pLine = document.createElementNS(svgNS, "line");
+        pLine.setAttribute("x1", "12");
+        pLine.setAttribute("y1", "22.08");
+        pLine.setAttribute("x2", "12");
+        pLine.setAttribute("y2", "12");
+        packIcon.appendChild(pPath);
+        packIcon.appendChild(pPoly);
+        packIcon.appendChild(pLine);
+        sectionTitle.appendChild(packIcon);
+        sectionTitle.appendChild(document.createTextNode(" Featured Packs"));
+        packsSection.appendChild(sectionTitle);
 
         const packGrid = document.createElement("div");
         packGrid.className = "pack-grid";
@@ -125,30 +200,47 @@ export const DiscoverView = {
             feedListText = displayNames + (diff > 0 ? ` & ${diff} more` : "");
           }
 
-          card.innerHTML = DOMPurify.sanitize(`
-                    <div class="pack-title">${pack.title}</div>
-                    <div class="pack-description">${pack.description}</div>
-                    <div class="pack-feed-preview-text">
-                        <span style="font-weight:600; font-size:0.75rem; text-transform:uppercase; color:var(--text-muted);">Includes:</span>
-                        <span class="feed-list-text"></span>
-                    </div>
-                    <button class="btn btn-outline ${alreadyAdded ? "added" : ""}" style="margin-top:auto; width:100%;" ${alreadyAdded ? "disabled" : ""}>${alreadyAdded ? "Pack Added" : "Add Pack"}</button>
-                  `);
+          const pTitle = document.createElement("div");
+          pTitle.className = "pack-title";
+          pTitle.textContent = pack.title;
 
-          // Set text content safely
-          card.querySelector(".pack-title").textContent = pack.title;
-          card.querySelector(".pack-description").textContent =
-            pack.description;
-          card.querySelector(".feed-list-text").textContent = feedListText;
+          const pDesc = document.createElement("div");
+          pDesc.className = "pack-description";
+          pDesc.textContent = pack.description;
+
+          const pPreview = document.createElement("div");
+          pPreview.className = "pack-feed-preview-text";
+          const pLabel = document.createElement("span");
+          pLabel.style.fontWeight = "600";
+          pLabel.style.fontSize = "0.75rem";
+          pLabel.style.textTransform = "uppercase";
+          pLabel.style.color = "var(--text-muted)";
+          pLabel.textContent = "Includes:";
+          const pList = document.createElement("span");
+          pList.className = "feed-list-text";
+          pList.textContent = feedListText;
+          pPreview.appendChild(pLabel);
+          pPreview.appendChild(pList);
+
+          const pBtn = document.createElement("button");
+          pBtn.className = `btn btn-outline ${alreadyAdded ? "added" : ""}`;
+          pBtn.style.marginTop = "auto";
+          pBtn.style.width = "100%";
+          if (alreadyAdded) pBtn.disabled = true;
+          pBtn.textContent = alreadyAdded ? "Pack Added" : "Add Pack";
+
+          card.appendChild(pTitle);
+          card.appendChild(pDesc);
+          card.appendChild(pPreview);
+          card.appendChild(pBtn);
 
           if (!alreadyAdded) {
-            const btn = card.querySelector("button");
-            btn.onclick = async () => {
-              btn.textContent = "Adding Pack...";
-              btn.disabled = true;
+            pBtn.onclick = async () => {
+              pBtn.textContent = "Adding Pack...";
+              pBtn.disabled = true;
               await onAddPack(pack);
-              btn.textContent = "Pack Added";
-              btn.classList.add("added");
+              pBtn.textContent = "Pack Added";
+              pBtn.classList.add("added");
             };
           }
           packGrid.appendChild(card);
@@ -185,7 +277,13 @@ export const DiscoverView = {
       });
 
       if (filteredFeeds.length === 0) {
-        feedGrid.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding:40px; grid-column:1/-1;">No feeds found matching filters.</div>`;
+        const noFeeds = document.createElement("div");
+        noFeeds.style.textAlign = "center";
+        noFeeds.style.color = "var(--text-muted)";
+        noFeeds.style.padding = "40px";
+        noFeeds.style.gridColumn = "1/-1";
+        noFeeds.textContent = "No feeds found matching filters.";
+        feedGrid.appendChild(noFeeds);
       } else {
         const batchSize = 20;
         let renderedCount = 0;
@@ -208,45 +306,68 @@ export const DiscoverView = {
             const item = document.createElement("div");
             item.className = "feed-directory-card";
 
-            const tagsHtml = feed.tags
-              .map(
-                (t) =>
-                  `<span class="tag-pill" style="background:transparent; color:var(--text-muted); font-size:0.7rem; border:1px solid var(--border);">${DOMPurify.sanitize(t)}</span>`,
-              )
-              .join("");
+            const img = document.createElement("img");
+            img.src = iconUrl;
+            img.className = "feed-icon-large";
+            img.onerror = function () {
+              this.style.display = "none";
+            };
 
-            item.innerHTML = DOMPurify.sanitize(`
-                            <img src="${iconUrl}" class="feed-icon-large" onerror="this.style.display='none'">
-                            <div class="feed-info">
-                                <div class="feed-title"></div>
-                                <div class="feed-desc"></div>
-                                <div class="card-tags" style="margin-top:8px;">
-                                    ${tagsHtml}
-                                </div>
-                            </div>
-                            <button class="feed-add-btn ${added ? "added" : ""}" ${added ? "disabled" : ""}>${added ? "Added" : "Add"}</button>
-                        `);
+            const infoDiv = document.createElement("div");
+            infoDiv.className = "feed-info";
 
-            item.querySelector(".feed-title").textContent = feed.title;
-            item.querySelector(".feed-desc").textContent = feed.description;
+            const fTitle = document.createElement("div");
+            fTitle.className = "feed-title";
+            fTitle.textContent = feed.title;
+
+            const fDesc = document.createElement("div");
+            fDesc.className = "feed-desc";
+            fDesc.textContent = feed.description;
+
+            const cardTags = document.createElement("div");
+            cardTags.className = "card-tags";
+            cardTags.style.marginTop = "8px";
+
+            feed.tags.forEach((t) => {
+              const tSpan = document.createElement("span");
+              tSpan.className = "tag-pill";
+              tSpan.style.background = "transparent";
+              tSpan.style.color = "var(--text-muted)";
+              tSpan.style.fontSize = "0.7rem";
+              tSpan.style.border = "1px solid var(--border)";
+              tSpan.textContent = DOMPurify.sanitize(t);
+              cardTags.appendChild(tSpan);
+            });
+
+            infoDiv.appendChild(fTitle);
+            infoDiv.appendChild(fDesc);
+            infoDiv.appendChild(cardTags);
+
+            const fBtn = document.createElement("button");
+            fBtn.className = `feed-add-btn ${added ? "added" : ""}`;
+            if (added) fBtn.disabled = true;
+            fBtn.textContent = added ? "Added" : "Add";
+
+            item.appendChild(img);
+            item.appendChild(infoDiv);
+            item.appendChild(fBtn);
 
             if (!added) {
-              const btn = item.querySelector("button");
-              btn.onclick = async () => {
-                btn.textContent = "Adding...";
-                btn.disabled = true;
-                btn.style.cursor = "wait";
+              fBtn.onclick = async () => {
+                fBtn.textContent = "Adding...";
+                fBtn.disabled = true;
+                fBtn.style.cursor = "wait";
                 const success = await onAddFeed(feed);
                 if (success) {
-                  btn.textContent = "Added";
-                  btn.className = "feed-add-btn added";
-                  btn.onclick = null;
-                  btn.style.cursor = "default";
+                  fBtn.textContent = "Added";
+                  fBtn.className = "feed-add-btn added";
+                  fBtn.onclick = null;
+                  fBtn.style.cursor = "default";
                 } else {
-                  btn.textContent = "Add";
-                  btn.className = "feed-add-btn";
-                  btn.disabled = false;
-                  btn.style.cursor = "pointer";
+                  fBtn.textContent = "Add";
+                  fBtn.className = "feed-add-btn";
+                  fBtn.disabled = false;
+                  fBtn.style.cursor = "pointer";
                 }
               };
             }
@@ -288,17 +409,13 @@ export const DiscoverView = {
       }
     });
 
-    const toggleTagsBtn = tagsSection.querySelector("#btn-toggle-tags");
-    const tagsContainerDiv = tagsSection.querySelector(
-      "#discover-tags-container",
-    );
     toggleTagsBtn.onclick = () => {
-      if (tagsContainerDiv.classList.contains("collapsed")) {
-        tagsContainerDiv.classList.remove("collapsed");
+      if (tagsContainer.classList.contains("collapsed")) {
+        tagsContainer.classList.remove("collapsed");
         toggleTagsBtn.textContent = "Show fewer topics";
       } else {
-        tagsContainerDiv.classList.add("collapsed");
-        tagsContainerDiv.scrollTop = 0;
+        tagsContainer.classList.add("collapsed");
+        tagsContainer.scrollTop = 0;
         toggleTagsBtn.textContent = "Show all topics";
       }
     };

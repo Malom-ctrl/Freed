@@ -141,9 +141,12 @@ function parseRSS(xml, feed) {
     }
     // Simple extraction if description has img
     if (!image && description) {
-      const div = document.createElement("div");
-      div.innerHTML = DOMPurify.sanitize(description);
-      const img = div.querySelector("img");
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(
+        DOMPurify.sanitize(description),
+        "text/html",
+      );
+      const img = doc.querySelector("img");
       if (img) image = img.src;
     }
 

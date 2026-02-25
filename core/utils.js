@@ -20,9 +20,9 @@ export const Utils = {
   },
 
   divToText: function (html) {
-    const tmp = document.createElement("DIV");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    return doc.body.textContent || doc.body.innerText || "";
   },
 
   countWords: function (text) {

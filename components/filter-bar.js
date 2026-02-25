@@ -138,7 +138,7 @@ export const FilterBar = {
       removeSpan.className = "remove-tag";
       removeSpan.style.marginLeft = "4px";
       removeSpan.style.cursor = "pointer";
-      removeSpan.innerHTML = "&times;"; // &times; is safe static HTML
+      removeSpan.textContent = "\u00D7"; // &times; equivalent
 
       removeSpan.onclick = () => {
         State.filters.tags = State.filters.tags.filter((t) => t !== tagName);

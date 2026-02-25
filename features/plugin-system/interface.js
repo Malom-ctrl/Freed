@@ -166,7 +166,18 @@ export class Interface {
         const guid = State.currentArticleGuid;
         const el = document.getElementById("reader-content");
         if (guid && el) {
-          await DB.saveArticles([{ guid: guid, fullContent: el.innerHTML }]);
+          const tempDiv = document.createElement("div");
+          Array.from(el.childNodes).forEach((node) =>
+            tempDiv.appendChild(node.cloneNode(true)),
+          );
+
+          const serializer = new XMLSerializer();
+          let fullContent = "";
+          tempDiv.childNodes.forEach((node) => {
+            fullContent += serializer.serializeToString(node);
+          });
+
+          await DB.saveArticles([{ guid: guid, fullContent: fullContent }]);
         }
       },
     };

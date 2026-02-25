@@ -178,9 +178,14 @@ export const Tags = {
     items.forEach((item) => {
       const div = document.createElement("div");
       div.className = "autocomplete-item";
-      div.innerHTML = DOMPurify.sanitize(
-        `<span class="tag-dot" style="background-color: ${item.color || "#ccc"}"></span> ${item.name}`,
-      );
+
+      const span = document.createElement("span");
+      span.className = "tag-dot";
+      span.style.backgroundColor = item.color || "#ccc";
+
+      div.appendChild(span);
+      div.appendChild(document.createTextNode(" " + item.name));
+
       div.addEventListener("mousedown", (e) => {
         e.preventDefault();
         onSelect(item);
@@ -257,7 +262,7 @@ export const Tags = {
 
       const removeBtn = document.createElement("span");
       removeBtn.className = "remove-tag";
-      removeBtn.innerHTML = "&times;";
+      removeBtn.textContent = "\u00D7"; // × character
       removeBtn.onclick = (e) => {
         e.stopPropagation();
         this.currentTags.splice(index, 1);
