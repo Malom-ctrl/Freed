@@ -2,7 +2,6 @@ import { DB } from "../../core/db.js";
 import { Service } from "../feeds/rss-service.js";
 import { Utils } from "../../core/utils.js";
 import { State } from "../../core/state.js";
-import { Events } from "../../core/events.js";
 import { Registry } from "../plugin-system/registry.js";
 import DOMPurify from "dompurify";
 
@@ -28,10 +27,7 @@ export const ReaderService = {
       // Only mark as read if content exists and is not loading
       if (scrollHeight > 0 && this._currentMaxProgress < 1) {
         this._currentMaxProgress = 1;
-        DB.updateReadingProgress(State.currentArticleGuid, 1).then(() => {
-          Events.emit(Events.ARTICLE_READ, { guid: State.currentArticleGuid });
-          Events.emit(Events.ARTICLES_UPDATED);
-        });
+        DB.updateReadingProgress(State.currentArticleGuid, 1);
         return 1;
       }
       return this._currentMaxProgress;
@@ -54,17 +50,7 @@ export const ReaderService = {
       // If "read", force progress to 1
       const progressToSave = isRead ? 1 : progress;
 
-      DB.updateReadingProgress(State.currentArticleGuid, progressToSave).then(
-        () => {
-          if (isRead) {
-            Events.emit(Events.ARTICLE_READ, {
-              guid: State.currentArticleGuid,
-            });
-            // Force update to ensure UI reflects read state immediately
-            Events.emit(Events.ARTICLES_UPDATED);
-          }
-        },
-      );
+      DB.updateReadingProgress(State.currentArticleGuid, progressToSave);
     }
 
     return progress;
@@ -104,8 +90,6 @@ export const ReaderService = {
   toggleFavorite: async function (guid) {
     if (!guid) return false;
     const newState = await DB.toggleFavorite(guid);
-    Events.emit(Events.ARTICLE_FAVORITED, { guid, favorite: newState });
-    Events.emit(Events.ARTICLES_UPDATED);
     return newState;
   },
 
@@ -115,7 +99,6 @@ export const ReaderService = {
 
   saveArticle: async function (article) {
     const res = await DB.saveArticles([article]);
-    Events.emit(Events.ARTICLES_UPDATED);
     return res;
   },
 

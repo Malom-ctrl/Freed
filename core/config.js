@@ -1,5 +1,5 @@
 export const Config = {
-  APP_VERSION: "1.4.2",
+  APP_VERSION: "1.4.3",
   DB_NAME: "freed_db",
   DB_VERSION: 4,
   COLOR_PALETTE: [
@@ -26,6 +26,7 @@ export const Config = {
   OFFICIAL_PLUGINS: [
     "https://raw.githubusercontent.com/Malom-ctrl/Freed-Language-Learning/refs/heads/main/manifest.json",
     "https://raw.githubusercontent.com/Malom-ctrl/Freed-Themer/refs/heads/master/manifest.json",
+    "https://raw.githubusercontent.com/Malom-ctrl/Freed-Automations/refs/heads/main/manifest.json",
   ],
   DEFAULTS: {
     CLEANUP_UNREAD_DAYS: 30,

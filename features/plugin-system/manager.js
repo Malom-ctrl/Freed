@@ -172,18 +172,15 @@ export const Manager = {
           const loadedModule = await import(url);
 
           if (typeof loadedModule.activate === "function") {
+            await loadedModule.activate(api);
             module = loadedModule;
             moduleUrl = url;
           }
         }
       }
 
-      if (module && typeof module.activate === "function") {
-        await module.activate(api);
+      if (module) {
         this.activePlugins.set(pluginData.id, { module, url: moduleUrl });
-      } else {
-        // If no activate function was found, just mark it active
-        this.activePlugins.set(pluginData.id, { url: moduleUrl });
       }
     } catch (e) {
       console.error(`Failed to activate plugin ${pluginData.id}`, e);

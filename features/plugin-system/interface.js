@@ -6,11 +6,20 @@ import { Modals } from "../../components/modals.js";
 import { Events } from "../../core/events.js";
 
 import { CADManager } from "../reader/cad-manager.js";
+import { Tags } from "../tags/tags.js";
 
 export class Interface {
   constructor(pluginId) {
     this.pluginId = pluginId;
     this.registry = Registry;
+    this._namespace = new Map();
+  }
+
+  get namespace() {
+    return {
+      register: (name, value) => this._namespace.set(name, value),
+      get: (name) => this._namespace.get(name),
+    };
   }
 
   get app() {
@@ -156,6 +165,8 @@ export class Interface {
         confirm: (msg) => confirm(msg),
       },
       utils: {
+        setupGenericTagInput: (inputElement, options) =>
+          Tags.setupGenericTagInput(inputElement, options),
         rgbToHex: (color) => Utils.rgbToHex(color),
         ensureUrlProtocol: (input) => Utils.ensureUrlProtocol(input),
         divToText: (html) => Utils.divToText(html),
@@ -216,9 +227,11 @@ export class Interface {
     return {
       getArticle: (id) => DB.getArticle(id),
       getFeed: (id) => DB.getFeed(id),
+      saveFeed: (feed) => DB.saveFeed(feed),
       getTag: (name) => DB.getTag(name),
       saveArticle: (article) => DB.saveArticles([article]),
       getAllFeeds: () => DB.getAllFeeds(),
+      getArticlesByFeed: (feedId) => DB.getArticlesByFeed(feedId),
       stats: {
         update: (feedId, key, count) => DB.updateFeedStat(feedId, key, count),
       },

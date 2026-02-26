@@ -9,6 +9,80 @@ export const Tags = {
   editingTag: null, // The specific tag being color-edited
   selectedColor: null, // For feed color picker
 
+  setupGenericTagInput: function (inputElement, options = {}) {
+    const { onTagAdded, getExclusions, onlyExisting } = options;
+
+    const triggerSearch = async () => {
+      const val = inputElement.value.trim().toLowerCase();
+      const allTags = await DB.getAllTags();
+
+      const exclusions = getExclusions ? getExclusions() : [];
+      const exclusionSet = new Set(exclusions.map((t) => t.toLowerCase()));
+
+      const matches = allTags.filter(
+        (t) =>
+          t.name.toLowerCase().includes(val) &&
+          !exclusionSet.has(t.name.toLowerCase()),
+      );
+
+      this.showAutocomplete(inputElement, matches, (item) => {
+        if (onTagAdded) onTagAdded(item);
+        inputElement.value = "";
+        inputElement.focus();
+        triggerSearch();
+      });
+    };
+
+    inputElement.addEventListener("input", triggerSearch);
+    inputElement.addEventListener("focus", triggerSearch);
+
+    inputElement.addEventListener("keydown", async (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const val = inputElement.value.trim();
+        if (!val) return;
+
+        document.getElementById("global-autocomplete").classList.remove("show");
+
+        // Check if already selected (if getExclusions provided)
+        if (getExclusions) {
+          const exclusions = getExclusions();
+          if (exclusions.some((t) => t.toLowerCase() === val.toLowerCase())) {
+            inputElement.value = "";
+            return;
+          }
+        }
+
+        const existing = await DB.getTag(val);
+
+        if (onlyExisting && !existing) {
+          Utils.showToast(`Tag "${val}" not found`);
+          inputElement.value = "";
+          return;
+        }
+
+        const newTag = {
+          name: existing ? existing.name : val,
+          color: existing ? existing.color : Utils.getRandomFromPalette(),
+        };
+
+        if (onTagAdded) onTagAdded(newTag);
+        inputElement.value = "";
+        triggerSearch();
+      }
+    });
+
+    inputElement.addEventListener("blur", () => {
+      setTimeout(() => {
+        const active = document.activeElement;
+        if (active !== inputElement) {
+          const autocomplete = document.getElementById("global-autocomplete");
+          if (autocomplete) autocomplete.classList.remove("show");
+        }
+      }, 150);
+    });
+  },
+
   setupTagInputs: function (onFilterUpdateCallback) {
     // Global Autocomplete closer
     document.addEventListener("click", (e) => {
@@ -22,144 +96,29 @@ export const Tags = {
       }
     });
 
-    const triggerSearch = async (input, type) => {
-      const val = input.value.trim().toLowerCase();
-      const allTags = await DB.getAllTags();
-      let matches = [];
-
-      if (type === "feed") {
-        const currentTagNames = new Set(this.currentTags.map((ct) => ct.name));
-        matches = allTags.filter(
-          (t) =>
-            t.name.toLowerCase().includes(val) && !currentTagNames.has(t.name),
-        );
-      } else if (type === "filter") {
-        const filterTagsSet = new Set(State.filters.tags);
-        matches = allTags.filter(
-          (t) =>
-            t.name.toLowerCase().includes(val) && !filterTagsSet.has(t.name),
-        );
-      }
-
-      this.showAutocomplete(input, matches, (item) => {
-        if (type === "feed") {
-          this.currentTags.push(item);
-          this.renderTagEditor();
-          input.value = "";
-          input.focus();
-          triggerSearch(input, type);
-        } else if (type === "filter") {
-          State.filters.tags.push(item.name);
-          State.saveFilters();
-          if (onFilterUpdateCallback) onFilterUpdateCallback();
-
-          input.value = "";
-          input.focus();
-          triggerSearch(input, type);
-        }
-      });
-    };
-
     // 1. Feed Modal Input
     const feedInput = document.getElementById("feed-tags-input");
     if (feedInput) {
-      feedInput.addEventListener("input", () =>
-        triggerSearch(feedInput, "feed"),
-      );
-      feedInput.addEventListener("focus", () =>
-        triggerSearch(feedInput, "feed"),
-      );
-
-      feedInput.addEventListener("keydown", async (e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          const val = feedInput.value.trim();
-          if (!val) return;
-
-          document
-            .getElementById("global-autocomplete")
-            .classList.remove("show");
-
-          if (
-            this.currentTags.find(
-              (t) => t.name.toLowerCase() === val.toLowerCase(),
-            )
-          ) {
-            feedInput.value = "";
-            return;
-          }
-
-          const existing = await DB.getTag(val);
-
-          const newTag = {
-            name: existing ? existing.name : val,
-            color: existing ? existing.color : Utils.getRandomFromPalette(),
-          };
-
-          this.currentTags.push(newTag);
+      this.setupGenericTagInput(feedInput, {
+        getExclusions: () => this.currentTags.map((t) => t.name),
+        onTagAdded: (tag) => {
+          this.currentTags.push(tag);
           this.renderTagEditor();
-          feedInput.value = "";
-          triggerSearch(feedInput, "feed");
-        }
-      });
-
-      feedInput.addEventListener("blur", () => {
-        setTimeout(() => {
-          const active = document.activeElement;
-          if (active !== feedInput) {
-            document
-              .getElementById("global-autocomplete")
-              .classList.remove("show");
-          }
-        }, 150);
+        },
       });
     }
 
     // 2. Filter Bar Input
     const filterInput = document.getElementById("filter-tag-input");
     if (filterInput) {
-      filterInput.addEventListener("input", () =>
-        triggerSearch(filterInput, "filter"),
-      );
-      filterInput.addEventListener("focus", () =>
-        triggerSearch(filterInput, "filter"),
-      );
-
-      filterInput.addEventListener("keydown", async (e) => {
-        if (e.key !== "Enter") return;
-
-        e.preventDefault();
-        const val = filterInput.value.trim();
-        if (!val) return;
-
-        document.getElementById("global-autocomplete").classList.remove("show");
-
-        const existing = await DB.getTag(val);
-
-        if (!existing) {
-          Utils.showToast(`Tag "${val}" not found`);
-          filterInput.value = "";
-          return;
-        }
-
-        if (State.filters.tags.includes(existing.name)) return;
-
-        State.filters.tags.push(existing.name);
-        State.saveFilters();
-        if (onFilterUpdateCallback) onFilterUpdateCallback();
-        filterInput.value = "";
-        triggerSearch(filterInput, "filter");
-      });
-
-      filterInput.addEventListener("blur", () => {
-        setTimeout(() => {
-          const active = document.activeElement;
-          if (active !== filterInput) {
-            document
-              .getElementById("global-autocomplete")
-              .classList.remove("show");
-          }
-        }, 150);
+      this.setupGenericTagInput(filterInput, {
+        getExclusions: () => State.filters.tags,
+        onlyExisting: true,
+        onTagAdded: (tag) => {
+          State.filters.tags.push(tag.name);
+          State.saveFilters();
+          if (onFilterUpdateCallback) onFilterUpdateCallback();
+        },
       });
     }
   },

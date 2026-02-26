@@ -6,11 +6,15 @@ export const Events = {
   // Feed Events
   FEEDS_UPDATED: "freed:feeds-updated", // Added, removed, edited, synced
   FEED_SELECTED: "freed:feed-selected",
+  FEED_ADDED: "freed:feed-added",
+  FEED_TAG_ADDED: "freed:feed-tag-added",
+  FEED_TAG_REMOVED: "freed:feed-tag-removed",
 
   // Article Events
   ARTICLES_UPDATED: "freed:articles-updated", // New articles fetched, or list needs refresh
   ARTICLE_CHANGED: "freed:article-changed", // Read status, favorite, etc.
   ARTICLE_READ: "freed:article-read", // Specific event for read completion
+  ARTICLE_FAVORITED: "freed:article-favorited",
 
   // Filter/View Events
   FILTER_CHANGED: "freed:filter-changed",

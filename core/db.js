@@ -1,5 +1,6 @@
 import { Config } from "./config.js";
 import { Utils } from "./utils.js";
+import { Events } from "./events.js";
 
 const { DB_NAME, DB_VERSION, DEFAULT_FEEDS } = Config;
 const { countWords, divToText } = Utils;
@@ -190,9 +191,34 @@ async function saveFeed(feed) {
   return new Promise((resolve, reject) => {
     const tx = db.transaction("feeds", "readwrite");
     const store = tx.objectStore("feeds");
-    const request = store.put(feed);
-    request.onsuccess = () => resolve();
-    request.onerror = () => reject(request.error);
+
+    // Get existing to diff tags
+    const getReq = store.get(feed.id);
+
+    getReq.onsuccess = () => {
+      const existing = getReq.result;
+      const oldTags = existing ? existing.tags || [] : [];
+      const newTags = feed.tags || [];
+
+      const putReq = store.put(feed);
+
+      putReq.onsuccess = () => {
+        // Calculate Diff
+        const addedTags = newTags.filter((t) => !oldTags.includes(t));
+        const removedTags = oldTags.filter((t) => !newTags.includes(t));
+
+        addedTags.forEach((t) =>
+          Events.emit(Events.FEED_TAG_ADDED, { feedId: feed.id, tag: t }),
+        );
+        removedTags.forEach((t) =>
+          Events.emit(Events.FEED_TAG_REMOVED, { feedId: feed.id, tag: t }),
+        );
+        Events.emit(Events.FEEDS_UPDATED);
+      };
+    };
+
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
   });
 }
 
@@ -215,7 +241,10 @@ async function deleteFeed(id) {
       keys.forEach((key) => articleStore.delete(key));
     };
 
-    tx.oncomplete = () => resolve();
+    tx.oncomplete = () => {
+      Events.emit(Events.FEEDS_UPDATED);
+      resolve();
+    };
     tx.onerror = () => reject(tx.error);
   });
 }
@@ -313,6 +342,7 @@ async function saveArticles(articles) {
             });
           });
         }
+        Events.emit(Events.ARTICLES_UPDATED);
         resolve();
       }
     }
@@ -371,11 +401,15 @@ async function updateReadingProgress(guid, progress) {
         const isRead = currentProgress >= 1;
         if (isRead !== wasRead) {
           delta.read = isRead ? 1 : -1;
+          if (isRead) {
+            Events.emit(Events.ARTICLE_READ, { guid });
+          }
         }
         if (Object.keys(delta).length > 0) {
           _applyFeedStatsDelta(feedStore, article.feedId, delta);
         }
       }
+      Events.emit(Events.ARTICLES_UPDATED);
       resolve();
     };
     req.onerror = () => reject(req.error);
@@ -401,6 +435,8 @@ async function setFavorite(guid, isFavorite) {
             favorited: isFavorite ? 1 : -1,
           });
         }
+        Events.emit(Events.ARTICLE_FAVORITED, { guid, favorite: isFavorite });
+        Events.emit(Events.ARTICLES_UPDATED);
       }
     };
     tx.oncomplete = () => resolve();
@@ -428,6 +464,7 @@ async function setArticleDiscarded(guid, isDiscarded) {
             discarded: isDiscarded ? 1 : -1,
           });
         }
+        Events.emit(Events.ARTICLES_UPDATED);
       }
     };
     tx.oncomplete = () => resolve();
@@ -453,6 +490,8 @@ async function toggleFavorite(guid) {
             favorited: newState ? 1 : -1,
           });
         }
+        Events.emit(Events.ARTICLE_FAVORITED, { guid, favorite: newState });
+        Events.emit(Events.ARTICLES_UPDATED);
         resolve(newState);
       } else {
         resolve(false);

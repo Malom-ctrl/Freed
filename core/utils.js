@@ -207,6 +207,32 @@ export const Utils = {
     };
   },
 
+  debounce: function (func, wait, immediateThreshold = 1) {
+    let timeout;
+    let callCount = 0;
+    return function () {
+      const context = this;
+      const args = arguments;
+
+      callCount++;
+
+      const later = function () {
+        timeout = null;
+        if (callCount > immediateThreshold) {
+          func.apply(context, args);
+        }
+        callCount = 0;
+      };
+
+      if (callCount <= immediateThreshold) {
+        func.apply(context, args);
+      }
+
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  },
+
   getFaviconUrl: function (domain) {
     return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
   },

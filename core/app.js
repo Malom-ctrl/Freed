@@ -29,6 +29,9 @@ async function init() {
   Theme.init();
   State.load();
 
+  // Debounce refreshUI to prevent spamming
+  const debouncedRefreshUI = Utils.debounce(refreshUI, 100);
+
   // Clear ghost history state on reload
   if (history.state && history.state.readingView) {
     history.replaceState(null, "", location.pathname + location.search);
@@ -51,7 +54,7 @@ async function init() {
     }
   });
 
-  setupEventListeners();
+  setupEventListeners(debouncedRefreshUI);
   Tools.setupSelectionTools();
   Modals.setupGlobalTooltip();
   Tags.setupTagColorPopup();
@@ -242,8 +245,6 @@ async function refreshUI() {
 function handleDiscard(article) {
   const newState = !article.discarded;
   DB.setArticleDiscarded(article.guid, newState).then(() => {
-    Events.emit(Events.ARTICLES_UPDATED);
-
     let msg, label, callback;
 
     if (newState) {
@@ -251,9 +252,7 @@ function handleDiscard(article) {
       msg = "Article discarded";
       label = "Undo";
       callback = () => {
-        DB.setArticleDiscarded(article.guid, false).then(() => {
-          Events.emit(Events.ARTICLES_UPDATED);
-        });
+        DB.setArticleDiscarded(article.guid, false);
       };
     } else {
       // Was discarded, now Restored
@@ -266,7 +265,6 @@ function handleDiscard(article) {
 
 function handleToggleFavorite(article) {
   DB.toggleFavorite(article.guid).then((newState) => {
-    Events.emit(Events.ARTICLES_UPDATED);
     Utils.showToast(newState ? "Added to Favorites" : "Removed from Favorites");
   });
 }
@@ -275,7 +273,7 @@ async function switchFeed(id) {
   Events.emit(Events.FEED_SELECTED, { id });
 }
 
-function setupEventListeners() {
+function setupEventListeners(debouncedRefreshUI) {
   // Setup Component Listeners
   Modals.setupListeners();
   FilterBar.setupListeners();
@@ -285,11 +283,14 @@ function setupEventListeners() {
   Sidebar.setupListeners();
 
   // Global Event Handlers
-  Events.on(Events.REFRESH_UI, () => refreshUI());
-  Events.on(Events.SETTINGS_UPDATED, () => refreshUI());
-  Events.on(Events.FEEDS_UPDATED, () => refreshUI());
-  Events.on(Events.ARTICLES_UPDATED, () => refreshUI());
-  Events.on(Events.FILTER_CHANGED, () => refreshUI());
+  // Use debounced refresh for high-frequency events
+  const refresh = debouncedRefreshUI || refreshUI;
+
+  Events.on(Events.REFRESH_UI, () => refresh());
+  Events.on(Events.SETTINGS_UPDATED, () => refresh());
+  Events.on(Events.FEEDS_UPDATED, () => refresh());
+  Events.on(Events.ARTICLES_UPDATED, () => refresh());
+  Events.on(Events.FILTER_CHANGED, () => refresh());
 
   Events.on(Events.FEED_SELECTED, async (detail) => {
     if (detail.id) {
@@ -300,7 +301,7 @@ function setupEventListeners() {
     const list = document.getElementById("article-list");
     if (list) list.scrollTop = 0;
 
-    await refreshUI();
+    await refresh();
 
     // Sidebar closing is handled in Sidebar.js
   });

@@ -138,6 +138,8 @@ export const FeedService = {
     });
 
     await DB.saveFeed(newFeed);
+    Events.emit(Events.FEED_ADDED, { feed: newFeed });
+
     await DB.saveArticles(
       result.articles.map((a) => ({
         ...a,
@@ -185,9 +187,6 @@ export const FeedService = {
       if (onSuccess) onSuccess(newFeed);
 
       await DB.cleanupOrphanedTags();
-
-      Events.emit(Events.FEEDS_UPDATED);
-      Events.emit(Events.ARTICLES_UPDATED);
 
       if (newFeed.autofetch) this._triggerAutofetch(newFeed);
       return true;
@@ -261,8 +260,6 @@ export const FeedService = {
           } else {
             Utils.showToast(`Saved changes`);
           }
-
-          Events.emit(Events.FEEDS_UPDATED);
         }
       }
     } catch (e) {
@@ -288,9 +285,6 @@ export const FeedService = {
       if (onSuccessCallback) onSuccessCallback(newFeed.id, true);
 
       await DB.cleanupOrphanedTags();
-
-      Events.emit(Events.FEEDS_UPDATED);
-      Events.emit(Events.ARTICLES_UPDATED);
 
       if (newFeed.autofetch) {
         this._triggerAutofetch(newFeed);
@@ -330,8 +324,6 @@ export const FeedService = {
     await DB.deleteFeed(id);
     await DB.cleanupOrphanedTags();
     Utils.showToast("Feed deleted");
-    Events.emit(Events.FEEDS_UPDATED);
-    Events.emit(Events.ARTICLES_UPDATED);
     if (onDeleteCallback) onDeleteCallback(id);
   },
 
@@ -381,8 +373,6 @@ export const FeedService = {
       }
     }
 
-    Events.emit(Events.FEEDS_UPDATED);
-    Events.emit(Events.ARTICLES_UPDATED);
     if (onRefreshUI) onRefreshUI();
 
     if (failCount > 0) {

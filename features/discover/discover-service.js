@@ -25,7 +25,6 @@ export const DiscoverService = {
 
     if (addedCount > 0) {
       Utils.showToast(`Pack added (${addedCount} new feeds)`);
-      Events.emit(Events.FEEDS_UPDATED);
       Events.emit(Events.ARTICLES_UPDATED);
     } else {
       Utils.showToast(`All feeds in pack already exist`);
