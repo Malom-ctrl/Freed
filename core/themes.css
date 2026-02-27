@@ -5,6 +5,7 @@
     --bg-card: #ffffff;
     --text-main: #1f2937;
     --text-muted: #6b7280;
+    --text-inverse: #ffffff;
     --primary: #4f46e5;
     --primary-hover: #4338ca;
     --border: #e5e7eb;
@@ -20,6 +21,7 @@
     --bg-card: #1f2937;
     --text-main: #f9fafb;
     --text-muted: #9ca3af;
+    --text-inverse: #ffffff;
     --border: #374151;
     --scrollbar-thumb: #4b5563;
     --scrollbar-thumb-hover: #6b7280;
@@ -33,6 +35,7 @@
     --bg-card: #121212;
     --text-main: #e5e5e5;
     --text-muted: #a3a3a3;
+    --text-inverse: #ffffff;
     --border: #262626;
     --primary: #6366f1; /* Slightly lighter indigo for contrast on black */
     --primary-hover: #4f46e5;
@@ -48,6 +51,7 @@
     --bg-card: #fffdf5;
     --text-main: #433422;
     --text-muted: #8a7b6a;
+    --text-inverse: #ffffff;
     --primary: #8f6e4a; /* Brownish */
     --primary-hover: #755a3d;
     --border: #dcd3c0;
@@ -63,6 +67,7 @@
     --bg-card: #ffffff;
     --text-main: #0c4a6e;
     --text-muted: #0369a1;
+    --text-inverse: #ffffff;
     --primary: #0284c7;
     --primary-hover: #0369a1;
     --border: #bae6fd;
@@ -78,6 +83,7 @@
     --bg-card: #ffffff;
     --text-main: #14532d;
     --text-muted: #15803d;
+    --text-inverse: #ffffff;
     --primary: #16a34a;
     --primary-hover: #15803d;
     --border: #bbf7d0;
@@ -93,6 +99,7 @@
     --bg-card: #ffffff;
     --text-main: #7c2d12;
     --text-muted: #c2410c;
+    --text-inverse: #ffffff;
     --primary: #ea580c;
     --primary-hover: #c2410c;
     --border: #fed7aa;
@@ -108,6 +115,7 @@
     --bg-card: #0c0c0c;
     --text-main: #22c55e;
     --text-muted: #15803d;
+    --text-inverse: #000000;
     --primary: #22c55e;
     --primary-hover: #4ade80;
     --border: #14532d;

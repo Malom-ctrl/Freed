@@ -207,7 +207,7 @@
 
 .feed-add-btn:hover {
     background: var(--primary);
-    color: white;
+    color: var(--text-inverse);
 }
 
 .feed-add-btn.added {

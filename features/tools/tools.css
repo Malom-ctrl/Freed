@@ -51,7 +51,7 @@
 .selection-toolbar button {
     background: transparent;
     border: none;
-    color: white;
+    color: var(--text-inverse);
     padding: 6px 12px;
     border-radius: 999px;
     font-size: 0.85rem;

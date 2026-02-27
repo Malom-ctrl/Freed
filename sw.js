@@ -1,4 +1,4 @@
-const APP_VERSION = "1.4.3";
+const APP_VERSION = "1.4.4";
 const CACHE_NAME = `freed-v${APP_VERSION}`;
 const ASSETS = [
   "./",

@@ -70,7 +70,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: var(--text-inverse);
     font-weight: 600;
     font-size: 1.1rem;
     opacity: 0;
@@ -86,7 +86,7 @@
     left: 16px;
     width: 24px;
     height: 24px;
-    stroke: white;
+    stroke: var(--text-inverse);
     stroke-width: 2;
     fill: none;
     pointer-events: none; /* Let clicks pass to overlay/zone */
@@ -173,7 +173,7 @@
 
 /* Text color overrides for Image Cards */
 .card.has-image .card-title {
-    color: #ffffff;
+    color: var(--text-inverse);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 .card.has-image.read .card-title {

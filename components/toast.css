@@ -5,7 +5,7 @@
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background: #333;
-    color: white;
+    color: var(--text-inverse);
     padding: 12px 24px;
     border-radius: 50px;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -23,7 +23,7 @@
 .toast-action {
     background: rgba(255, 255, 255, 0.15);
     border: none;
-    color: white;
+    color: var(--text-inverse);
     font-weight: 600;
     font-size: 0.85rem;
     padding: 6px 12px;

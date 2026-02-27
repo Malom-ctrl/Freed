@@ -422,7 +422,7 @@ export const ArticleList = {
         iconSvgEl.setAttribute("class", "discard-icon-cross");
         iconSvgEl.setAttribute("viewBox", "0 0 24 24");
         iconSvgEl.setAttribute("fill", "none");
-        iconSvgEl.setAttribute("stroke", "white");
+        iconSvgEl.setAttribute("stroke", "var(--text-inverse)");
         iconSvgEl.setAttribute("stroke-width", "2");
         iconSvgEl.setAttribute("stroke-linecap", "round");
         iconSvgEl.setAttribute("stroke-linejoin", "round");

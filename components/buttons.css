@@ -10,7 +10,7 @@
 }
 .btn-primary {
     background: var(--primary);
-    color: white;
+    color: var(--text-inverse);
     display: flex;
     align-items: center;
     gap: 8px;
