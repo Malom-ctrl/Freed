@@ -1,10 +1,26 @@
 export const Modals = {
+  popoverJustOpened: false,
+
   setupListeners: function () {
     window.closeStatsModal = () => this.toggleModal("stats-modal", false);
 
     let mouseDownTarget = null;
     document.addEventListener("mousedown", (e) => {
       mouseDownTarget = e.target;
+    });
+
+    // Close popover when clicking outside
+    document.addEventListener("mousedown", (e) => {
+      const popover = document.getElementById("global-popover");
+      if (
+        popover &&
+        popover.classList.contains("show") &&
+        !this.popoverJustOpened
+      ) {
+        if (!popover.contains(e.target)) {
+          this.hidePopover();
+        }
+      }
     });
 
     const bindBackdropClose = (modalId, closeFn) => {
@@ -150,6 +166,11 @@ export const Modals = {
     }
 
     popover.classList.add("show");
+
+    this.popoverJustOpened = true;
+    setTimeout(() => {
+      this.popoverJustOpened = false;
+    }, 0);
 
     // Position logic
     const popoverHeight = popover.offsetHeight || 100;
