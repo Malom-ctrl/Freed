@@ -7,6 +7,7 @@ import { Utils } from "../../core/utils.js";
 import { DB } from "../../core/db.js";
 import { Events } from "../../core/events.js";
 import { CADManager } from "./cad-manager.js";
+import { Tags } from "../tags/tags.js";
 
 export const ReaderView = {
   _scrollHandler: null,
@@ -225,6 +226,138 @@ export const ReaderView = {
 
     if (titleEl) titleEl.textContent = article.title;
     if (feedTitleEl) feedTitleEl.textContent = article.feedTitle;
+
+    const tagsContainer = document.getElementById("reader-article-tags");
+    if (tagsContainer) {
+      const renderTags = () => {
+        while (tagsContainer.firstChild)
+          tagsContainer.removeChild(tagsContainer.firstChild);
+
+        if (article.articleTags && article.articleTags.length > 0) {
+          article.articleTags.forEach((tag) => {
+            const span = document.createElement("span");
+            span.className = "tag-pill";
+            span.style.color = tag.color;
+            span.style.backgroundColor = Utils.hexToRgba(tag.color, 0.15);
+            span.style.borderColor = `${tag.color}40`;
+            span.textContent = tag.name;
+            tagsContainer.appendChild(span);
+          });
+        }
+
+        const modifyBtn = document.createElement("span");
+        modifyBtn.className = "tag-modify-btn";
+
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("width", "12");
+        svg.setAttribute("height", "12");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("fill", "none");
+        svg.setAttribute("stroke", "currentColor");
+        svg.setAttribute("stroke-width", "2");
+        svg.setAttribute("stroke-linecap", "round");
+        svg.setAttribute("stroke-linejoin", "round");
+
+        const path = document.createElementNS(svgNS, "path");
+        path.setAttribute(
+          "d",
+          "M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z",
+        );
+        svg.appendChild(path);
+
+        modifyBtn.appendChild(svg);
+        modifyBtn.onclick = (e) => {
+          e.stopPropagation();
+          enterTagEditMode();
+        };
+        tagsContainer.appendChild(modifyBtn);
+      };
+
+      const enterTagEditMode = () => {
+        while (tagsContainer.firstChild)
+          tagsContainer.removeChild(tagsContainer.firstChild);
+
+        if (article.articleTags && article.articleTags.length > 0) {
+          article.articleTags.forEach((tag, idx) => {
+            const span = document.createElement("span");
+            span.className = "tag-pill";
+            span.style.color = tag.color;
+            span.style.backgroundColor = Utils.hexToRgba(tag.color, 0.15);
+            span.style.borderColor = `${tag.color}40`;
+            span.textContent = tag.name;
+
+            const removeBtn = document.createElement("span");
+            removeBtn.className = "remove-tag";
+            removeBtn.textContent = "\u00D7";
+            removeBtn.onclick = async (e) => {
+              e.stopPropagation();
+              article.articleTags.splice(idx, 1);
+              article.tags = article.articleTags.map((t) => t.name);
+              await DB.saveArticles([article]);
+              enterTagEditMode();
+            };
+            span.appendChild(removeBtn);
+            tagsContainer.appendChild(span);
+          });
+        }
+
+        const inputWrapper = document.createElement("div");
+        inputWrapper.className = "tag-input-wrapper";
+        inputWrapper.style.position = "relative";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "tag-edit-input";
+        input.placeholder = "Add tag...";
+        input.onclick = (e) => e.stopPropagation();
+
+        inputWrapper.appendChild(input);
+        tagsContainer.appendChild(inputWrapper);
+
+        const doneBtn = document.createElement("span");
+        doneBtn.className = "tag-modify-btn";
+
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("width", "12");
+        svg.setAttribute("height", "12");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("fill", "none");
+        svg.setAttribute("stroke", "currentColor");
+        svg.setAttribute("stroke-width", "2");
+        svg.setAttribute("stroke-linecap", "round");
+        svg.setAttribute("stroke-linejoin", "round");
+
+        const polyline = document.createElementNS(svgNS, "polyline");
+        polyline.setAttribute("points", "20 6 9 17 4 12");
+        svg.appendChild(polyline);
+
+        doneBtn.appendChild(svg);
+        doneBtn.onclick = (e) => {
+          e.stopPropagation();
+          renderTags();
+        };
+        tagsContainer.appendChild(doneBtn);
+
+        Tags.setupGenericTagInput(input, {
+          getExclusions: () =>
+            article.articleTags ? article.articleTags.map((t) => t.name) : [],
+          onTagAdded: async (tag) => {
+            if (!article.articleTags) article.articleTags = [];
+            article.articleTags.push(tag);
+            article.tags = article.articleTags.map((t) => t.name);
+            await DB.saveTag(tag);
+            await DB.saveArticles([article]);
+            enterTagEditMode();
+          },
+        });
+
+        input.focus();
+      };
+
+      renderTags();
+    }
 
     if (dateEl) {
       try {

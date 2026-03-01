@@ -121,12 +121,10 @@ async function refreshUI() {
     if (f.tags) f.tags.forEach((t) => uniqueTagNames.add(t));
   });
 
-  // Fetch only needed tags
+  // Fetch all tags
   const tagMap = new Map();
-  for (const tagName of uniqueTagNames) {
-    const tag = await DB.getTag(tagName);
-    if (tag) tagMap.set(tagName, tag);
-  }
+  const allTags = await DB.getAllTags();
+  allTags.forEach((t) => tagMap.set(t.name, t));
 
   // Create map for metadata (using resolved feeds)
   const feedMap = {};
@@ -214,7 +212,9 @@ async function refreshUI() {
       ...a,
       feedColor: feedMap[a.feedId]?.displayColor,
       feedTitle: feedMap[a.feedId]?.title || a.feedTitle,
-      feedTags: feedMap[a.feedId]?.tags || [],
+      articleTags: (a.tags || [])
+        .map((tagName) => tagMap.get(tagName))
+        .filter(Boolean),
     }));
 
     // Apply Filters

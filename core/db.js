@@ -250,40 +250,8 @@ async function deleteFeed(id) {
 }
 
 async function cleanupOrphanedTags() {
-  const db = await openDB();
-
-  // 1. Get all feeds to find used tags
-  const feeds = await new Promise((resolve) => {
-    const tx = db.transaction("feeds", "readonly");
-    tx.objectStore("feeds").getAll().onsuccess = (e) =>
-      resolve(e.target.result);
-  });
-
-  const usedTags = new Set();
-  feeds.forEach((feed) => {
-    if (feed.tags && Array.isArray(feed.tags)) {
-      feed.tags.forEach((t) => usedTags.add(t));
-    }
-  });
-
-  // 2. Get all tags and delete unused
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction("tags", "readwrite");
-    const store = tx.objectStore("tags");
-    store.openCursor().onsuccess = (e) => {
-      const cursor = e.target.result;
-      if (cursor) {
-        const tagName = cursor.value.name;
-        if (!usedTags.has(tagName)) {
-          cursor.delete();
-        }
-        cursor.continue();
-      } else {
-        resolve();
-      }
-    };
-    tx.onerror = () => reject(tx.error);
-  });
+  // No-op: We no longer automatically remove unused tags from the DB
+  return Promise.resolve();
 }
 
 async function saveArticles(articles) {
@@ -319,6 +287,31 @@ async function saveArticles(articles) {
           if (finalArticle.discarded === undefined)
             finalArticle.discarded = false;
           if (finalArticle.cads === undefined) finalArticle.cads = [];
+
+          const saveAndCheck = () => {
+            delete finalArticle.isDateFromFeed;
+            articleStore.put(finalArticle);
+            processed++;
+            checkComplete();
+          };
+
+          if (finalArticle.feedId) {
+            const feedReq = feedStore.get(finalArticle.feedId);
+            feedReq.onsuccess = () => {
+              const feed = feedReq.result;
+              if (feed && feed.tags) {
+                finalArticle.tags = feed.tags;
+              } else {
+                finalArticle.tags = [];
+              }
+              saveAndCheck();
+            };
+            return;
+          } else {
+            finalArticle.tags = [];
+            saveAndCheck();
+            return;
+          }
         }
 
         if (existing) {

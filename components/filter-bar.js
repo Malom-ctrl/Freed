@@ -51,7 +51,8 @@ export const FilterBar = {
 
       if (filters.tags && filters.tags.length > 0) {
         const hasTag =
-          a.feedTags && a.feedTags.some((t) => filters.tags.includes(t.name));
+          a.articleTags &&
+          a.articleTags.some((t) => filters.tags.includes(t.name));
         if (!hasTag) return false;
       }
 

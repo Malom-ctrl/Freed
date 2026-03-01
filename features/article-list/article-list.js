@@ -1,5 +1,6 @@
 import { Utils } from "../../core/utils.js";
 import { Registry } from "../plugin-system/registry.js";
+import { DB } from "../../core/db.js";
 import DOMPurify from "dompurify";
 
 export const ArticleList = {
@@ -518,10 +519,10 @@ export const ArticleList = {
         cardBody.appendChild(cardMeta);
         cardBody.appendChild(cardTitle);
 
-        if (article.feedTags && article.feedTags.length > 0) {
+        if (article.articleTags && article.articleTags.length > 0) {
           const tagsDiv = document.createElement("div");
           tagsDiv.className = "card-tags";
-          article.feedTags.forEach((tag) => {
+          article.articleTags.forEach((tag) => {
             const span = document.createElement("span");
             span.className = "tag-pill";
             span.style.color = tag.color;
