@@ -146,8 +146,26 @@ export const Utils = {
     });
   },
 
+  _proxyIndex: 0,
+  _proxies: [
+    (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  ],
+
   proxifyUrl: function (url) {
-    return `https://corsproxy.io/?${encodeURIComponent(url)}`;
+    if (!url) return "";
+    return Utils._proxies[Utils._proxyIndex](url);
+  },
+
+  reportProxyFailure: function () {
+    if (Utils._proxyIndex < Utils._proxies.length - 1) {
+      Utils._proxyIndex++;
+      console.warn(
+        `Proxy failed, falling back to proxy index ${Utils._proxyIndex}`
+      );
+      return true; // Proxy switched
+    }
+    return false; // No more proxies
   },
 
   hexToRgba: function (hex, alpha = 1) {
@@ -237,11 +255,28 @@ export const Utils = {
     return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
   },
 
-  fetchImageAsBase64: async function (url) {
-    const proxy = this.proxifyUrl(url);
+  fetchWithProxy: async function (url, options = {}) {
+    let proxyUrl = this.proxifyUrl(url);
     try {
-      const res = await fetch(proxy);
-      if (!res.ok) throw new Error("Fetch failed");
+      const response = await fetch(proxyUrl, options);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      return response;
+    } catch (e) {
+      if (this.reportProxyFailure()) {
+        proxyUrl = this.proxifyUrl(url);
+        const response = await fetch(proxyUrl, options);
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
+        return response;
+      }
+      throw e;
+    }
+  },
+
+  fetchImageAsBase64: async function (url) {
+    try {
+      const res = await this.fetchWithProxy(url);
       const blob = await res.blob();
       if (blob.size === 0) throw new Error("Empty image");
 
@@ -255,6 +290,7 @@ export const Utils = {
         reader.readAsDataURL(blob);
       });
     } catch (e) {
+      console.warn("Failed to fetch image", e);
       return null;
     }
   },

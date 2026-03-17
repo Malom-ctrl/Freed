@@ -51,17 +51,16 @@ async function fetchAndParseFeed(feed) {
     targetUrl = await Registry.executePipeline("feed:fetch:before", targetUrl);
   }
 
-  const proxyUrl = proxifyUrl(targetUrl);
-  let rawText = "";
+  let response;
 
   try {
-    const response = await fetch(proxyUrl);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    rawText = await response.text();
+    response = await Utils.fetchWithProxy(targetUrl);
   } catch (e) {
     console.error(`Error fetching ${feed.title}:`, e);
     return { articles: [], error: e.message };
   }
+
+  const rawText = await response.text();
 
   let resultArticles = [];
   let type = "rss";
@@ -269,10 +268,8 @@ function parseWebWithRule(html, rule, baseUrl, feed) {
 }
 
 async function fetchFullArticle(url) {
-  const proxyUrl = proxifyUrl(url);
   try {
-    const response = await fetch(proxyUrl);
-    if (!response.ok) throw new Error("Network response was not ok");
+    const response = await Utils.fetchWithProxy(url);
     const htmlText = await response.text();
     const doc = new DOMParser().parseFromString(htmlText, "text/html");
     const base = doc.createElement("base");
