@@ -1,5 +1,5 @@
 export const Config = {
-  APP_VERSION: "1.4.5",
+  APP_VERSION: "1.4.6",
   DB_NAME: "freed_db",
   DB_VERSION: 4,
   COLOR_PALETTE: [
