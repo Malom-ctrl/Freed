@@ -148,7 +148,7 @@ export const Utils = {
 
   _proxyIndex: 0,
   _proxies: [
-    (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
     (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   ],
 
@@ -161,7 +161,7 @@ export const Utils = {
     if (Utils._proxyIndex < Utils._proxies.length - 1) {
       Utils._proxyIndex++;
       console.warn(
-        `Proxy failed, falling back to proxy index ${Utils._proxyIndex}`
+        `Proxy failed, falling back to proxy index ${Utils._proxyIndex}`,
       );
       return true; // Proxy switched
     }
