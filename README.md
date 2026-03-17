@@ -24,7 +24,9 @@
 To use Freed just go to https://malom-ctrl.github.io/Freed/
 
 You can use it directly as a website or you can install it to your device if you want it to behaves more like a native app.
+
 **On desktop**: Click on the "Install" button in the adress bar.
+
 **On mobile**: In your browser menu, click on "Add to home screen"
 
 ## Running your own instance
