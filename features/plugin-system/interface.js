@@ -177,6 +177,7 @@ export class Interface {
         formatRelativeTime: (dateStr) => Utils.formatRelativeTime(dateStr),
         formatFullDate: (dateStr) => Utils.formatFullDate(dateStr),
         proxifyUrl: (url) => Utils.proxifyUrl(url),
+        fetchWithProxy: (url, options) => Utils.fetchWithProxy(url, options),
         hexToRgba: (hex, alpha) => Utils.hexToRgba(hex, alpha),
         throttle: (func, limit) => Utils.throttle(func, limit),
         getFaviconUrl: (domain) => Utils.getFaviconUrl(domain),

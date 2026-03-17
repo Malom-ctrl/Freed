@@ -1,3 +1,5 @@
+import DOMPurify from "dompurify";
+
 export const Modals = {
   popoverJustOpened: false,
 
@@ -156,8 +158,9 @@ export const Modals = {
     contentEl.innerHTML = "";
 
     if (typeof content === "string") {
+      const cleanContent = DOMPurify.sanitize(content);
       const parser = new DOMParser();
-      const doc = parser.parseFromString(content, "text/html");
+      const doc = parser.parseFromString(cleanContent, "text/html");
       while (doc.body.firstChild) {
         contentEl.appendChild(doc.body.firstChild);
       }
